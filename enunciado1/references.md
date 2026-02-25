@@ -1,3 +1,15 @@
+# RQs
+
+| RQ   | Campo GraphQL buscado                                 | Métrica computada                        |
+|------|------------------------------------------------------|------------------------------------------|
+| RQ01 | createdAt                                            | idade_anos a partir de hoje              |
+| RQ02 | pullRequests(states: MERGED).totalCount               | prs_mesclados                            |
+| RQ03 | releases.totalCount                                  | releases                                 |
+| RQ04 | updatedAt                                            | dias_desde_atualizacao a partir de hoje  |
+| RQ05 | primaryLanguage.name                                 | tabela de frequência                     |
+| RQ06 | issues(CLOSED) + issues(OPEN)                        | razão fechadas / total                   |
+| RQ07 | Todos acima agrupados por language                   | mediana por linguagem                    |
+
 H. Borges, A. Hora and M. T. Valente, "Understanding the Factors That Impact the Popularity of GitHub Repositories," 2016 IEEE International Conference on Software Maintenance and Evolution (ICSME), Raleigh, NC, USA, 2016, pp. 334-344, doi: 10.1109/ICSME.2016.31.
 keywords: {Software;Libraries;Organizations;Documentation;HTML;Java;GitHub;Software Popularity;Open Source software;Social coding},
 
