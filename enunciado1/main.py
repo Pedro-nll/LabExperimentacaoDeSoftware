@@ -27,7 +27,7 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
-TOTAL_REPOS = 100
+TOTAL_REPOS = 1000
 MAX_RETRIES = 5          # max attempts per page before giving up
 RETRY_BACKOFF_BASE = 2   # seconds; doubles on each retry (2, 4, 8, 16, 32)
 
@@ -48,7 +48,7 @@ query($cursor: String) {
   search(
     query: "stars:>1 sort:stars-desc"
     type: REPOSITORY
-    first: 25
+    first: 10
     after: $cursor
   ) {
     pageInfo {
@@ -241,8 +241,40 @@ def main():
         )
 
     print("Fetching top 100 most-starred repositories from GitHub…")
-    raw = fetch_repositories(TOTAL_REPOS)
-    df  = parse_repositories(raw)
+    
+    # Incrementally fetch, parse, and save repositories
+    all_repos = []
+    df = pd.DataFrame()
+    cursor = None
+    out_path = "repos_data_backup.csv"
+    
+    while len(all_repos) < TOTAL_REPOS:
+        search = run_query(cursor)
+        nodes = search["nodes"]
+        all_repos.extend(nodes)
+        
+        collected = min(len(all_repos), TOTAL_REPOS)
+        print(f"  Collected {collected} / {TOTAL_REPOS} …")
+        
+        # Parse the current batch and append to DataFrame
+        batch_df = parse_repositories(nodes)
+        df = pd.concat([df, batch_df], ignore_index=True)
+        
+        # Update CSV after each page
+        df.to_csv(out_path, index=False)
+        print(f"  ✓ Updated '{out_path}'")
+        
+        page_info = search["pageInfo"]
+        if not page_info["hasNextPage"] or len(all_repos) >= TOTAL_REPOS:
+            break
+        
+        cursor = page_info["endCursor"]
+        time.sleep(1)  # respect GitHub secondary rate limits
+    
+    # Trim to exact total if we exceeded it
+    df = df.iloc[:TOTAL_REPOS]
+    df.to_csv(out_path, index=False)
+    
     print(f"\n✓ {len(df)} repositories collected and parsed.\n")
 
     # ── RQ01: Are popular systems mature/old? ──────────────────────────────
@@ -311,11 +343,6 @@ def main():
         showindex=False,
         floatfmt=".1f",
     ))
-
-    # ── Export raw data ────────────────────────────────────────────────────
-    out_path = "repos_data.csv"
-    df.to_csv(out_path, index=False)
-    print(f"\n✓ Raw data exported to '{out_path}'")
 
 
 if __name__ == "__main__":
