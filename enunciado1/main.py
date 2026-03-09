@@ -38,7 +38,7 @@ RETRY_BACKOFF_BASE = 2   # seconds; doubles on each retry (2, 4, 8, 16, 32)
 #   createdAt            → RQ01 (age)
 #   mergedPullRequests   → RQ02 (accepted PRs)
 #   releases             → RQ03 (release count)
-#   updatedAt            → RQ04 (time since last update)
+#   pushedAt             → RQ04 (time since last push)
 #   primaryLanguage      → RQ05 (primary language)
 #   closedIssues /
 #   openIssues           → RQ06 (closed-issue ratio)
@@ -63,8 +63,8 @@ query($cursor: String) {
         # RQ01 – repository age
         createdAt
 
-        # RQ04 – time since last update
-        updatedAt
+        # RQ04 – time since last push
+        pushedAt
 
         # RQ05 – primary language
         primaryLanguage { name }
@@ -182,7 +182,7 @@ def parse_repositories(raw: list[dict]) -> pd.DataFrame:
 
     for r in raw:
         created_at = datetime.fromisoformat(r["createdAt"].replace("Z", "+00:00"))
-        updated_at = datetime.fromisoformat(r["updatedAt"].replace("Z", "+00:00"))
+        pushed_at = datetime.fromisoformat(r["pushedAt"].replace("Z", "+00:00"))
 
         closed_issues = r["closedIssues"]["totalCount"]
         open_issues   = r["openIssues"]["totalCount"]
@@ -199,7 +199,7 @@ def parse_repositories(raw: list[dict]) -> pd.DataFrame:
             # RQ03
             "releases":          r["releases"]["totalCount"],
             # RQ04
-            "days_since_update": (now - updated_at).days,
+            "days_since_update": (now - pushed_at).days,
             # RQ05
             "language":          (r["primaryLanguage"]["name"]
                                   if r["primaryLanguage"] else "Unknown"),
@@ -260,16 +260,16 @@ def summarise(series: pd.Series) -> None:
 # Main analysis
 # ─────────────────────────────────────────────
 def main():
+    if not GITHUB_TOKEN:
+        raise EnvironmentError(
+            "GITHUB_TOKEN is not set. Export it before running:\n"
+            "  export GITHUB_TOKEN=ghp_..."
+        )
+
     if os.path.exists("repos_data.csv"):
         print("repos_data.csv exists, loading existing data and proceeding to analysis and filtering.")
         df = pd.read_csv("repos_data.csv")
     else:
-        if not GITHUB_TOKEN:
-            raise EnvironmentError(
-                "GITHUB_TOKEN is not set. Export it before running:\n"
-                "  export GITHUB_TOKEN=ghp_..."
-            )
-        
         print("Fetching top 1000 most-starred repositories from GitHub…")
         
         # Incrementally fetch, parse, and save repositories
