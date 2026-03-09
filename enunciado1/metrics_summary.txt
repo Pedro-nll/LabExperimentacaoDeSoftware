@@ -1,0 +1,87 @@
+GitHub Repository Metrics Summary
+========================================
+
+RQ1 - Repository Age (years):
+  Median: 8.21
+
+RQ2 - Merged Pull Requests:
+  Median: 894.00
+  Average: 4248.12
+  Std Dev: 9887.76
+
+RQ3 - Total Releases:
+  Median: 54.00
+
+RQ4 - Days Since Last Push:
+  Median: 2.00
+
+RQ5 - Repository Count by Language:
+  Python: 201
+  TypeScript: 162
+  JavaScript: 112
+  Go: 76
+  Rust: 55
+  C++: 46
+  Java: 46
+  Jupyter Notebook: 23
+  C: 23
+  Shell: 21
+  HTML: 18
+  Ruby: 12
+  C#: 11
+  Kotlin: 10
+  CSS: 8
+  Vue: 7
+  PHP: 7
+  Swift: 7
+  Dart: 6
+  MDX: 5
+  Vim Script: 4
+  Clojure: 4
+  Dockerfile: 3
+  Zig: 3
+  Makefile: 3
+  Scala: 2
+  Assembly: 2
+  Nunjucks: 2
+  PowerShell: 2
+  Lua: 2
+  Haskell: 2
+  Svelte: 2
+  TeX: 2
+  Batchfile: 1
+  Blade: 1
+  Roff: 1
+  Julia: 1
+  V: 1
+  LLVM: 1
+  Elixir: 1
+  Objective-C: 1
+
+RQ6 - Closed Issue Ratio:
+  Median: 0.8816
+
+RQ7 - Language Popularity vs Median PRs and Releases:
+Language		Repos	Median PRs	Median Releases
+-------------------------------------------------------
+Python         	201  	621.0     	23.0          
+TypeScript     	162  	2589.0    	158.0         
+JavaScript     	112  	569.0     	38.0          
+Go             	76   	1509.0    	131.0         
+Rust           	55   	2340.0    	74.0          
+C++            	46   	983.0     	63.5          
+Java           	46   	614.0     	42.0          
+Jupyter Noteboo	23   	88.0      	0.0           
+C              	23   	157.0     	42.0          
+Shell          	21   	494.0     	29.0          
+HTML           	18   	310.0     	0.0           
+Ruby           	12   	4770.5    	14.5          
+C#             	11   	5181.0    	120.0         
+Kotlin         	10   	399.5     	53.5          
+CSS            	8    	440.0     	13.0          
+Vue            	7    	311.0     	43.0          
+PHP            	7    	5806.0    	603.0         
+Swift          	7    	433.0     	47.0          
+Dart           	6    	575.0     	33.5          
+MDX            	5    	349.0     	0.0           
+
