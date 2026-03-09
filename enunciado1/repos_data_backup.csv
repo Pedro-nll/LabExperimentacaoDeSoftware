@@ -1,28 +1,40 @@
 repo,stars,age_days,age_years,merged_prs,releases,days_since_update,language,closed_issues,total_issues,closed_issue_ratio
+codecrafters-io/build-your-own-x,473626,2861,7.83,155,0,0,Markdown,653,889,0.7345
+sindresorhus/awesome,444047,4259,11.66,694,0,0,Unknown,350,366,0.9563
 freeCodeCamp/freeCodeCamp,437948,4092,11.2,27794,0,0,TypeScript,20986,21160,0.9918
 public-apis/public-apis,405887,3640,9.97,1872,0,0,Python,832,839,0.9917
 EbookFoundation/free-programming-books,383835,4532,12.41,7336,0,0,Python,1228,1264,0.9715
 kamranahmedse/developer-roadmap,350581,3281,8.98,4086,1,0,TypeScript,3083,3088,0.9984
 donnemartin/system-design-primer,338141,3298,9.03,205,0,0,Python,116,360,0.3222
+jwasham/coding-interview-university,337738,3563,9.75,415,0,0,Unknown,454,526,0.8631
 openclaw/openclaw,289173,105,0.29,2962,63,0,TypeScript,10617,16882,0.6289
 vinta/awesome-python,286356,4272,11.7,641,0,0,Python,0,0,
+awesome-selfhosted/awesome-selfhosted,278917,3934,10.77,2395,1,0,Unknown,807,807,1.0
+996icu/996.ICU,275711,2540,6.95,1072,0,0,Unknown,0,0,
+practical-tutorials/project-based-learning,260634,3253,8.91,182,0,0,Unknown,82,227,0.3612
 facebook/react,243781,4672,12.79,12774,118,0,JavaScript,13579,14390,0.9436
+torvalds/linux,221703,5299,14.51,0,0,0,C,0,0,
 TheAlgorithms/Python,218489,3523,9.65,3063,0,0,Python,1540,1704,0.9038
 vuejs/vue,209976,4606,12.61,1136,249,0,TypeScript,9669,10028,0.9642
+trimstray/the-book-of-secret-knowledge,209351,2816,7.71,122,0,0,Unknown,0,0,
 ossu/computer-science,202284,4327,11.85,305,0,0,HTML,655,669,0.9791
 trekhleb/javascript-algorithms,195767,2907,7.96,304,0,0,JavaScript,234,372,0.629
 tensorflow/tensorflow,194079,3775,10.34,42339,222,0,C++,40303,41201,0.9782
 ohmyzsh/ohmyzsh,185227,6036,16.53,3516,0,0,Shell,4892,5034,0.9718
+getify/You-Dont-Know-JS,184477,4496,12.31,370,0,0,Unknown,949,949,1.0
+CyC2018/CS-Notes,183865,2946,8.07,374,0,0,Unknown,449,578,0.7768
 microsoft/vscode,182495,3839,10.51,43428,199,0,TypeScript,219082,232636,0.9417
 Significant-Gravitas/AutoGPT,182304,1089,2.98,3989,94,0,Python,3513,3742,0.9388
 jackfrued/Python-100-Days,179438,2930,8.02,13,0,0,Jupyter Notebook,188,711,0.2644
 n8n-io/n8n,178299,2452,6.71,14162,550,0,TypeScript,7806,8257,0.9454
 flutter/flutter,175475,4020,11.01,46964,7,0,Dart,100313,112489,0.8918
 twbs/bootstrap,174046,5336,14.61,9122,94,0,MDX,22539,22848,0.9865
+github/gitignore,172929,5599,15.33,1727,0,0,Unknown,0,0,
 massgravel/Microsoft-Activation-Scripts,168199,2247,6.15,6,29,0,Batchfile,909,911,0.9978
 avelino/awesome-go,166968,4264,11.67,3612,0,0,Go,713,727,0.9807
 ollama/ollama,164597,986,2.7,3082,189,0,Go,7520,9530,0.7891
 AUTOMATIC1111/stable-diffusion-webui,161596,1295,3.55,1884,27,0,Python,5487,7890,0.6954
+jlevy/the-art-of-command-line,160218,3946,10.8,317,0,0,Unknown,136,262,0.5191
 huggingface/transformers,157629,2688,7.36,18770,244,0,Python,17614,18681,0.9429
 Snailclimb/JavaGuide,154136,2863,7.84,1216,0,0,Java,1060,1133,0.9356
 DigitalPlatDev/FreeDomain,151522,648,1.77,1,0,0,HTML,0,0,
@@ -36,8 +48,10 @@ vercel/next.js,138243,3441,9.42,26171,1000,0,JavaScript,22270,24318,0.9158
 yangshun/tech-interview-handbook,138050,3534,9.68,486,0,0,TypeScript,77,121,0.6364
 Genymobile/scrcpy,136713,3029,8.29,123,50,0,C,3287,5962,0.5513
 golang/go,132998,4220,11.55,1,0,0,Go,61016,70458,0.866
+labuladong/fucking-algorithm,132965,2210,6.05,244,0,0,Markdown,962,963,0.999
 langgenius/dify,131769,1062,2.91,9765,158,0,TypeScript,16394,16781,0.9769
 microsoft/PowerToys,130346,2503,6.85,6364,127,0,C#,30197,38301,0.7884
+x1xhlol/system-prompts-and-models-of-ai-tools,129762,369,1.01,46,0,0,Unknown,111,192,0.5781
 langchain-ai/langchain,128796,1239,3.39,16068,1000,0,Python,8879,9128,0.9727
 Chalarangelo/30-seconds-of-code,127006,3021,8.27,836,12,0,JavaScript,300,300,1.0
 open-webui/open-webui,126392,884,2.42,3367,154,0,Python,7684,7836,0.9806
@@ -48,6 +62,7 @@ electron/electron,120390,4714,12.91,24591,1000,0,C++,20747,21482,0.9658
 ripienaar/free-for-dev,119279,4008,10.97,2901,0,0,HTML,0,0,
 anomalyco/opencode,118927,312,0.85,2638,734,0,TypeScript,5212,10110,0.5155
 excalidraw/excalidraw,118356,2258,6.18,3844,14,0,TypeScript,2564,4652,0.5512
+justjavac/free-programming-books-zh_CN,116421,4508,12.34,282,3,0,Unknown,0,0,
 nodejs/node,116176,4120,11.28,11908,486,0,JavaScript,18343,20097,0.9127
 iptv-org/iptv,112641,2671,7.31,6827,0,0,TypeScript,21719,22113,0.9822
 d3/d3,112500,5641,15.44,494,194,0,Shell,2229,2239,0.9955
@@ -57,6 +72,7 @@ shadcn-ui/ui,109028,1160,3.18,1027,78,0,TypeScript,2960,3941,0.7511
 rustdesk/rustdesk,108924,1988,5.44,3947,36,0,Rust,3949,4010,0.9848
 axios/axios,108618,4220,11.55,1136,109,0,JavaScript,4758,4960,0.9593
 microsoft/TypeScript,108071,4283,11.73,14857,215,0,TypeScript,37986,42964,0.8841
+Hack-with-Github/Awesome-Hacking,108048,3631,9.94,34,0,0,Unknown,0,0,
 microsoft/generative-ai-for-beginners,107728,994,2.72,542,0,0,Jupyter Notebook,206,208,0.9904
 godotengine/godot,107562,4447,12.18,41462,66,0,C++,48315,61333,0.7877
 GrowingGit/GitHub-Chinese-Top-Charts,106711,2377,6.51,0,0,0,Java,162,343,0.4723
@@ -76,6 +92,7 @@ jaywcjlove/awesome-mac,99738,3522,9.64,1084,13,0,JavaScript,379,514,0.7374
 supabase/supabase,98764,2340,6.41,15630,26,0,TypeScript,4984,5253,0.9488
 Anduin2017/HowToCook,98642,2200,6.02,616,4,0,Dockerfile,364,827,0.4401
 2dust/v2rayN,98286,2414,6.61,398,300,0,C#,6600,6610,0.9985
+mtdvio/every-programmer-should-know,98206,3119,8.54,110,0,0,Unknown,31,45,0.6889
 pytorch/pytorch,98094,3495,9.57,6432,64,0,Python,41105,57180,0.7189
 mui/material-ui,98034,4220,11.55,21495,558,0,TypeScript,18755,20351,0.9216
 ant-design/ant-design,97708,3972,10.87,17097,741,0,TypeScript,31140,32415,0.9607
@@ -92,6 +109,8 @@ tailwindlabs/tailwindcss,93988,3076,8.42,3303,300,0,TypeScript,4721,4774,0.9889
 iluwatar/java-design-patterns,93800,4230,11.58,1520,0,0,Java,839,978,0.8579
 puppeteer/puppeteer,93775,3225,8.83,5839,646,0,TypeScript,7065,7325,0.9645
 nvm-sh/nvm,92149,5806,15.9,741,71,0,Shell,2062,2394,0.8613
+deepseek-ai/DeepSeek-R1,91933,413,1.13,10,1,0,Unknown,668,695,0.9612
+florinpop17/app-ideas,91037,2568,7.03,151,0,0,Unknown,51,196,0.2602
 microsoft/markitdown,90434,480,1.31,170,18,0,Python,84,388,0.2165
 PanJiaChen/vue-element-admin,90284,3248,8.89,311,49,0,Vue,2357,3613,0.6524
 firecrawl/firecrawl,90064,692,1.89,1375,32,0,TypeScript,781,824,0.9478
@@ -107,20 +126,25 @@ gohugoio/hugo,86980,4631,12.68,3245,365,0,Go,7800,8039,0.9703
 mermaid-js/mermaid,86574,4145,11.35,2590,184,0,TypeScript,2212,3579,0.618
 opencv/opencv,86511,4981,13.64,13505,67,0,C++,8866,11442,0.7749
 sveltejs/svelte,86048,3395,9.3,6528,607,0,JavaScript,8013,8928,0.8975
+ruanyf/weekly,85562,2704,7.4,106,0,0,Unknown,1292,8522,0.1516
 home-assistant/core,85235,4556,12.47,82688,1000,0,Python,65464,68414,0.9569
 3b1b/manim,85071,4004,10.96,661,13,0,Python,766,1224,0.6258
 microsoft/ML-For-Beginners,84226,1832,5.02,446,0,0,Jupyter Notebook,158,159,0.9937
 laravel/laravel,83953,5388,14.75,1670,211,0,Blade,0,0,
 louislam/uptime-kuma,83847,1710,4.68,1693,125,0,JavaScript,4006,4665,0.8587
 microsoft/playwright,83824,2305,6.31,16289,158,0,TypeScript,16517,17109,0.9654
+MunGell/awesome-for-beginners,83301,3788,10.37,469,0,0,Unknown,188,205,0.9171
 macrozheng/mall,83079,2896,7.93,1,3,0,Java,490,500,0.98
 realworld-apps/realworld,82958,3663,10.03,434,0,0,TypeScript,513,545,0.9413
 animate-css/animate.css,82617,5262,14.41,315,22,0,CSS,843,883,0.9547
+punkpeye/awesome-mcp-servers,82585,464,1.27,1495,0,0,Unknown,216,219,0.9863
 bregman-arie/devops-exercises,81431,2348,6.43,309,0,0,Python,70,104,0.6731
+DopplerHQ/awesome-interview-questions,81323,3754,10.28,175,0,0,Unknown,34,61,0.5574
 tonsky/FiraCode,81256,4135,11.32,142,29,0,Clojure,960,1380,0.6957
 syncthing/syncthing,80652,4486,12.28,2838,462,0,Go,5488,5861,0.9364
 modelcontextprotocol/servers,80619,475,1.3,1181,24,0,TypeScript,564,849,0.6643
 astral-sh/uv,80570,888,2.43,8547,260,0,Rust,6264,8627,0.7261
+ByteByteGoHq/system-design-101,80380,902,2.47,23,0,0,Unknown,19,59,0.322
 spring-projects/spring-boot,80217,4889,13.39,42,339,0,Java,40985,41495,0.9877
 browser-use/browser-use,80016,494,1.35,1671,118,0,Python,1297,1406,0.9225
 hacksider/Deep-Live-Cam,79921,897,2.46,98,10,0,Python,1035,1116,0.9274
@@ -133,14 +157,17 @@ hoppscotch/hoppscotch,78249,2392,6.55,2038,99,0,TypeScript,1771,2344,0.7555
 netdata/netdata,78003,4647,12.72,11762,132,0,C,8052,8203,0.9816
 tensorflow/models,77692,3685,10.09,2342,51,0,Python,6240,7324,0.852
 nomic-ai/gpt4all,77204,1077,2.95,938,38,0,C++,1493,2212,0.675
+Developer-Y/cs-video-courses,76875,3426,9.38,258,0,0,Unknown,0,0,
 MisterBooo/LeetCodeAnimation,76719,2650,7.26,63,0,0,Java,43,61,0.7049
 zed-industries/zed,76693,1843,5.05,22204,1000,0,Rust,16061,18708,0.8585
 coder/code-server,76551,2567,7.03,1639,224,0,TypeScript,3628,3795,0.956
 FortAwesome/Font-Awesome,76403,5134,14.06,220,63,0,JavaScript,19611,19904,0.9853
 elastic/elasticsearch,76315,5873,16.08,87501,235,0,Java,38704,43165,0.8967
+mlabonne/llm-course,76276,995,2.72,2,0,0,Unknown,32,95,0.3368
 localsend/localsend,76202,1179,3.23,702,24,0,Dart,740,1598,0.4631
 d2l-ai/d2l-zh,76092,3120,8.54,1019,16,0,Python,0,0,
 swisskyrepo/PayloadsAllTheThings,75896,3429,9.39,564,5,0,Python,0,0,
+sdmg15/Best-websites-a-programmer-should-visit,75824,3290,9.01,431,0,0,Unknown,105,185,0.5676
 anthropics/claude-code,75741,379,1.04,145,56,0,Shell,25521,31045,0.8221
 typicode/json-server,75642,4485,12.28,161,46,0,JavaScript,566,1179,0.4801
 github/spec-kit,75235,199,0.54,186,112,0,Python,341,873,0.3906
@@ -151,14 +178,18 @@ nestjs/nest,74904,3319,9.09,8098,143,0,TypeScript,5769,5786,0.9971
 infiniflow/ragflow,74545,818,2.24,5482,40,0,Python,3632,6629,0.5479
 unionlabs/union,74249,1027,2.81,3102,107,0,Rust,1709,1837,0.9303
 jesseduffield/lazygit,73791,2851,7.81,1820,176,0,Go,1743,2523,0.6908
+vuejs/awesome-vue,73629,3793,10.38,3617,0,0,Unknown,191,230,0.8304
 sherlock-project/sherlock,73519,2632,7.21,735,2,0,Python,1070,1150,0.9304
 redis/redis,73363,6196,16.96,4430,117,0,C,4708,6917,0.6806
 lobehub/lobehub,73342,1023,2.8,4380,1000,0,TypeScript,5004,5467,0.9153
+awesomedata/awesome-public-datasets,73335,4127,11.3,188,1,0,Unknown,48,124,0.3871
 twitter/the-algorithm,72851,1078,2.95,2,0,0,Scala,749,1067,0.702
 tesseract-ocr/tesseract,72788,4226,11.57,1432,35,0,C++,2318,2748,0.8435
 CompVis/stable-diffusion,72657,1307,3.58,5,0,0,Jupyter Notebook,199,735,0.2707
 grafana/grafana,72580,4471,12.24,62733,592,0,TypeScript,39962,43221,0.9246
 vllm-project/vllm,72569,1124,3.08,14557,85,0,Python,12228,13923,0.8783
+thedaviddias/Front-End-Checklist,72336,3066,8.39,179,1,0,Unknown,151,152,0.9934
+enaqx/awesome-react,72301,4233,11.59,794,0,0,Unknown,117,119,0.9832
 openai/openai-cookbook,71963,1459,3.99,1010,0,0,Jupyter Notebook,657,728,0.9025
 python/cpython,71930,3313,9.07,57299,0,0,Python,68312,75485,0.905
 josephmisiti/awesome-machine-learning,71919,4254,11.65,902,0,0,Python,97,99,0.9798
@@ -176,9 +207,11 @@ obsproject/obs-studio,70809,4542,12.44,5425,237,0,C,4166,4922,0.8464
 caddyserver/caddy,70709,4072,11.15,2266,134,0,Go,4293,4490,0.9561
 hakimel/reveal.js,70690,5388,14.75,414,49,0,JavaScript,1697,2491,0.6813
 binary-husky/gpt_academic,70197,1085,2.97,228,32,0,Python,1481,1757,0.8429
+fffaraz/awesome-cpp,70105,4253,11.64,839,0,0,Unknown,356,591,0.6024
 swiftlang/swift,69876,3789,10.37,58115,66,0,C++,10074,17489,0.576
 Eugeny/tabby,69403,3363,9.21,1512,204,0,TypeScript,3510,6032,0.5819
 danielmiessler/SecLists,69326,5132,14.05,696,29,0,PHP,309,318,0.9717
+binhnguyennus/awesome-scalability,69242,2994,8.2,37,0,0,Unknown,0,0,
 nektos/act,69211,2622,7.18,1057,92,0,Go,1077,1318,0.8171
 expressjs/express,68902,6099,16.7,522,164,0,JavaScript,3930,4030,0.9752
 affaan-m/everything-claude-code,68843,50,0.14,99,10,0,JavaScript,129,138,0.9348
@@ -188,6 +221,7 @@ AppFlowy-IO/AppFlowy,68477,1727,4.73,3894,128,0,Dart,2997,3905,0.7675
 ansible/ansible,68262,5116,14.01,39672,207,0,Python,32755,33292,0.9839
 hiyouga/LlamaFactory,68101,1016,2.78,903,35,0,Python,6968,7875,0.8848
 chartjs/Chart.js,67237,4739,12.97,3016,117,0,JavaScript,6817,7301,0.9337
+prakhar1989/awesome-courses,66931,4131,11.31,194,0,0,Unknown,39,83,0.4699
 juliangarnier/anime,66777,3647,9.98,87,34,0,JavaScript,750,836,0.8971
 leonardomso/33-js-concepts,66269,2743,7.51,262,0,0,JavaScript,119,119,1.0
 webpack/webpack,66056,5112,14.0,5568,448,0,JavaScript,10040,10151,0.9891
@@ -198,8 +232,11 @@ TapXWorld/ChinaTextbook,65684,2255,6.17,1,0,0,Roff,76,161,0.472
 NationalSecurityAgency/ghidra,65538,2565,7.02,553,52,0,Java,4329,5869,0.7376
 toeverything/AFFiNE,65535,1316,3.6,9039,542,0,TypeScript,3113,3623,0.8592
 scikit-learn/scikit-learn,65352,5683,15.56,14176,49,0,Python,10396,11983,0.8676
+lydiahallie/javascript-questions,65302,2462,6.74,328,0,0,Unknown,233,252,0.9246
+sindresorhus/awesome-nodejs,65224,4259,11.66,421,0,0,Unknown,102,105,0.9714
 TheAlgorithms/Java,65179,3523,9.65,2269,0,0,Java,1178,1203,0.9792
 kdn251/interviews,64987,3309,9.06,42,0,0,Java,24,58,0.4138
+bradtraversy/design-resources-for-developers,64987,2133,5.84,967,0,0,Unknown,109,112,0.9732
 kelseyhightower/nocode,64954,2952,8.08,1,1,0,Dockerfile,729,4922,0.1481
 FoundationAgents/MetaGPT,64913,983,2.69,673,22,0,Python,890,907,0.9813
 chrislgarry/Apollo-11,64646,4358,11.93,355,0,0,Assembly,330,388,0.8505
@@ -221,10 +258,12 @@ gorhill/uBlock,61988,3994,10.93,256,283,0,JavaScript,3434,3447,0.9962
 ryanoasis/nerd-fonts,61915,4112,11.26,565,38,0,CSS,1080,1127,0.9583
 FuelLabs/sway,61904,1874,5.13,3641,185,0,Rust,2418,3267,0.7401
 unclecode/crawl4ai,61594,669,1.83,164,13,0,Python,907,934,0.9711
+tldr-pages/tldr,61587,4474,12.25,17792,6,0,Markdown,1482,1685,0.8795
 lodash/lodash,61579,5084,13.92,614,2,0,JavaScript,4274,4338,0.9852
 reduxjs/redux,61443,3936,10.78,1747,78,0,TypeScript,2030,2067,0.9821
 LadybirdBrowser/ladybird,61146,648,1.77,5925,0,0,C++,932,1482,0.6289
 atom/atom,60991,5161,14.13,3937,538,0,JavaScript,16148,17111,0.9437
+xingshaocheng/architect-awesome,60847,2894,7.92,49,0,0,Unknown,23,71,0.3239
 h5bp/Front-end-Developer-Interview-Questions,60799,5141,14.08,484,0,0,Nunjucks,143,177,0.8079
 BurntSushi/ripgrep,60708,3650,9.99,544,74,0,Rust,1674,1769,0.9463
 scrapy/scrapy,60680,5859,16.04,2475,46,0,Python,2781,3242,0.8578
@@ -246,8 +285,10 @@ meta-llama/llama,59214,1119,3.06,54,0,0,Python,652,1112,0.5863
 topjohnwu/Magisk,59154,3469,9.5,1688,156,0,Rust,6457,6496,0.994
 angular/angular.js,58924,5906,16.17,790,0,0,JavaScript,8644,9033,0.9569
 cline/cline,58798,611,1.67,3265,240,0,TypeScript,2926,3427,0.8538
+PlexPt/awesome-chatgpt-prompts-zh,58614,1183,3.24,33,0,0,Unknown,59,97,0.6082
 rails/rails,58371,6541,17.91,25887,160,0,Ruby,17974,18486,0.9723
 FiloSottile/mkcert,58294,2814,7.7,52,14,0,Go,241,350,0.6886
+FFmpeg/FFmpeg,57698,5443,14.9,0,0,0,C,0,0,
 usememos/memos,57601,1552,4.25,1927,86,0,Go,2820,2829,0.9968
 sharkdp/bat,57593,2879,7.88,1581,43,0,Rust,1269,1580,0.8032
 h5bp/html5-boilerplate,57402,5887,16.12,804,34,0,JavaScript,1353,1358,0.9963
@@ -273,6 +314,8 @@ azl397985856/leetcode,55822,2901,7.94,257,40,0,JavaScript,248,256,0.9688
 opendatalab/MinerU,55788,739,2.02,1320,143,0,Python,1905,2095,0.9093
 Textualize/rich,55717,2311,6.33,860,175,0,Python,1265,1481,0.8542
 RVC-Boss/GPT-SoVITS,55620,784,2.15,355,4,0,Python,1233,2009,0.6137
+wasabeef/awesome-android-ui,55603,4093,11.21,90,0,0,Unknown,94,115,0.8174
+tiimgreen/github-cheat-sheet,55566,4349,11.91,129,0,0,Unknown,49,75,0.6533
 golang-standards/project-layout,55516,3103,8.5,94,0,0,Makefile,44,115,0.3826
 microsoft/autogen,55361,934,2.56,2534,98,0,Python,2496,2943,0.8481
 docling-project/docling,55288,608,1.66,752,156,0,Python,826,1640,0.5037
@@ -298,9 +341,13 @@ wagoodman/dive,53510,2857,7.82,164,28,0,Go,205,373,0.5496
 microsoft/ai-agents-for-beginners,53491,466,1.28,317,0,0,Jupyter Notebook,86,86,1.0
 romkatv/powerlevel10k,53260,2569,7.03,168,33,0,Shell,2488,2604,0.9555
 vuejs/core,53177,2827,7.74,3658,269,0,TypeScript,5315,5959,0.8919
+ngosang/trackerslist,53138,3606,9.87,1,0,0,Unknown,501,510,0.9824
+google/material-design-icons,52962,4169,11.41,50,16,0,Unknown,1177,1565,0.7521
 mozilla/pdf.js,52947,5431,14.87,8487,83,0,JavaScript,9994,10425,0.9587
+firstcontributions/first-contributions,52910,3457,9.46,94834,0,0,Unknown,1328,1367,0.9715
 WerWolv/ImHex,52827,1945,5.33,726,82,0,C++,1252,1557,0.8041
 Zie619/n8n-workflows,52730,299,0.82,34,1,0,Python,81,99,0.8182
+cloudcommunity/Free-Certifications,52442,2047,5.6,115,0,0,Unknown,19,65,0.2923
 JetBrains/kotlin,52430,5137,14.06,2142,284,0,Kotlin,0,0,
 ionic-team/ionic-framework,52386,4583,12.55,6526,931,0,TypeScript,21549,22144,0.9731
 sickcodes/Docker-OSX,52238,2104,5.76,109,0,0,Shell,287,681,0.4214
@@ -322,18 +369,21 @@ DefinitelyTyped/DefinitelyTyped,51023,4903,13.42,52970,1,0,TypeScript,7543,8109,
 agalwood/Motrix,51011,2638,7.22,192,21,0,JavaScript,600,1355,0.4428
 ethereum/go-ethereum,50901,4456,12.2,8789,228,0,Go,8450,8637,0.9783
 charlax/professional-programming,50639,3775,10.34,43,0,0,Python,32,32,1.0
+justjavac/awesome-wechat-weapp,50595,3454,9.46,278,0,0,Unknown,0,0,
 FlowiseAI/Flowise,50561,1074,2.94,1578,80,0,TypeScript,1872,2510,0.7458
 poteto/hiring-without-whiteboards,50477,3281,8.98,1309,0,0,JavaScript,0,0,
 dockur/windows,50274,785,2.15,519,119,0,Shell,883,983,0.8983
 harry0703/MoneyPrinterTurbo,50099,728,1.99,145,9,0,Python,400,620,0.6452
 jgthms/bulma,50057,3697,10.12,646,22,0,CSS,2403,2743,0.876
 jesseduffield/lazydocker,50046,2487,6.81,191,45,0,Go,204,397,0.5139
+Avik-Jain/100-Days-Of-ML-Code,49788,2804,7.68,6,0,0,Unknown,0,0,
 mastodon/mastodon,49723,3668,10.04,19178,327,0,Ruby,8546,12742,0.6707
 cypress-io/cypress,49600,4023,11.01,8083,387,0,TypeScript,14128,15323,0.922
 NARKOZ/hacker-scripts,49431,3760,10.29,63,0,0,JavaScript,68,104,0.6538
 odoo/odoo,49399,4318,11.82,6182,0,0,Python,15254,18820,0.8105
 lyswhut/lx-music-desktop,49215,2399,6.57,90,112,0,TypeScript,1275,2360,0.5403
 jellyfin/jellyfin,49194,2647,7.25,5181,102,0,C#,7564,8196,0.9229
+dkhamsing/open-source-ios-apps,49169,4059,11.11,1546,37,0,Unknown,333,333,1.0
 mem0ai/mem0,49162,993,2.72,1823,273,0,Python,944,1403,0.6728
 AlistGo/alist,49136,1901,5.2,905,143,0,Go,3898,4433,0.8793
 nlohmann/json,49067,4631,12.68,1007,45,0,C++,2332,2368,0.9848
@@ -354,16 +404,23 @@ x64dbg/x64dbg,47855,3984,10.91,774,4,0,C++,2110,2686,0.7856
 lllyasviel/Fooocus,47833,942,2.58,448,21,0,Python,1420,1644,0.8637
 expo/expo,47806,3493,9.56,20672,0,0,TypeScript,17825,18171,0.981
 type-challenges/type-challenges,47792,2055,5.63,600,0,0,TypeScript,3998,37047,0.1079
+serhii-londar/open-source-mac-os-apps,47758,3048,8.34,614,0,0,Unknown,210,219,0.9589
+kelseyhightower/kubernetes-the-hard-way,47678,3532,9.67,73,0,0,Unknown,416,438,0.9498
+kamranahmedse/design-patterns-for-humans,47616,3307,9.05,50,0,0,Unknown,47,52,0.9038
 minimaxir/big-list-of-naughty-strings,47604,3865,10.58,89,0,0,Python,32,101,0.3168
 bigskysoftware/htmx,47579,2156,5.9,1049,27,0,JavaScript,1068,1673,0.6384
 skylot/jadx,47558,4739,12.97,623,34,0,Java,1636,2051,0.7977
 gogs/gogs,47557,4408,12.07,1869,96,0,Go,4255,5178,0.8217
 run-llama/llama_index,47517,1223,3.35,7648,425,0,Python,6734,6943,0.9699
 freqtrade/freqtrade,47490,3217,8.81,6336,110,0,Python,5531,5560,0.9948
+karan/Projects,47459,4631,12.68,19,0,0,Unknown,37,92,0.4022
 ggml-org/whisper.cpp,47359,1260,3.45,932,31,0,C++,873,1874,0.4658
+akullpp/awesome-java,47245,4261,11.67,733,0,0,Unknown,136,139,0.9784
 virattt/ai-hedge-fund,47080,465,1.27,41,0,0,Python,203,232,0.875
+1c7/chinese-independent-developer,47046,3091,8.46,414,0,0,Unknown,243,244,0.9959
 jakevdp/PythonDataScienceHandbook,47008,3498,9.58,28,0,0,Jupyter Notebook,79,208,0.3798
 typescript-cheatsheets/react,46989,2837,7.77,375,0,0,JavaScript,224,224,1.0
+brillout/awesome-react-components,46986,3545,9.71,343,0,0,Unknown,45,56,0.8036
 serverless/serverless,46946,3975,10.88,4857,480,0,JavaScript,5481,6599,0.8306
 v2ray/v2ray-core,46932,3839,10.51,203,247,0,Go,2593,2596,0.9988
 slab/quill,46929,4969,13.6,382,95,0,TypeScript,3269,3821,0.8555
@@ -376,10 +433,13 @@ discourse/discourse,46523,4804,13.15,33450,0,0,Ruby,0,0,
 OpenCut-app/OpenCut,46455,260,0.71,187,2,0,TypeScript,85,250,0.34
 makeplane/plane,46381,1206,3.3,6280,54,0,TypeScript,968,1570,0.6166
 metabase/metabase,46338,4052,11.09,39549,733,0,Clojure,20740,24405,0.8498
+DovAmir/awesome-design-patterns,46333,2834,7.76,30,0,0,Unknown,5,16,0.3125
 ClickHouse/ClickHouse,46253,3567,9.77,59190,746,0,C++,22901,27452,0.8342
 oobabooga/text-generation-webui,46193,1174,3.21,1237,93,0,Python,3275,4101,0.7986
 astral-sh/ruff,46172,1308,3.58,13651,402,0,Rust,6167,7807,0.7899
 Asabeneh/30-Days-Of-JavaScript,46158,2268,6.21,100,0,0,JavaScript,60,178,0.3371
+ziishaned/learn-regex,46158,3152,8.63,132,0,0,Unknown,36,87,0.4138
+dypsilon/frontend-dev-bookmarks,46153,4643,12.71,129,1,0,Unknown,82,109,0.7523
 microsoft/AI-For-Beginners,45924,1832,5.02,289,0,0,Jupyter Notebook,148,149,0.9933
 acmesh-official/acme.sh,45902,3726,10.2,1513,46,0,Shell,2389,3516,0.6795
 ghostty-org/ghostty,45814,1440,3.94,3630,1,0,Zig,1895,2023,0.9367
@@ -387,6 +447,7 @@ tldraw/tldraw,45708,1765,4.83,4436,102,0,TypeScript,1881,2158,0.8716
 microsoft/monaco-editor,45703,3562,9.75,558,187,0,JavaScript,3229,3969,0.8136
 android/architecture-samples,45597,3685,10.09,232,0,0,Kotlin,349,491,0.7108
 crewAIInc/crewAI,45589,864,2.37,1396,141,0,Python,1695,1773,0.956
+GitHubDaily/GitHubDaily,45528,2626,7.19,3,0,0,Unknown,181,714,0.2535
 prisma/prisma,45475,2454,6.72,6753,242,0,TypeScript,9438,11829,0.7979
 LeCoupa/awesome-cheatsheets,45463,3042,8.33,171,0,0,JavaScript,59,100,0.59
 jeecgboot/JeecgBoot,45366,2660,7.28,126,70,0,Java,8128,8160,0.9961
@@ -418,6 +479,7 @@ astaxie/build-web-application-with-golang,44153,4967,13.6,757,0,0,Go,183,306,0.5
 parcel-bundler/parcel,44049,3136,8.59,2600,52,0,JavaScript,5052,5521,0.9151
 NaiboWang/EasySpider,44040,2060,5.64,44,10,0,JavaScript,496,758,0.6544
 iina/iina,44012,3367,9.22,884,47,0,Swift,2511,4378,0.5735
+lukasz-madon/awesome-remote-job,43971,4084,11.18,593,0,0,Unknown,75,89,0.8427
 streamich/react-use,43950,2690,7.36,1533,256,0,TypeScript,245,609,0.4023
 square/retrofit,43904,5662,15.5,1344,4,0,HTML,2637,2765,0.9537
 babel/babel,43898,4180,11.44,6555,452,0,TypeScript,8467,9057,0.9349
@@ -442,11 +504,13 @@ apache/spark,42955,4395,12.03,9,0,0,Scala,3,17,0.1765
 Light-City/CPlusPlusThings,42941,2430,6.65,72,0,0,C++,218,230,0.9478
 Kong/kong,42909,4129,11.3,6501,145,0,Lua,4532,4590,0.9874
 ziglang/zig,42856,3868,10.59,9540,21,0,Zig,10191,13518,0.7539
+alex/what-happens-when,42794,4505,12.33,108,0,0,Unknown,54,296,0.1824
 faif/python-patterns,42783,5023,13.75,289,0,0,Python,86,97,0.8866
 tmux/tmux,42777,3931,10.76,3,39,0,C,3863,3900,0.9905
 mitmproxy/mitmproxy,42587,5865,16.06,2741,79,0,Python,3279,3643,0.9001
 bannedbook/fanqiang,42505,4072,11.15,3,3,0,Kotlin,485,812,0.5973
 DIYgod/RSSHub,42495,2898,7.93,12117,0,0,TypeScript,5965,6322,0.9435
+k88hudson/git-flight-rules,42481,4247,11.63,226,0,0,Unknown,57,73,0.7808
 jgm/pandoc,42480,5832,15.97,1761,153,0,Haskell,7216,8185,0.8816
 hiroi-sora/Umi-OCR,42465,1442,3.95,58,31,0,Python,518,842,0.6152
 exo-explore/exo,42396,622,1.7,610,13,0,Python,636,738,0.8618
@@ -466,10 +530,12 @@ siyuan-note/siyuan,41749,2017,5.52,700,878,0,TypeScript,15881,16212,0.9796
 apache/dubbo,41702,5011,13.72,6023,113,0,Java,6562,7368,0.8906
 Aider-AI/aider,41701,1034,2.83,284,93,0,Python,2813,3980,0.7068
 ray-project/ray,41685,3421,9.37,30102,122,0,Python,19498,22430,0.8693
+byoungd/English-level-up-tips,41674,3205,8.77,26,0,0,Unknown,78,106,0.7358
 nwjs/nw.js,41568,5178,14.18,576,0,0,JavaScript,6484,7435,0.8721
 usebruno/bruno,41559,1258,3.44,2065,160,0,JavaScript,2436,3911,0.6229
 yarnpkg/yarn,41532,3701,10.13,1655,153,1,JavaScript,4742,6618,0.7165
 logseq/logseq,41471,2116,5.79,3133,152,0,Clojure,7143,8103,0.8815
+karanpratapsingh/system-design,41450,1301,3.56,12,0,0,Unknown,21,23,0.913
 dcloudio/uni-app,41448,2797,7.66,555,0,0,JavaScript,4387,5056,0.8677
 psf/black,41425,2916,7.98,1734,52,0,Python,2486,2778,0.8949
 dylanaraps/pure-bash-bible,41411,2826,7.74,28,0,0,Shell,33,77,0.4286
@@ -490,6 +556,7 @@ vuetifyjs/vuetify,40987,3465,9.49,4666,641,0,TypeScript,14816,15284,0.9694
 janhq/jan,40906,935,2.56,3455,97,0,TypeScript,3078,3327,0.9252
 tabler/tabler,40822,2958,8.1,787,51,0,HTML,1063,1150,0.9243
 jingyaogong/minimind,40789,590,1.62,9,2,0,Python,529,551,0.9601
+LC044/WeChatMsg,40615,1153,3.16,62,0,0,Unknown,0,0,
 zen-browser/desktop,40558,711,1.95,790,155,0,JavaScript,7999,8489,0.9423
 calcom/cal.com,40506,1813,4.96,12914,611,0,TypeScript,8083,9063,0.8919
 bradtraversy/50projects50days,40476,1939,5.31,44,0,0,CSS,0,0,
@@ -499,6 +566,7 @@ saadeghi/daisyui,40441,1926,5.27,528,184,0,Svelte,2084,2115,0.9853
 chakra-ui/chakra-ui,40375,2396,6.56,2929,1000,0,TypeScript,4280,4287,0.9984
 twentyhq/twenty,40323,1194,3.27,10158,59,0,TypeScript,5939,6143,0.9668
 QSCTech/zju-icicles,40320,3541,9.69,232,0,0,HTML,69,78,0.8846
+zbezj/HEU_KMS_Activator,40264,2451,6.71,0,49,0,Unknown,31,194,0.1598
 aria2/aria2,40228,5581,15.28,254,24,0,C++,827,1914,0.4321
 wg/wrk,40116,5102,13.97,0,0,0,C,262,407,0.6437
 remoteintech/remote-jobs,40066,3800,10.4,1374,0,0,Nunjucks,196,203,0.9655
@@ -510,6 +578,7 @@ HeyPuter/puter,39852,736,2.02,1328,8,0,JavaScript,854,1016,0.8406
 evanw/esbuild,39845,3555,9.73,257,309,0,Go,3313,3858,0.8587
 bmad-code-org/BMAD-METHOD,39769,330,0.9,401,24,0,JavaScript,744,826,0.9007
 trpc/trpc,39698,2060,5.64,3854,231,0,TypeScript,1191,1339,0.8895
+freefq/free,39691,2101,5.75,0,0,0,Unknown,258,810,0.3185
 go-gorm/gorm,39670,4518,12.37,775,11,0,Go,5611,6096,0.9204
 danielmiessler/Fabric,39607,795,2.18,605,387,0,Go,816,837,0.9749
 videojs/video.js,39519,5777,15.82,1819,334,0,JavaScript,4817,5417,0.8892
@@ -588,6 +657,7 @@ ManimCommunity/manim,37111,2120,5.8,2042,33,0,Python,1363,1739,0.7838
 huiyadanli/RevokeMsgPatcher,37079,2423,6.63,12,21,0,C#,945,995,0.9497
 openai/gym,37079,3603,9.86,999,19,0,Python,1727,1840,0.9386
 satwikkansal/wtfpython,36917,3114,8.53,113,2,0,Python,158,224,0.7054
+AobingJava/JavaFamily,36906,2309,6.32,2,0,0,Unknown,60,66,0.9091
 exelban/stats,36901,2475,6.78,433,323,0,Swift,2442,2464,0.9911
 babysor/MockingBird,36878,1675,4.59,82,1,0,Python,415,892,0.4652
 drawdb-io/drawdb,36844,967,2.65,351,0,0,JavaScript,215,337,0.638
@@ -601,16 +671,21 @@ inkonchain/ink-kit,36676,490,1.34,91,0,0,TypeScript,3,5,0.6
 gkd-kit/gkd,36668,979,2.68,10,64,0,Kotlin,726,736,0.9864
 roboflow/supervision,36659,1197,3.28,1120,35,0,Python,431,517,0.8337
 markedjs/marked,36638,5342,14.63,1643,166,0,TypeScript,1643,1652,0.9946
+alebcay/awesome-shell,36613,4263,11.67,307,0,0,Unknown,23,64,0.3594
 open-guides/og-aws,36592,3525,9.65,498,0,0,Shell,88,228,0.386
 DavidHDev/react-bits,36541,580,1.59,157,0,0,JavaScript,475,477,0.9958
 duckdb/duckdb,36518,2813,7.7,9640,57,0,C++,6055,6592,0.9185
 date-fns/date-fns,36506,4172,11.42,1068,122,0,TypeScript,1382,2038,0.6781
 chatanywhere/GPT_API_free,36503,1051,2.88,1,0,0,Python,365,419,0.8711
 huggingface/pytorch-image-models,36461,2592,7.1,524,75,0,Python,978,1026,0.9532
+karpathy/LLM101n,36450,651,1.78,0,0,0,Unknown,0,0,
 fengdu78/Coursera-ML-AndrewNg-Notes,36432,3047,8.34,14,0,0,HTML,15,69,0.2174
 typeorm/typeorm,36372,3661,10.02,2433,40,0,TypeScript,8135,8557,0.9507
 juanfont/headscale,36251,2087,5.71,1233,132,0,Go,1158,1236,0.9369
+SheetJS/sheetjs,36204,4843,13.26,106,0,0,Unknown,2267,2386,0.9501
 hankcs/HanLP,36176,4169,11.41,79,62,0,Python,1426,1434,0.9944
+slatedocs/slate,36156,4559,12.48,298,28,0,Unknown,559,609,0.9179
+formulahendry/955.WLB,36152,2538,6.95,18,0,0,Unknown,81,263,0.308
 lerna/lerna,36087,3748,10.26,1021,249,2,TypeScript,2313,2693,0.8589
 myshell-ai/OpenVoice,36057,831,2.28,18,0,0,Python,73,348,0.2098
 geekxh/hello-algorithm,36017,2110,5.78,26,0,0,Java,33,44,0.75
@@ -620,6 +695,7 @@ XingangPan/DragGAN,35968,1026,2.81,18,0,0,Python,46,192,0.2396
 servo/servo,35928,5142,14.08,23125,5,0,Rust,12350,15237,0.8105
 opentofu/manifesto,35887,939,2.57,765,0,0,HTML,14,26,0.5385
 qbittorrent/qBittorrent,35881,5147,14.09,4130,0,0,C++,14821,17281,0.8576
+deepseek-ai/awesome-deepseek-integration,35834,788,2.16,289,0,0,Unknown,154,158,0.9747
 ShareX/ShareX,35817,4534,12.41,774,85,0,C#,6614,7180,0.9212
 reworkd/AgentGPT,35786,1067,2.92,541,12,0,TypeScript,337,469,0.7186
 fastify/fastify,35768,3448,9.44,3277,309,0,JavaScript,2073,2147,0.9655
@@ -629,6 +705,7 @@ mattermost/mattermost,35731,3920,10.73,20564,937,0,TypeScript,8657,9195,0.9415
 YunaiV/ruoyi-vue-pro,35712,1870,5.12,73,54,0,Java,742,743,0.9987
 XTLS/Xray-core,35704,1946,5.33,1221,106,0,Go,2758,2780,0.9921
 amruthpillai/reactive-resume,35644,2175,5.95,730,110,0,TypeScript,1802,1856,0.9709
+jaywcjlove/linux-command,35634,3404,9.32,370,32,0,Markdown,133,209,0.6364
 veggiemonk/awesome-docker,35625,4187,11.46,991,1,0,Makefile,136,143,0.951
 jondot/awesome-react-native,35622,4000,10.95,912,0,0,JavaScript,37,75,0.4933
 umami-software/umami,35597,2061,5.64,871,106,0,TypeScript,1981,2075,0.9547
@@ -649,7 +726,9 @@ bumptech/glide,35037,4626,12.67,605,54,0,Java,3935,4517,0.8712
 jax-ml/jax,35034,2691,7.37,17834,134,0,Python,5193,6879,0.7549
 pbatard/rufus,35030,5223,14.3,1,88,0,C,2619,2629,0.9962
 zsh-users/zsh-autosuggestions,34971,4517,12.37,116,0,0,Shell,458,620,0.7387
+geekan/HowToLiveLonger,34967,1423,3.9,14,0,0,Unknown,103,140,0.7357
 TriliumNext/Trilium,34965,3212,8.79,1836,349,0,TypeScript,4326,5198,0.8322
+sorrycc/awesome-javascript,34922,4269,11.69,404,0,0,Unknown,89,93,0.957
 typicode/husky,34847,4277,11.71,262,80,0,JavaScript,1031,1111,0.928
 netty/netty,34844,5599,15.33,5074,0,0,Java,6282,6850,0.9171
 geekcomputers/Python,34807,5213,14.27,2017,0,0,Python,159,530,0.3
@@ -665,12 +744,15 @@ alan2207/bulletproof-react,34598,1744,4.77,70,0,0,TypeScript,77,117,0.6581
 xinntao/Real-ESRGAN,34569,1694,4.64,21,10,0,Python,174,753,0.2311
 laravel/framework,34569,4805,13.16,17582,911,0,PHP,19104,19154,0.9974
 anthropics/claude-cookbooks,34556,936,2.56,147,0,0,Jupyter Notebook,132,133,0.9925
+kuchin/awesome-cto,34479,3369,9.22,18,0,0,Unknown,14,14,1.0
 danny-avila/LibreChat,34472,1121,3.07,2917,80,0,TypeScript,3956,4196,0.9428
 google/langextract,34467,243,0.67,78,12,0,Python,92,180,0.5111
 hyprwm/Hyprland,34427,1453,3.98,2295,107,0,C++,7431,7490,0.9921
 directus/directus,34418,4835,13.24,8553,357,0,TypeScript,9403,9752,0.9642
 jaredpalmer/formik,34384,3189,8.73,836,200,0,TypeScript,1562,2268,0.6887
 mpv-player/mpv,34360,4895,13.4,3796,88,0,C,9871,10848,0.9099
+xitu/gold-miner,34347,3778,10.34,3563,0,0,Unknown,5591,5602,0.998
+nodejs/node-v0.x-archive,34341,6130,16.78,218,0,0,Unknown,6379,6379,1.0
 python-poetry/poetry,34334,2931,8.02,2428,147,0,Python,5813,6319,0.9199
 schollz/croc,34332,3065,8.39,287,182,0,Go,562,564,0.9965
 pnpm/pnpm,34289,3693,10.11,3038,1000,0,TypeScript,3214,5233,0.6142
@@ -696,6 +778,7 @@ ehang-io/nps,33939,2682,7.34,74,59,0,Go,698,1206,0.5788
 TheAlgorithms/C-Plus-Plus,33917,3523,9.65,705,0,0,C++,323,331,0.9758
 zxing/zxing,33877,5262,14.41,345,32,0,Java,1336,1340,0.997
 harness/harness,33868,4413,12.08,1053,55,0,Go,1937,2017,0.9603
+GorvGoyl/Clone-Wars,33855,1923,5.26,130,0,0,Unknown,70,87,0.8046
 jqlang/jq,33846,4981,13.64,685,15,0,C,1963,2322,0.8454
 CMU-Perceptual-Computing-Lab/openpose,33840,3241,8.87,174,15,0,C++,1667,2007,0.8306
 halfrost/LeetCode-Go,33813,3156,8.64,178,4,0,Go,64,82,0.7805
@@ -724,9 +807,11 @@ pcottle/learnGitBranching,33203,4955,13.57,652,0,0,JavaScript,478,531,0.9002
 drizzle-team/drizzle-orm,33193,1719,4.71,660,170,0,TypeScript,2242,3469,0.6463
 utmapp/UTM,33160,2523,6.91,277,128,0,Swift,2610,3586,0.7278
 wailsapp/wails,33158,2640,7.23,1690,292,0,Go,2092,2321,0.9013
+awesome-foss/awesome-sysadmin,33147,4094,11.21,342,0,0,Unknown,90,105,0.8571
 bilibili/ijkplayer,33125,4662,12.76,35,0,0,C,2547,5384,0.4731
 anthropics/prompt-eng-interactive-tutorial,33123,706,1.93,1,0,0,Jupyter Notebook,4,35,0.1143
 adobe/brackets,33106,5205,14.25,4332,69,2,JavaScript,7066,9683,0.7297
+VoltAgent/awesome-openclaw-skills,33099,43,0.12,63,0,0,Unknown,39,40,0.975
 immutable-js/immutable-js,33098,4268,11.69,622,93,0,TypeScript,1172,1267,0.925
 mckaywrigley/chatbot-ui,33081,1094,3.0,281,0,0,TypeScript,817,1002,0.8154
 aquasecurity/trivy,33039,2524,6.91,3498,85,0,Go,2865,3031,0.9452
@@ -746,12 +831,14 @@ ocrmypdf/OCRmyPDF,32883,4462,12.22,169,52,0,Python,1185,1322,0.8964
 nothings/stb,32881,4306,11.79,291,0,0,C,717,940,0.7628
 KeygraphHQ/shannon,32876,163,0.45,60,0,0,TypeScript,70,80,0.875
 fish-shell/fish-shell,32853,5051,13.83,2192,62,0,Rust,7522,8018,0.9381
+ibraheemdev/modern-unix,32817,1882,5.15,15,0,0,Unknown,30,84,0.3571
 zeromicro/go-zero,32781,2040,5.59,2435,149,0,Go,1790,1956,0.9151
 backstage/backstage,32764,2235,6.12,20414,496,0,TypeScript,7181,7484,0.9595
 openai/CLIP,32747,1909,5.23,29,0,0,Jupyter Notebook,192,443,0.4334
 google/comprehensive-rust,32713,1174,3.21,2403,0,0,Rust,242,362,0.6685
 block/goose,32708,562,1.54,4311,123,0,Rust,1539,1821,0.8451
 alibaba/nacos,32705,2824,7.73,3344,89,0,Java,9280,9489,0.978
+mli/paper-reading,32662,1599,4.38,15,0,0,Unknown,0,0,
 stanfordnlp/dspy,32662,1154,3.16,1471,106,0,Python,1238,1516,0.8166
 qier222/YesPlayMusic,32640,1977,5.41,292,32,0,Vue,1200,1834,0.6543
 MonitorControl/MonitorControl,32625,3095,8.47,220,26,0,Swift,994,1010,0.9842
@@ -765,6 +852,8 @@ yewstack/yew,32461,3005,8.23,1888,38,0,Rust,1175,1269,0.9259
 glanceapp/glance,32439,680,1.86,110,33,0,Go,294,507,0.5799
 beego/beego,32428,5122,14.02,1328,43,0,Go,3380,3382,0.9994
 ItzCrazyKns/Vane,32421,699,1.91,83,33,0,TypeScript,433,615,0.7041
+ziadoz/awesome-php,32412,4486,12.28,457,0,0,Unknown,153,155,0.9871
+cursor/cursor,32401,1093,2.99,47,0,0,Unknown,0,0,
 k3s-io/k3s,32386,2839,7.77,4468,957,0,Go,7279,7388,0.9852
 vercel/swr,32333,2323,6.36,816,126,0,TypeScript,831,973,0.8541
 datalab-to/marker,32300,860,2.35,228,71,0,Python,324,651,0.4977
@@ -777,17 +866,21 @@ google/material-design-lite,32215,4071,11.15,655,14,1,HTML,1814,2204,0.823
 yunjey/pytorch-tutorial,32208,3286,9.0,28,0,0,Python,114,180,0.6333
 facebookresearch/fairseq,32182,3114,8.53,236,16,0,Python,3060,4260,0.7183
 apache/kafka,32153,5319,14.56,12791,0,0,Java,0,0,
+The-Run-Philosophy-Organization/run,32145,1429,3.91,172,0,0,Unknown,216,261,0.8276
 frappe/erpnext,32143,5388,14.75,28748,1000,0,Python,15816,17763,0.8904
 PDFMathTranslate/PDFMathTranslate,32137,549,1.5,136,24,0,Python,732,858,0.8531
 linera-io/linera-protocol,32134,1541,4.22,3558,31,0,Rust,903,1452,0.6219
+ashishpatel26/500-AI-Machine-learning-Deep-learning-Computer-vision-NLP-Projects-with-code,32113,1892,5.18,3,0,0,Unknown,26,74,0.3514
 NginxProxyManager/nginx-proxy-manager,32022,3000,8.21,683,86,0,TypeScript,2365,3193,0.7407
 cockroachdb/cockroach,32012,4414,12.08,72895,0,0,Go,75894,82531,0.9196
 nicolargo/glances,32006,5209,14.26,773,56,0,Python,2037,2162,0.9422
 lovell/sharp,31992,4584,12.55,311,107,0,JavaScript,3912,4030,0.9707
+linexjlin/GPTs,31977,849,2.32,45,0,0,Unknown,21,31,0.6774
 PostHog/posthog,31940,2236,6.12,34783,86,0,Python,6365,9101,0.6994
 casey/just,31936,3552,9.72,1376,131,0,Rust,1009,1353,0.7458
 hasura/graphql-engine,31914,2821,7.72,2110,300,0,TypeScript,4165,6410,0.6498
 dokku/dokku,31898,4657,12.75,4526,317,0,Shell,2818,2844,0.9909
+Trinea/android-open-project,31843,4446,12.17,204,0,0,Unknown,75,87,0.8621
 niklasvh/html2canvas,31811,5350,14.65,186,45,0,TypeScript,1664,2633,0.632
 Chanzhaoyu/chatgpt-web,31797,1124,3.08,159,43,0,Vue,1746,1746,1.0
 valinet/ExplorerPatcher,31791,1673,4.58,19,296,0,C,2359,2662,0.8862
@@ -827,6 +920,7 @@ donnemartin/interactive-coding-challenges,31228,3967,10.86,176,0,0,Python,32,69,
 SagerNet/sing-box,31209,1348,3.69,193,501,0,Go,2803,2967,0.9447
 parallax/jsPDF,31173,5937,16.25,753,41,0,JavaScript,2485,2588,0.9602
 motiondivision/motion,31161,2670,7.31,1197,0,0,TypeScript,1745,1917,0.9103
+mqyqingfeng/Blog,31123,3283,8.99,3,0,0,Unknown,101,400,0.2525
 DevToys-app/DevToys,31058,1622,4.44,501,39,0,C#,664,979,0.6782
 docsifyjs/docsify,31040,3396,9.3,783,16,0,JavaScript,1230,1311,0.9382
 SortableJS/Sortable,31027,4463,12.22,248,31,0,JavaScript,1346,1825,0.7375
@@ -836,6 +930,7 @@ pear-devs/pear-desktop,30995,2515,6.89,1630,87,0,TypeScript,1380,1962,0.7034
 eriklindernoren/ML-From-Scratch,30984,3319,9.09,9,0,0,Python,37,78,0.4744
 symfony/symfony,30971,5908,16.18,25603,603,0,PHP,21436,21788,0.9838
 containers/podman,30948,3050,8.35,12221,236,0,Go,9562,10476,0.9128
+OAI/OpenAPI-Specification,30940,4389,12.02,1794,14,0,Markdown,2307,2410,0.9573
 iawia002/lux,30934,2935,8.04,304,86,0,Go,549,1074,0.5112
 Lightning-AI/pytorch-lightning,30911,2535,6.94,9341,172,0,Python,6662,7499,0.8884
 ascoders/weekly,30893,3276,8.97,136,193,0,JavaScript,366,370,0.9892
@@ -848,6 +943,7 @@ aristocratos/btop,30798,1767,4.84,372,54,0,C++,481,905,0.5315
 wshobson/agents,30791,227,0.62,53,0,0,Python,58,59,0.9831
 AMAI-GmbH/AI-Expert-Roadmap,30787,1961,5.37,14,0,0,JavaScript,54,70,0.7714
 mantinedev/mantine,30764,1887,5.17,1591,291,0,TypeScript,3427,3456,0.9916
+XIU2/TrackersListCollection,30750,2349,6.43,7,0,0,Unknown,0,0,
 blakeblackshear/frigate,30728,2599,7.12,3747,76,0,TypeScript,5803,5889,0.9854
 transloadit/uppy,30666,3766,10.31,3276,392,0,TypeScript,2351,2520,0.9329
 refined-github/refined-github,30656,3675,10.06,3608,186,0,TypeScript,4611,4704,0.9802
@@ -863,10 +959,14 @@ sequelize/sequelize,30349,5709,15.63,5023,490,0,TypeScript,9522,10425,0.9134
 chinabugotech/hutool,30342,4348,11.9,515,156,0,Java,3090,3092,0.9994
 pmndrs/react-three-fiber,30331,2569,7.03,690,131,0,TypeScript,1166,1172,0.9949
 trailofbits/algo,30329,3585,9.82,686,4,0,Python,1585,1650,0.9606
+herrbischoff/awesome-macos-command-line,30324,3820,10.46,104,0,0,Unknown,0,0,
+Binaryify/NeteaseCloudMusicApi,30290,3547,9.71,292,0,0,Unknown,1189,1336,0.89
+waydabber/BetterDisplay,30279,1597,4.37,2,119,0,Unknown,2817,2991,0.9418
 facebook/folly,30277,5028,13.77,13,281,0,C++,943,1249,0.755
 tatsu-lab/stanford_alpaca,30271,1094,3.0,6,0,0,Python,98,268,0.3657
 jobbole/awesome-python-cn,30263,3779,10.35,51,0,0,Makefile,18,35,0.5143
 songquanpeng/one-api,30262,1052,2.88,287,55,0,JavaScript,897,1798,0.4989
+joshbuchea/HEAD,30241,3609,9.88,88,0,0,Unknown,73,93,0.7849
 cfenollosa/os-tutorial,30225,4179,11.44,11,0,0,C,106,182,0.5824
 AvaloniaUI/Avalonia,30214,4476,12.25,5658,120,0,C#,6492,8326,0.7797
 openai/openai-python,30213,1960,5.37,1053,369,0,Python,1043,1206,0.8648
@@ -882,8 +982,10 @@ StevenBlack/hosts,29971,5078,13.9,507,833,0,Python,2073,2208,0.9389
 xuxueli/xxl-job,29965,3754,10.28,124,42,0,Java,3197,3340,0.9572
 kingToolbox/WindTerm,29959,2342,6.41,1,32,0,C,587,2918,0.2012
 encode/django-rest-framework,29930,5486,15.02,3108,21,0,Python,3907,3946,0.9901
+AllThingsSmitty/css-protips,29909,3845,10.53,73,0,0,Unknown,62,63,0.9841
 square/leakcanary,29909,3966,10.86,933,43,0,Kotlin,1514,1656,0.9143
 ageron/handson-ml2,29907,2617,7.16,65,0,0,Jupyter Notebook,304,518,0.5869
+google-research/tuning_playbook,29902,1145,3.13,14,0,0,Unknown,34,45,0.7556
 GoogleChrome/lighthouse,29893,3653,10.0,5564,130,0,JavaScript,8772,9259,0.9474
 zellij-org/zellij,29807,2015,5.52,1395,65,0,Rust,1197,2532,0.4727
 hashicorp/consul,29787,4507,12.34,14142,256,0,Go,4285,5580,0.7679
@@ -894,5 +996,6 @@ nvim-lua/kickstart.nvim,29744,1354,3.71,265,0,0,Lua,637,670,0.9507
 qarmin/czkawka,29737,2014,5.51,469,40,0,Rust,694,1118,0.6208
 openssl/openssl,29707,4800,13.14,145,297,0,C,9973,11184,0.8917
 filamentphp/filament,29694,2181,5.97,5806,823,0,PHP,3306,3327,0.9937
+JushBJJ/Mr.-Ranedeer-AI-Tutor,29679,1074,2.94,0,3,0,Unknown,34,49,0.6939
 nginx/nginx,29661,3912,10.71,157,14,0,C,252,476,0.5294
 sampotts/plyr,29639,4041,11.06,393,93,0,JavaScript,1225,2116,0.5789

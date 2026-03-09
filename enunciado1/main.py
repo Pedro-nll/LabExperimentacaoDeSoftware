@@ -215,6 +215,32 @@ def parse_repositories(raw: list[dict]) -> pd.DataFrame:
 
 
 # ─────────────────────────────────────────────
+# Filter repositories for software engineering relevance
+# ─────────────────────────────────────────────
+def filter_repositories(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Filter out repositories that:
+    - Don't have a programming language associated (language == "Unknown" or "Markdown")
+    - Don't have PRs and/or issues (merged_prs == 0 and total_issues == 0)
+    
+    Returns: (kept_df, filtered_out_df)
+    """
+    # Define non-programming languages to exclude
+    non_programming_languages = ["Unknown", "Markdown"]
+    
+    # Condition to keep: has programming language and has PRs or issues
+    keep_condition = (
+        ~df["language"].isin(non_programming_languages) &
+        ~((df["merged_prs"] == 0) & (df["total_issues"] == 0))
+    )
+    
+    kept = df[keep_condition]
+    filtered_out = df[~keep_condition]
+    
+    return kept, filtered_out
+
+
+# ─────────────────────────────────────────────
 # Display helpers
 # ─────────────────────────────────────────────
 def print_section(title: str) -> None:
@@ -234,48 +260,51 @@ def summarise(series: pd.Series) -> None:
 # Main analysis
 # ─────────────────────────────────────────────
 def main():
-    if not GITHUB_TOKEN:
-        raise EnvironmentError(
-            "GITHUB_TOKEN is not set. Export it before running:\n"
-            "  export GITHUB_TOKEN=ghp_..."
-        )
-
-    print("Fetching top 100 most-starred repositories from GitHub…")
-    
-    # Incrementally fetch, parse, and save repositories
-    all_repos = []
-    df = pd.DataFrame()
-    cursor = None
-    out_path = "repos_data_backup.csv"
-    
-    while len(all_repos) < TOTAL_REPOS:
-        search = run_query(cursor)
-        nodes = search["nodes"]
-        all_repos.extend(nodes)
+    if os.path.exists("repos_data.csv"):
+        print("repos_data.csv exists, loading existing data and proceeding to analysis and filtering.")
+        df = pd.read_csv("repos_data.csv")
+    else:
+        if not GITHUB_TOKEN:
+            raise EnvironmentError(
+                "GITHUB_TOKEN is not set. Export it before running:\n"
+                "  export GITHUB_TOKEN=ghp_..."
+            )
         
-        collected = min(len(all_repos), TOTAL_REPOS)
-        print(f"  Collected {collected} / {TOTAL_REPOS} …")
+        print("Fetching top 1000 most-starred repositories from GitHub…")
         
-        # Parse the current batch and append to DataFrame
-        batch_df = parse_repositories(nodes)
-        df = pd.concat([df, batch_df], ignore_index=True)
+        # Incrementally fetch, parse, and save repositories
+        all_repos = []
+        df = pd.DataFrame()
+        cursor = None
+        out_path = "repos_data_backup.csv"
         
-        # Update CSV after each page
-        df.to_csv(out_path, index=False)
-        print(f"  ✓ Updated '{out_path}'")
+        while len(all_repos) < TOTAL_REPOS:
+            search = run_query(cursor)
+            nodes = search["nodes"]
+            all_repos.extend(nodes)
+            
+            collected = min(len(all_repos), TOTAL_REPOS)
+            print(f"  Collected {collected} / {TOTAL_REPOS} …")
+            
+            # Parse the current batch and append to DataFrame
+            batch_df = parse_repositories(nodes)
+            df = pd.concat([df, batch_df], ignore_index=True)
+            
+            # Update CSV after each page
+            df.to_csv(out_path, index=False)
+            print(f"  ✓ Updated '{out_path}'")
+            
+            page_info = search["pageInfo"]
+            if not page_info["hasNextPage"] or len(all_repos) >= TOTAL_REPOS:
+                break
+            
+            cursor = page_info["endCursor"]
+            time.sleep(1)  # respect GitHub secondary rate limits
         
-        page_info = search["pageInfo"]
-        if not page_info["hasNextPage"] or len(all_repos) >= TOTAL_REPOS:
-            break
-        
-        cursor = page_info["endCursor"]
-        time.sleep(1)  # respect GitHub secondary rate limits
-    
-    # Trim to exact total if we exceeded it
-    df = df.iloc[:TOTAL_REPOS]
-    df.to_csv(out_path, index=False)
-    
-    print(f"\n✓ {len(df)} repositories collected and parsed.\n")
+        # Trim to exact total if we exceeded it
+        df = df.iloc[:TOTAL_REPOS]
+        df.to_csv("repos_data.csv", index=False)
+        print(f"\n✓ {len(df)} repositories collected and parsed.\n")
 
     # ── RQ01: Are popular systems mature/old? ──────────────────────────────
     print_section("RQ01 – Repository Age (years)")
@@ -343,6 +372,33 @@ def main():
         showindex=False,
         floatfmt=".1f",
     ))
+
+    # ── Filter repositories for software engineering relevance ───────────
+    print_section("Filtering Repositories")
+    print("Filtering out repositories that don't have a programming language")
+    print("or don't have PRs and/or issues associated with them.")
+    
+    # Load existing data
+    df = pd.read_csv("repos_data.csv")
+    print(f"Loaded {len(df)} repositories from repos_data.csv")
+    
+    kept_df, filtered_out_df = filter_repositories(df)
+    
+    print(f"Original repositories: {len(df)}")
+    print(f"Kept repositories: {len(kept_df)}")
+    print(f"Filtered out repositories: {len(filtered_out_df)}")
+    
+    # Save filtered out repos to .txt file
+    filtered_out_path = "filtered_out_repos.txt"
+    with open(filtered_out_path, "w") as f:
+        for repo in filtered_out_df["repo"]:
+            f.write(f"{repo}\n")
+    print(f"✓ Filtered out repositories saved to '{filtered_out_path}'")
+    
+    # Save kept repositories back to CSV
+    kept_path = "repos_data.csv"
+    kept_df.to_csv(kept_path, index=False)
+    print(f"✓ Filtered repositories saved to '{kept_path}'")
 
 
 if __name__ == "__main__":
