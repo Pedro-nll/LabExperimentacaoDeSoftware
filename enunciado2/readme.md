@@ -90,7 +90,12 @@ Restricoes:
 - `python enunciado2/scripts/setup_ck.py --ck-dir enunciado2/tools/ck --build`
 
 3. Piloto de clone + CK em 1 repositorio
-- `python enunciado2/scripts/run_ck_pipeline.py --repos-csv enunciado2/data/java_top1000.csv --sample-size 1 --workspace enunciado2/work --output enunciado2/output`
+- `python enunciado2/scripts/run_ck_pipeline.py --repos-csv enunciado2/data/java_top1000.csv --sample-size 1 --workspace enunciado2/work --output enunciado2/output --workers 1`
 
-4. Consolidacao das metricas do piloto
+4. Execucao paralela do lote completo
+- `python enunciado2/scripts/run_ck_pipeline.py --repos-csv enunciado2/data/java_top1000.csv --sample-size 1000 --workspace enunciado2/work --output enunciado2/output --workers 4`
+
+python enunciado2/scripts/run_ck_pipeline.py --repos-csv enunciado2/data/java_top1000.csv --sample-size 1000 --workspace enunciado2/work --output enunciado2/output --ck-dir enunciado2/tools/ck --workers 4 --timeout-minutes 30
+
+5. Consolidacao das metricas do piloto
 - `python enunciado2/scripts/summarize_ck_metrics.py --input-dir enunciado2/output --output-csv enunciado2/output/pilot_metrics_summary.csv`

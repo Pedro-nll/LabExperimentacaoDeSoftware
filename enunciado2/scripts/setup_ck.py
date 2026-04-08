@@ -8,7 +8,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-CK_REPO_URL = "https://github.com/mauricioaniche/ck.git"
+CK_REPO_URL = "https://www.github.com/mauricioaniche/ck.git"
 
 
 def parse_args() -> argparse.Namespace:

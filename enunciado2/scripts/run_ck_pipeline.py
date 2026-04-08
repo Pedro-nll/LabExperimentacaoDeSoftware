@@ -5,9 +5,11 @@ from __future__ import annotations
 
 import argparse
 import csv
+import os
 import shutil
 import subprocess
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 EXPECTED_JAR_GLOB = "*-jar-with-dependencies.jar"
@@ -21,6 +23,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", required=True, help="Output directory for CK files")
     parser.add_argument("--ck-jar", default="", help="Path to CK standalone jar")
     parser.add_argument("--ck-dir", default="enunciado2/tools/ck", help="Path to CK repository")
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=min(4, max(1, (os.cpu_count() or 2) // 2)),
+        help="Number of repositories to process in parallel",
+    )
     parser.add_argument("--use-jars", default="true", choices=["true", "false"])
     parser.add_argument("--max-files-per-partition", default="0")
     parser.add_argument("--variables-and-fields", default="false", choices=["true", "false"])
@@ -112,6 +120,57 @@ def write_run_log(path: Path, rows: list[dict[str, str]]) -> None:
             writer.writerow(row)
 
 
+def read_run_log(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+
+    with path.open("r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        return [row for row in reader]
+
+
+def cleanup_repo_dir(repo_dir: Path) -> None:
+    if repo_dir.exists():
+        shutil.rmtree(repo_dir)
+
+
+def process_repo(
+    row: dict[str, str],
+    ck_jar: Path,
+    workspace: Path,
+    output_root: Path,
+    use_jars: str,
+    max_files: str,
+    variables_and_fields: str,
+    timeout_minutes: int,
+) -> dict[str, str]:
+    owner = row["owner"]
+    repo = row["repo"]
+    full_name = f"{owner}/{repo}"
+    clone_url = f"https://github.com/{full_name}.git"
+
+    repo_dir = workspace / full_name.replace("/", "__")
+    repo_output = output_root / full_name.replace("/", "__")
+
+    try:
+        print(f"Processing {full_name}")
+        clone_repo(clone_url, repo_dir)
+        run_ck(
+            ck_jar=ck_jar,
+            project_dir=repo_dir,
+            output_dir=repo_output,
+            use_jars=use_jars,
+            max_files=max_files,
+            variables_and_fields=variables_and_fields,
+            timeout_minutes=timeout_minutes,
+        )
+        return {"owner": owner, "repo": repo, "status": "ok", "message": ""}
+    except Exception as exc:  # noqa: BLE001
+        return {"owner": owner, "repo": repo, "status": "error", "message": str(exc)}
+    finally:
+        cleanup_repo_dir(repo_dir)
+
+
 def main() -> int:
     args = parse_args()
     repos_csv = Path(args.repos_csv).resolve()
@@ -125,41 +184,57 @@ def main() -> int:
     repos = read_repos(repos_csv)
     if not repos:
         raise RuntimeError("No repositories found in CSV.")
+    if args.workers < 1:
+        raise ValueError("--workers must be at least 1")
 
-    run_log: list[dict[str, str]] = []
+    run_log_path = output_root / "pipeline_run_log.csv"
+    run_log: list[dict[str, str]] = read_run_log(run_log_path)
+    completed = {
+        (row["owner"], row["repo"])
+        for row in run_log
+        if row.get("status") == "ok"
+    }
+
     selected = repos[: max(1, args.sample_size)]
 
+    pending = []
     for row in selected:
         owner = row["owner"]
         repo = row["repo"]
-        full_name = f"{owner}/{repo}"
-        clone_url = f"https://github.com/{full_name}.git"
+        repo_output = output_root / f"{owner}__{repo}"
+        if (owner, repo) in completed and (repo_output / "class.csv").exists():
+            print(f"Skipping already processed {owner}/{repo}")
+            continue
+        pending.append(row)
 
-        repo_dir = workspace / full_name.replace("/", "__")
-        repo_output = output_root / full_name.replace("/", "__")
+    if not pending:
+        print("Nothing to process; all selected repositories are already completed.")
+        return 0
 
-        try:
-            print(f"Processing {full_name}")
-            clone_repo(clone_url, repo_dir)
-            run_ck(
-                ck_jar=ck_jar,
-                project_dir=repo_dir,
-                output_dir=repo_output,
-                use_jars=args.use_jars,
-                max_files=args.max_files_per_partition,
-                variables_and_fields=args.variables_and_fields,
-                timeout_minutes=args.timeout_minutes,
-            )
-            run_log.append({"owner": owner, "repo": repo, "status": "ok", "message": ""})
-        except Exception as exc:  # noqa: BLE001
-            run_log.append({
-                "owner": owner,
-                "repo": repo,
-                "status": "error",
-                "message": str(exc),
-            })
+    with ThreadPoolExecutor(max_workers=args.workers) as executor:
+        future_to_repo = {
+            executor.submit(
+                process_repo,
+                row,
+                ck_jar,
+                workspace,
+                output_root,
+                args.use_jars,
+                args.max_files_per_partition,
+                args.variables_and_fields,
+                args.timeout_minutes,
+            ): row
+            for row in pending
+        }
 
-    write_run_log(output_root / "pipeline_run_log.csv", run_log)
+        for future in as_completed(future_to_repo):
+            row = future_to_repo[future]
+            result = future.result()
+            run_log.append(result)
+            if result["status"] == "ok":
+                completed.add((row["owner"], row["repo"]))
+            write_run_log(run_log_path, run_log)
+
     failures = [r for r in run_log if r["status"] != "ok"]
     print(f"Processed: {len(run_log)} | Failed: {len(failures)}")
     return 1 if failures else 0
