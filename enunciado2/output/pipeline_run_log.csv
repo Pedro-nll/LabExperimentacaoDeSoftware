@@ -208,3 +208,4 @@ daimajia,AndroidSwipeLayout,ok,
 redis,jedis,ok,
 amitshekhariitbhu,android-interview-questions,ok,
 Team-xManager,xManager,ok,
+Anuken,Mindustry,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Anuken__Mindustry', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Anuken__Mindustry']' returned non-zero exit status 1."

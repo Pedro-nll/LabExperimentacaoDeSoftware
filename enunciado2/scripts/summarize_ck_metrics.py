@@ -15,6 +15,7 @@ METRIC_ALIASES = {
     "dit": ["dit"],
     "lcom": ["lcom"],
     "lcom_star": ["lcom*", "lcom_star", "lcomhs", "lcom_hs"],
+    "loc": ["loc"],
 }
 
 
@@ -126,6 +127,9 @@ def main() -> int:
             "lcom_star_mean": f"{stats['lcom_star_mean']:.6f}",
             "lcom_star_median": f"{stats['lcom_star_median']:.6f}",
             "lcom_star_std": f"{stats['lcom_star_std']:.6f}",
+            "loc_mean": f"{stats['loc_mean']:.6f}",
+            "loc_median": f"{stats['loc_median']:.6f}",
+            "loc_std": f"{stats['loc_std']:.6f}",
         }
         summary_rows.append(row)
 
@@ -146,6 +150,9 @@ def main() -> int:
         "lcom_star_mean",
         "lcom_star_median",
         "lcom_star_std",
+        "loc_mean",
+        "loc_median",
+        "loc_std",
     ]
 
     with output_csv.open("w", newline="", encoding="utf-8") as f:

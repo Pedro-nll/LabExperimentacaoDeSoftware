@@ -99,3 +99,10 @@ python enunciado2/scripts/run_ck_pipeline.py --repos-csv enunciado2/data/java_to
 
 5. Consolidacao das metricas do piloto
 - `python enunciado2/scripts/summarize_ck_metrics.py --input-dir enunciado2/output --output-csv enunciado2/output/pilot_metrics_summary.csv`
+
+6. Graficos de dispersao por RQ
+- `python enunciado2/scripts/plot_rq_scatter.py --repos-csv enunciado2/data/java_top1000.csv --ck-summary-csv enunciado2/output/ck_summary.csv --output-dir enunciado2/output/rq_graphs`
+
+Observacao:
+- O RQ3 ainda nao tem a contagem de releases na base atual; enquanto isso, o grafico usa `days_since_push` como proxy explicito para a exploracao inicial.
+- O RQ4 usa `LOC` do CK como proxy de tamanho ate a base ter a soma `LOC + comentarios` calculada separadamente.
