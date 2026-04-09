@@ -1,26 +1,26 @@
-Merged rows: 451
+Merged rows: 679
 
 RQ1: Popularity vs Quality
-  CBO: pearson=-0.1921, spearman=-0.0905
-  DIT: pearson=-0.0606, spearman=-0.0434
-  LCOM: pearson=0.0004, spearman=-0.1308
-  LCOM*: pearson=0.0145, spearman=-0.0465
+  CBO: pearson=-0.1430, spearman=-0.0003
+  DIT: pearson=-0.0568, spearman=-0.0494
+  LCOM: pearson=-0.0236, spearman=-0.0347
+  LCOM*: pearson=0.0145, spearman=0.0136
 
 RQ2: Maturity vs Quality
-  CBO: pearson=0.0952, spearman=0.0937
-  DIT: pearson=0.1036, spearman=0.1438
-  LCOM: pearson=0.0003, spearman=0.0661
-  LCOM*: pearson=-0.0589, spearman=-0.0440
+  CBO: pearson=0.0366, spearman=0.0468
+  DIT: pearson=0.1220, spearman=0.1616
+  LCOM: pearson=0.0394, spearman=0.0948
+  LCOM*: pearson=-0.0188, spearman=-0.0162
 
 rq3_activity: releases unavailable; using days_since_push proxy
 RQ3: Activity proxy vs Quality
-  CBO: pearson=-0.1386, spearman=-0.3089
-  DIT: pearson=0.1234, spearman=0.0613
-  LCOM: pearson=0.0582, spearman=-0.0711
-  LCOM*: pearson=-0.0639, spearman=-0.1026
+  CBO: pearson=-0.1503, spearman=-0.3127
+  DIT: pearson=0.1059, spearman=0.0708
+  LCOM: pearson=0.0441, spearman=-0.0960
+  LCOM*: pearson=-0.0752, spearman=-0.1329
 
 RQ4: Size vs Quality
-  CBO: pearson=0.3637, spearman=0.3928
-  DIT: pearson=0.0820, spearman=0.0774
-  LCOM: pearson=0.3809, spearman=0.5401
-  LCOM*: pearson=0.5122, spearman=0.5086
+  CBO: pearson=0.4281, spearman=0.4193
+  DIT: pearson=0.2438, spearman=0.1551
+  LCOM: pearson=0.3881, spearman=0.5648
+  LCOM*: pearson=0.4833, spearman=0.5007
