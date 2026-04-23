@@ -1,0 +1,26 @@
+Merged rows: 967
+
+RQ1: Popularity vs Quality
+  CBO: pearson=-0.0972, spearman=0.0366
+  DIT: pearson=-0.0474, spearman=-0.0412
+  LCOM: pearson=-0.0211, spearman=0.0096
+  LCOM*: pearson=0.0053, spearman=-0.0039
+
+RQ2: Maturity vs Quality
+  CBO: pearson=0.0220, spearman=0.0342
+  DIT: pearson=0.0867, spearman=0.1081
+  LCOM: pearson=0.0163, spearman=0.0914
+  LCOM*: pearson=-0.0155, spearman=-0.0183
+
+rq3_activity: releases unavailable; using days_since_push proxy
+RQ3: Activity proxy vs Quality
+  CBO: pearson=-0.1672, spearman=-0.3097
+  DIT: pearson=0.0649, spearman=0.0516
+  LCOM: pearson=0.0020, spearman=-0.0865
+  LCOM*: pearson=-0.0387, spearman=-0.0762
+
+RQ4: Size vs Quality
+  CBO: pearson=0.3984, spearman=0.4427
+  DIT: pearson=0.1984, spearman=0.1731
+  LCOM: pearson=0.5499, spearman=0.5510
+  LCOM*: pearson=0.4714, spearman=0.4899

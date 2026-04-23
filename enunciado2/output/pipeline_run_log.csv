@@ -1,0 +1,585 @@
+owner,repo,status,message
+Snailclimb,JavaGuide,ok,
+GrowingGit,GitHub-Chinese-Top-Charts,ok,
+macrozheng,mall,ok,
+doocs,advanced-java,ok,
+krahets,hello-algo,ok,
+iluwatar,java-design-patterns,ok,
+spring-projects,spring-boot,ok,
+TheAlgorithms,Java,ok,
+kdn251,interviews,ok,
+NationalSecurityAgency,ghidra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/NationalSecurityAgency__ghidra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/NationalSecurityAgency__ghidra']' returned non-zero exit status 1."
+MisterBooo,LeetCodeAnimation,ok,
+termux,termux-app,ok,
+elastic,elasticsearch,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/elastic__elasticsearch', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/elastic__elasticsearch']' returned non-zero exit status 1."
+dbeaver,dbeaver,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/dbeaver__dbeaver', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/dbeaver__dbeaver']' returned non-zero exit status 1."
+google,guava,ok,
+skylot,jadx,ok,
+jeecgboot,JeecgBoot,ok,
+spring-projects,spring-framework,ok,
+PhilJay,MPAndroidChart,ok,
+halo-dev,halo,ok,
+ReactiveX,RxJava,ok,
+TeamNewPipe,NewPipe,ok,
+apache,dubbo,ok,
+alibaba,arthas,ok,
+geekxh,hello-algorithm,ok,
+airbnb,lottie-android,ok,
+ashishps1,awesome-system-design-resources,ok,
+doocs,leetcode,ok,
+YunaiV,ruoyi-vue-pro,ok,
+bumptech,glide,ok,
+xkcoding,spring-boot-demo,ok,
+SeleniumHQ,selenium,ok,
+alibaba,easyexcel,ok,
+zxing,zxing,ok,
+netty,netty,ok,
+eugenp,tutorials,ok,
+Blankj,AndroidUtilCode,ok,
+binarywang,WxJava,ok,
+alibaba,nacos,ok,
+ityouknow,spring-boot-examples,ok,
+conductor-oss,conductor,ok,
+xuxueli,xxl-job,ok,
+apolloconfig,apollo,ok,
+keycloak,keycloak,ok,
+chinabugotech,hutool,ok,
+alibaba,spring-cloud-alibaba,ok,
+alibaba,canal,ok,
+wuyouzhuguli,SpringAll,ok,
+apache,kafka,ok,
+yuliskov,SmartTube,ok,
+lenve,vhr,ok,
+Anuken,Mindustry,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Anuken__Mindustry', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Anuken__Mindustry']' returned non-zero exit status 1."
+crossoverJie,JCSprout,ok,
+qiurunze123,miaosha,ok,
+kestra-io,kestra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/kestra-io__kestra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/kestra-io__kestra']' returned non-zero exit status 1."
+alibaba,druid,ok,
+apache,incubator-seata,ok,
+alibaba,fastjson,ok,
+hollischuang,toBeTopJavaer,ok,
+JakeWharton,butterknife,ok,
+CodePhiliaX,Chat2DB,ok,
+dbeaver,dbeaver,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/dbeaver__dbeaver', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/dbeaver__dbeaver']' returned non-zero exit status 1."
+Anuken,Mindustry,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Anuken__Mindustry', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Anuken__Mindustry']' returned non-zero exit status 1."
+NationalSecurityAgency,ghidra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/NationalSecurityAgency__ghidra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/NationalSecurityAgency__ghidra']' returned non-zero exit status 1."
+kestra-io,kestra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/kestra-io__kestra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/kestra-io__kestra']' returned non-zero exit status 1."
+elastic,elasticsearch,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/elastic__elasticsearch', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/elastic__elasticsearch']' returned non-zero exit status 1."
+DrKLO,Telegram,ok,
+scwang90,SmartRefreshLayout,ok,
+apache,flink,ok,
+jenkinsci,jenkins,ok,
+proxyee-down-org,proxyee-down,ok,
+OpenAPITools,openapi-generator,ok,
+greenrobot,EventBus,ok,
+libgdx,libgdx,ok,
+Netflix,Hystrix,ok,
+google,gson,ok,
+apache,skywalking,ok,
+bazelbuild,bazel,ok,
+EnterpriseQualityCoding,FizzBuzzEnterpriseEdition,ok,
+LSPosed,LSPosed,ok,
+iBotPeaches,Apktool,ok,
+doocs,source-code-hunter,ok,
+dataease,dataease,ok,
+ashishps1,awesome-low-level-design,ok,
+alibaba,Sentinel,ok,
+redisson,redisson,ok,
+apache,rocketmq,ok,
+elunez,eladmin,ok,
+kunal-kushwaha,DSA-Bootcamp-Java,ok,
+CarGuo,GSYVideoPlayer,ok,
+openjdk,jdk,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openjdk__jdk', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openjdk__jdk']' returned non-zero exit status 1."
+brettwooldridge,HikariCP,ok,
+thingsboard,thingsboard,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/thingsboard__thingsboard', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/thingsboard__thingsboard']' returned non-zero exit status 1."
+google,ExoPlayer,ok,
+mybatis,mybatis-3,ok,
+didi,DoKit,ok,
+ReactiveX,RxAndroid,ok,
+linlinjava,litemall,ok,
+yudaocode,SpringBoot-Labs,ok,
+oracle,graal,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/oracle__graal', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/oracle__graal']' returned non-zero exit status 1."
+dianping,cat,ok,
+apache,shardingsphere,ok,
+Baseflow,PhotoView,ok,
+antlr,antlr4,ok,
+lionsoul2014,ip2region,ok,
+dromara,Sa-Token,ok,
+Tencent,APIJSON,ok,
+YunaiV,yudao-cloud,ok,
+forezp,SpringCloudLearning,ok,
+JetBrains,intellij-community,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/JetBrains__intellij-community', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/JetBrains__intellij-community']' returned non-zero exit status 1."
+LMAX-Exchange,disruptor,ok,
+infinilabs,analysis-ik,ok,
+openzipkin,zipkin,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openzipkin__zipkin', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openzipkin__zipkin']' returned non-zero exit status 1."
+Tencent,tinker,ok,
+williamfiset,Algorithms,ok,
+justauth,JustAuth,ok,
+gyoogle,tech-interview-for-developer,ok,
+baomidou,mybatis-plus,ok,
+ben-manes,caffeine,ok,
+nostra13,Android-Universal-Image-Loader,ok,
+facebook,fresco,ok,
+heibaiying,BigData-Notes,ok,
+alibaba,DataX,ok,
+material-components,material-components-android,ok,
+winterbe,java8-tutorial,ok,
+Grasscutters,Grasscutter,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Grasscutters__Grasscutter', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Grasscutters__Grasscutter']' returned non-zero exit status 1."
+JeffLi1993,springboot-learning-example,ok,
+shuzheng,zheng,ok,
+ashishps1,awesome-leetcode-resources,ok,
+android-hacker,VirtualXposed,ok,
+neo4j,neo4j,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/neo4j__neo4j', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/neo4j__neo4j']' returned non-zero exit status 1."
+dyc87112,SpringBoot-Learning,ok,
+android10,Android-CleanArchitecture,ok,
+questdb,questdb,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/questdb__questdb', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/questdb__questdb']' returned non-zero exit status 1."
+Konloch,bytecode-viewer,ok,
+mockito,mockito,ok,
+Anuken,Mindustry,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Anuken__Mindustry', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Anuken__Mindustry']' returned non-zero exit status 1."
+kestra-io,kestra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/kestra-io__kestra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/kestra-io__kestra']' returned non-zero exit status 1."
+NationalSecurityAgency,ghidra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/NationalSecurityAgency__ghidra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/NationalSecurityAgency__ghidra']' returned non-zero exit status 1."
+dbeaver,dbeaver,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/dbeaver__dbeaver', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/dbeaver__dbeaver']' returned non-zero exit status 1."
+openjdk,jdk,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openjdk__jdk', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openjdk__jdk']' returned non-zero exit status 1."
+thingsboard,thingsboard,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/thingsboard__thingsboard', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/thingsboard__thingsboard']' returned non-zero exit status 1."
+openzipkin,zipkin,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openzipkin__zipkin', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openzipkin__zipkin']' returned non-zero exit status 1."
+elastic,elasticsearch,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/elastic__elasticsearch', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/elastic__elasticsearch']' returned non-zero exit status 1."
+oracle,graal,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/oracle__graal', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/oracle__graal']' returned non-zero exit status 1."
+Grasscutters,Grasscutter,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Grasscutters__Grasscutter', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Grasscutters__Grasscutter']' returned non-zero exit status 1."
+JetBrains,intellij-community,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/JetBrains__intellij-community', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/JetBrains__intellij-community']' returned non-zero exit status 1."
+neo4j,neo4j,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/neo4j__neo4j', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/neo4j__neo4j']' returned non-zero exit status 1."
+questdb,questdb,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/questdb__questdb', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/questdb__questdb']' returned non-zero exit status 1."
+prestodb,presto,ok,
+apache,pulsar,ok,
+zhisheng17,flink-learning,ok,
+java-decompiler,jd-gui,ok,
+supertokens,supertokens-core,ok,
+zaproxy,zaproxy,ok,
+quarkusio,quarkus,ok,
+cryptomator,cryptomator,ok,
+apache,doris,ok,
+elastic,logstash,ok,
+arduino,Arduino,ok,
+hdodenhof,CircleImageView,ok,
+eclipse-vertx,vert.x,ok,
+Tencent,QMUI_Android,ok,
+alibaba,ARouter,ok,
+theonedev,onedev,ok,
+GoogleContainerTools,jib,ok,
+apache,dolphinscheduler,ok,
+languagetool-org,languagetool,ok,
+DuGuQiuBai,Java,ok,
+Netflix,zuul,ok,
+apache,hadoop,ok,
+janishar,mit-deep-learning-book-pdf,ok,
+kekingcn,kkFileView,ok,
+sqshq,piggymetrics,ok,
+orhanobut,logger,ok,
+xpipe-io,xpipe,ok,
+lgvalle,Material-Animations,ok,
+seaswalker,spring-analysis,ok,
+JessYanCoding,AndroidAutoSize,ok,
+LuckSiege,PictureSelector,ok,
+tink-crypto,tink,ok,
+Bigkoo,Android-PickerView,ok,
+pinpoint-apm,pinpoint,ok,
+projectlombok,lombok,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/projectlombok__lombok', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/projectlombok__lombok']' returned non-zero exit status 1."
+macrozheng,mall-learning,ok,
+pxb1988,dex2jar,ok,
+youth5201314,banner,ok,
+alibaba,COLA,ok,
+macrozheng,mall-swarm,ok,
+codecentric,spring-boot-admin,ok,
+apache,druid,ok,
+metersphere,metersphere,ok,
+Netflix,conductor,ok,
+google,guice,ok,
+plantuml,plantuml,ok,
+apache,zookeeper,ok,
+facebook,stetho,ok,
+Netflix,eureka,ok,
+microg,GmsCore,ok,
+greenrobot,greenDAO,ok,
+zhihu,Matisse,ok,
+debezium,debezium,ok,
+daimajia,AndroidViewAnimations,ok,
+deeplearning4j,deeplearning4j,ok,
+pagehelper-org,Mybatis-PageHelper,ok,
+daimajia,AndroidSwipeLayout,ok,
+redis,jedis,ok,
+amitshekhariitbhu,android-interview-questions,ok,
+Team-xManager,xManager,ok,
+Anuken,Mindustry,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Anuken__Mindustry', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Anuken__Mindustry']' returned non-zero exit status 1."
+NationalSecurityAgency,ghidra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/NationalSecurityAgency__ghidra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/NationalSecurityAgency__ghidra']' returned non-zero exit status 1."
+kestra-io,kestra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/kestra-io__kestra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/kestra-io__kestra']' returned non-zero exit status 1."
+openjdk,jdk,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openjdk__jdk', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openjdk__jdk']' returned non-zero exit status 1."
+dbeaver,dbeaver,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/dbeaver__dbeaver', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/dbeaver__dbeaver']' returned non-zero exit status 1."
+thingsboard,thingsboard,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/thingsboard__thingsboard', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/thingsboard__thingsboard']' returned non-zero exit status 1."
+openzipkin,zipkin,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openzipkin__zipkin', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openzipkin__zipkin']' returned non-zero exit status 1."
+elastic,elasticsearch,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/elastic__elasticsearch', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/elastic__elasticsearch']' returned non-zero exit status 1."
+oracle,graal,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/oracle__graal', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/oracle__graal']' returned non-zero exit status 1."
+Grasscutters,Grasscutter,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Grasscutters__Grasscutter', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Grasscutters__Grasscutter']' returned non-zero exit status 1."
+projectlombok,lombok,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/projectlombok__lombok', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/projectlombok__lombok']' returned non-zero exit status 1."
+JetBrains,intellij-community,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/JetBrains__intellij-community', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/JetBrains__intellij-community']' returned non-zero exit status 1."
+neo4j,neo4j,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/neo4j__neo4j', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/neo4j__neo4j']' returned non-zero exit status 1."
+questdb,questdb,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/questdb__questdb', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/questdb__questdb']' returned non-zero exit status 1."
+beemdevelopment,Aegis,ok,
+Yalantis,uCrop,ok,
+PaperMC,Paper,ok,
+grpc,grpc-java,ok,
+trinodb,trino,ok,
+Anuken,Mindustry,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Anuken__Mindustry', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Anuken__Mindustry']' returned non-zero exit status 1."
+NationalSecurityAgency,ghidra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/NationalSecurityAgency__ghidra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/NationalSecurityAgency__ghidra']' returned non-zero exit status 1."
+kestra-io,kestra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/kestra-io__kestra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/kestra-io__kestra']' returned non-zero exit status 1."
+dbeaver,dbeaver,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/dbeaver__dbeaver', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/dbeaver__dbeaver']' returned non-zero exit status 1."
+openjdk,jdk,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openjdk__jdk', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openjdk__jdk']' returned non-zero exit status 1."
+thingsboard,thingsboard,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/thingsboard__thingsboard', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/thingsboard__thingsboard']' returned non-zero exit status 1."
+openzipkin,zipkin,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openzipkin__zipkin', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openzipkin__zipkin']' returned non-zero exit status 1."
+oracle,graal,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/oracle__graal', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/oracle__graal']' returned non-zero exit status 1."
+elastic,elasticsearch,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/elastic__elasticsearch', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/elastic__elasticsearch']' returned non-zero exit status 1."
+Grasscutters,Grasscutter,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Grasscutters__Grasscutter', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Grasscutters__Grasscutter']' returned non-zero exit status 1."
+JetBrains,intellij-community,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/JetBrains__intellij-community', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/JetBrains__intellij-community']' returned non-zero exit status 1."
+projectlombok,lombok,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/projectlombok__lombok', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/projectlombok__lombok']' returned non-zero exit status 1."
+neo4j,neo4j,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/neo4j__neo4j', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/neo4j__neo4j']' returned non-zero exit status 1."
+questdb,questdb,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/questdb__questdb', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/questdb__questdb']' returned non-zero exit status 1."
+provectus,kafka-ui,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/provectus__kafka-ui', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/provectus__kafka-ui']' returned non-zero exit status 1."
+Tencent,VasSonic,ok,
+Tencent,matrix,ok,
+OpenRefine,OpenRefine,ok,
+frank-lam,fullstack-tutorial,ok,
+code4craft,webmagic,ok,
+newbee-ltd,newbee-mall,ok,
+datahub-project,datahub,ok,
+realm,realm-java,ok,
+jd-opensource,joyagent-jdgenie,ok,
+careercup,CtCI-6th-Edition,ok,
+gyf-dev,ImmersionBar,ok,
+opensearch-project,OpenSearch,ok,
+ssssssss-team,spider-flow,ok,
+jhy,jsoup,ok,
+mission-peace,interview,ok,
+LawnchairLauncher,lawnchair,ok,
+permissions-dispatcher,PermissionsDispatcher,ok,
+langchain4j,langchain4j,ok,
+StarRocks,starrocks,ok,
+H07000223,FlycoTabLayout,ok,
+lingochamp,FileDownloader,ok,
+apereo,cas,ok,
+jwtk,jjwt,ok,
+jfeinstein10,SlidingMenu,ok,
+apple,pkl,ok,
+androidannotations,androidannotations,ok,
+square,javapoet,ok,
+asLody,VirtualApp,ok,
+daniulive,SmarterStreaming,ok,
+clojure,clojure,ok,
+TooTallNate,Java-WebSocket,ok,
+alibaba,vlayout,ok,
+zfile-dev,zfile,ok,
+android-async-http,android-async-http,ok,
+jeasonlzy,okhttp-OkGo,ok,
+resilience4j,resilience4j,ok,
+google,auto,ok,
+lipangit,JiaoZiVideoPlayer,ok,
+Activiti,Activiti,ok,
+tbruyelle,RxPermissions,ok,
+signalapp,Signal-Server,ok,
+iflytek,astron-agent,ok,
+JessYanCoding,MVPArms,ok,
+aosp-mirror,platform_frameworks_base,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/aosp-mirror__platform_frameworks_base', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/aosp-mirror__platform_frameworks_base']' returned non-zero exit status 1."
+JingMatrix,LSPosed,ok,
+awsdocs,aws-doc-sdk-examples,ok,
+ZCShou,GoGoGo,ok,
+JakeWharton,ViewPagerIndicator,ok,
+happydog-intj,JsBridge,ok,
+xuchengsheng,spring-reading,ok,
+wasabeef,glide-transformations,ok,
+googlesamples,easypermissions,ok,
+hackware1993,MagicIndicator,ok,
+paascloud,paascloud-master,ok,
+HarlonWang,AVLoadingIndicatorView,ok,
+lihengming,spring-boot-api-project-seed,ok,
+OpenFeign,feign,ok,
+YoKeyword,Fragmentation,ok,
+SonarSource,sonarqube,ok,
+perwendel,spark,ok,
+koral--,android-gif-drawable,ok,
+react-native-camera,react-native-camera,ok,
+stanfordnlp,CoreNLP,ok,
+ksoichiro,Android-ObservableScrollView,ok,
+spinnaker,spinnaker,ok,
+bilibili,DanmakuFlameMaster,ok,
+flyway,flyway,ok,
+seven332,EhViewer,ok,
+liaohuqiu,android-Ultra-Pull-To-Refresh,ok,
+MyCATApache,Mycat-Server,ok,
+crossoverJie,cim,ok,
+umano,AndroidSlidingUpPanel,ok,
+Justson,AgentWeb,ok,
+json-path,JsonPath,ok,
+pockethub,PocketHub,ok,
+huanghaibin-dev,CalendarView,ok,
+apache,cassandra,ok,
+GcsSloop,AndroidNote,ok,
+android,testing-samples,ok,
+spring-projects,spring-security,ok,
+cats-oss,android-gpuimage,ok,
+apache,jmeter,ok,
+didi,VirtualAPK,ok,
+AutoMQ,automq,ok,
+opendataloader-project,opendataloader-pdf,ok,
+KunMinX,Jetpack-MVVM-Best-Practice,ok,
+navasmdc,MaterialDesignLibrary,ok,
+Freelander,Android_Data,ok,
+HMCL-dev,HMCL,ok,
+apache,seatunnel,ok,
+LSPosed,LSPatch,ok,
+alibaba,spring-ai-alibaba,ok,
+frohoff,ysoserial,ok,
+java-native-access,jna,ok,
+PojavLauncherTeam,PojavLauncher,ok,
+karatelabs,karate,ok,
+flowable,flowable-engine,ok,
+checkstyle,checkstyle,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/checkstyle__checkstyle', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/checkstyle__checkstyle']' returned non-zero exit status 1."
+nathanmarz,storm,ok,
+laobie,StatusBarUtil,ok,
+Blankj,awesome-java-leetcode,ok,
+cabaletta,baritone,ok,
+chrisbanes,Android-PullToRefresh,ok,
+ybq,Android-SpinKit,ok,
+amitshekhariitbhu,Android-Debug-Database,ok,
+react-native-image-picker,react-native-image-picker,ok,
+shwenzhang,AndResGuard,ok,
+apache,shenyu,ok,
+testcontainers,testcontainers-java,ok,
+dropwizard,dropwizard,ok,
+airbnb,epoxy,ok,
+google,tsunami-security-scanner,ok,
+chrisjenx,Calligraphy,ok,
+junit-team,junit4,ok,
+aeron-io,aeron,ok,
+DImuthuUpe,AndroidPdfViewer,ok,
+apache,iceberg,ok,
+wildfirechat,im-server,ok,
+roughike,BottomBar,ok,
+hs-web,hsweb-framework,ok,
+bytedeco,javacv,ok,
+spring-projects,spring-ai,error,"Command '['git', 'clone', '--depth', '1', 'https://github.com/spring-projects/spring-ai.git', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/spring-projects__spring-ai']' returned non-zero exit status 128."
+alibaba,transmittable-thread-local,ok,
+aritraroy,UltimateAndroidReference,ok,
+apache,shardingsphere-elasticjob,ok,
+krahets,LeetCode-Book,ok,
+apache,beam,ok,
+alibaba,atlas,ok,
+alibaba,otter,ok,
+florent37,MaterialViewPager,ok,
+guolindev,LitePal,ok,
+LaurieWired,GhidraMCP,ok,
+pentaho,pentaho-kettle,ok,
+junixapp,XPopup,ok,
+davemorrissey,subsampling-scale-image-view,ok,
+Netflix,SimianArmy,ok,
+apache,tomcat,ok,
+JakeWharton,hugo,ok,
+gunnarmorling,1brc,ok,
+jeecgboot,jimureport,ok,
+exadel-inc,CompreFace,ok,
+dropwizard,metrics,ok,
+HannahMitt,HomeMirror,ok,
+lecho,hellocharts-android,ok,
+ChrisRM,material-theme-jetbrains,ok,
+Tencent,Shadow,ok,
+AntennaPod,AntennaPod,ok,
+Graylog2,graylog2-server,ok,
+goldze,MVVMHabit,ok,
+PowerJob,PowerJob,ok,
+trello-archive,RxLifecycle,ok,
+vipshop,vjtools,ok,
+gedoor,MyBookshelf,ok,
+MuntashirAkon,AppManager,ok,
+mapstruct,mapstruct,ok,
+google,android-classyshark,ok,
+FongMi,TV,ok,
+koush,AndroidAsync,ok,
+kaushikgopal,RxJava-Android-Samples,ok,
+kevin-wayne,algs4,ok,
+MinecraftForge,MinecraftForge,ok,
+yuanguangxin,LeetCode,ok,
+Genymobile,gnirehtet,ok,
+swagger-api,swagger-core,ok,
+lenve,VBlog,ok,
+dyc87112,SpringCloud-Learning,ok,
+dependency-check,DependencyCheck,ok,
+abel533,Mapper,ok,
+enso-org,enso,ok,
+Qihoo360,RePlugin,ok,
+leolin310148,ShortcutBadger,ok,
+square,dagger,ok,
+Bearded-Hen,Android-Bootstrap,ok,
+iflytek,astron-rpa,ok,
+zhongyi-tong,WeChatLuckyMoney,ok,
+Exrick,xmall,ok,
+crazycodeboy,TakePhoto,ok,
+pedant,sweet-alert-dialog,ok,
+NanoHttpd,nanohttpd,ok,
+gocd,gocd,ok,
+cymcsg,UltimateRecyclerView,ok,
+didi,KnowStreaming,ok,
+wiremock,wiremock,ok,
+google,error-prone,ok,
+Anuken,Mindustry,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Anuken__Mindustry', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Anuken__Mindustry']' returned non-zero exit status 1."
+dbeaver,dbeaver,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/dbeaver__dbeaver', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/dbeaver__dbeaver']' returned non-zero exit status 1."
+NationalSecurityAgency,ghidra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/NationalSecurityAgency__ghidra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/NationalSecurityAgency__ghidra']' returned non-zero exit status 1."
+kestra-io,kestra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/kestra-io__kestra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/kestra-io__kestra']' returned non-zero exit status 1."
+thingsboard,thingsboard,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/thingsboard__thingsboard', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/thingsboard__thingsboard']' returned non-zero exit status 1."
+openjdk,jdk,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openjdk__jdk', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openjdk__jdk']' returned non-zero exit status 1."
+Anuken,Mindustry,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Anuken__Mindustry', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Anuken__Mindustry']' returned non-zero exit status 1."
+NationalSecurityAgency,ghidra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/NationalSecurityAgency__ghidra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/NationalSecurityAgency__ghidra']' returned non-zero exit status 1."
+kestra-io,kestra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/kestra-io__kestra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/kestra-io__kestra']' returned non-zero exit status 1."
+dbeaver,dbeaver,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/dbeaver__dbeaver', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/dbeaver__dbeaver']' returned non-zero exit status 1."
+openjdk,jdk,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openjdk__jdk', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openjdk__jdk']' returned non-zero exit status 1."
+thingsboard,thingsboard,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/thingsboard__thingsboard', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/thingsboard__thingsboard']' returned non-zero exit status 1."
+openzipkin,zipkin,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openzipkin__zipkin', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openzipkin__zipkin']' returned non-zero exit status 1."
+elastic,elasticsearch,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/elastic__elasticsearch', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/elastic__elasticsearch']' returned non-zero exit status 1."
+Anuken,Mindustry,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Anuken__Mindustry', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Anuken__Mindustry']' returned non-zero exit status 1."
+NationalSecurityAgency,ghidra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/NationalSecurityAgency__ghidra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/NationalSecurityAgency__ghidra']' returned non-zero exit status 1."
+kestra-io,kestra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/kestra-io__kestra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/kestra-io__kestra']' returned non-zero exit status 1."
+dbeaver,dbeaver,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/dbeaver__dbeaver', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/dbeaver__dbeaver']' returned non-zero exit status 1."
+openjdk,jdk,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openjdk__jdk', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openjdk__jdk']' returned non-zero exit status 1."
+thingsboard,thingsboard,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/thingsboard__thingsboard', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/thingsboard__thingsboard']' returned non-zero exit status 1."
+openzipkin,zipkin,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openzipkin__zipkin', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openzipkin__zipkin']' returned non-zero exit status 1."
+elastic,elasticsearch,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/elastic__elasticsearch', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/elastic__elasticsearch']' returned non-zero exit status 1."
+oracle,graal,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/oracle__graal', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/oracle__graal']' returned non-zero exit status 1."
+Grasscutters,Grasscutter,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Grasscutters__Grasscutter', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Grasscutters__Grasscutter']' returned non-zero exit status 1."
+projectlombok,lombok,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/projectlombok__lombok', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/projectlombok__lombok']' returned non-zero exit status 1."
+neo4j,neo4j,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/neo4j__neo4j', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/neo4j__neo4j']' returned non-zero exit status 1."
+provectus,kafka-ui,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/provectus__kafka-ui', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/provectus__kafka-ui']' returned non-zero exit status 1."
+questdb,questdb,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/questdb__questdb', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/questdb__questdb']' returned non-zero exit status 1."
+checkstyle,checkstyle,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/checkstyle__checkstyle', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/checkstyle__checkstyle']' returned non-zero exit status 1."
+spring-projects,spring-ai,error,"Command '['git', 'clone', '--depth', '1', 'https://github.com/spring-projects/spring-ai.git', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/spring-projects__spring-ai']' returned non-zero exit status 128."
+Alluxio,alluxio,ok,
+aosp-mirror,platform_frameworks_base,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/aosp-mirror__platform_frameworks_base', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/aosp-mirror__platform_frameworks_base']' returned non-zero exit status 1."
+google,agera,ok,
+apache,hertzbeat,ok,
+rest-assured,rest-assured,ok,
+h2pl,JavaTutorial,ok,
+ogaclejapan,SmartTabLayout,ok,
+traccar,traccar,ok,
+CoderLeixiaoshuai,java-eight-part,ok,
+JakeWharton,ActionBarSherlock,ok,
+naman14,Timber,ok,
+NLPchina,elasticsearch-sql,ok,
+mrniko,netty-socketio,ok,
+Col-E,Recaf,ok,
+DroidPluginTeam,DroidPlugin,ok,
+junit-team,junit-framework,ok,
+alibaba,jvm-sandbox,ok,
+macrozheng,springcloud-learning,ok,
+smuyyh,BookReader,ok,
+rabbitmq,rabbitmq-tutorials,ok,
+Meituan-Dianping,walle,ok,
+getActivity,AndroidProject,ok,
+hongyangAndroid,okhttputils,ok,
+logisim-evolution,logisim-evolution,ok,
+guardianproject,haven,ok,
+zo0r,react-native-push-notification,ok,
+raphw,byte-buddy,ok,
+vespa-engine,vespa,ok,
+fuzhengwei,itstack-demo-design,ok,
+gzu-liyujiang,AndroidPicker,ok,
+527515025,springBoot,ok,
+CeuiLiSA,Pixiv-Shaft,ok,
+Meituan-Dianping,Leaf,ok,
+Angel-ML,angel,ok,
+markzhai,AndroidPerformanceMonitor,ok,
+zouzg,mybatis-generator-gui,ok,
+getActivity,XXPermissions,ok,
+648540858,wvp-GB28181-pro,ok,
+hongyangAndroid,AndroidAutoLayout,ok,
+quartz-scheduler,quartz,ok,
+apache,storm,ok,
+Suwayomi,Suwayomi-Server,ok,
+yanzhenjie,AndPermission,ok,
+JesusFreke,smali,ok,
+apache,zeppelin,ok,
+jOOQ,jOOQ,ok,
+pig-mesh,pig,ok,
+GrenderG,Toasty,ok,
+NLPchina,ansj_seg,ok,
+ximsfei,Android-skin-support,ok,
+processing,processing,ok,
+nayuki,QR-Code-generator,ok,
+hibernate,hibernate-orm,ok,
+ArthurHub,Android-Image-Cropper,ok,
+wxiaoqi,Spring-Cloud-Platform,ok,
+vinc3m1,RoundedImageView,ok,
+jetlinks,jetlinks-community,ok,
+gephi,gephi,ok,
+AsyncHttpClient,async-http-client,ok,
+freeok,so-novel,ok,
+Javen205,IJPay,ok,
+micronaut-projects,micronaut-core,ok,
+aa112901,remusic,ok,
+apache,flink-cdc,ok,
+joelittlejohn,jsonschema2pojo,ok,
+graphhopper,graphhopper,ok,
+haifengl,smile,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/haifengl__smile', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/haifengl__smile']' returned non-zero exit status 1."
+DerekYRC,mini-spring,ok,
+wasabeef,richeditor-android,ok,
+sshahine,JFoenix,ok,
+amitshekhariitbhu,from-java-to-kotlin,ok,
+Anuken,Mindustry,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Anuken__Mindustry', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Anuken__Mindustry']' returned non-zero exit status 1."
+NationalSecurityAgency,ghidra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/NationalSecurityAgency__ghidra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/NationalSecurityAgency__ghidra']' returned non-zero exit status 1."
+kestra-io,kestra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/kestra-io__kestra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/kestra-io__kestra']' returned non-zero exit status 1."
+openjdk,jdk,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openjdk__jdk', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openjdk__jdk']' returned non-zero exit status 1."
+dbeaver,dbeaver,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/dbeaver__dbeaver', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/dbeaver__dbeaver']' returned non-zero exit status 1."
+thingsboard,thingsboard,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/thingsboard__thingsboard', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/thingsboard__thingsboard']' returned non-zero exit status 1."
+openzipkin,zipkin,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openzipkin__zipkin', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openzipkin__zipkin']' returned non-zero exit status 1."
+oracle,graal,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/oracle__graal', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/oracle__graal']' returned non-zero exit status 1."
+elastic,elasticsearch,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/elastic__elasticsearch', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/elastic__elasticsearch']' returned non-zero exit status 1."
+Grasscutters,Grasscutter,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Grasscutters__Grasscutter', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Grasscutters__Grasscutter']' returned non-zero exit status 1."
+projectlombok,lombok,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/projectlombok__lombok', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/projectlombok__lombok']' returned non-zero exit status 1."
+questdb,questdb,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/questdb__questdb', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/questdb__questdb']' returned non-zero exit status 1."
+JetBrains,intellij-community,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/JetBrains__intellij-community', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/JetBrains__intellij-community']' returned non-zero exit status 1."
+provectus,kafka-ui,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/provectus__kafka-ui', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/provectus__kafka-ui']' returned non-zero exit status 1."
+neo4j,neo4j,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/neo4j__neo4j', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/neo4j__neo4j']' returned non-zero exit status 1."
+checkstyle,checkstyle,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/checkstyle__checkstyle', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/checkstyle__checkstyle']' returned non-zero exit status 1."
+spring-projects,spring-ai,error,"Command '['git', 'clone', '--depth', '1', 'https://github.com/spring-projects/spring-ai.git', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/spring-projects__spring-ai']' returned non-zero exit status 128."
+haifengl,smile,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/haifengl__smile', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/haifengl__smile']' returned non-zero exit status 1."
+aosp-mirror,platform_frameworks_base,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/aosp-mirror__platform_frameworks_base', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/aosp-mirror__platform_frameworks_base']' returned non-zero exit status 1."
+lightbend,config,ok,
+koush,ion,ok,
+graphql-java,graphql-java,ok,
+apache,iotdb,ok,
+ityouknow,spring-cloud-examples,ok,
+auth0,java-jwt,ok,
+google,grafika,ok,
+apache,incubator-kie-drools,ok,
+Vedenin,useful-java-links,ok,
+alipay,SoloPi,ok,
+loks666,get_jobs,ok,
+LandGrey,SpringBootVulExploit,ok,
+obsidiandynamics,kafdrop,ok,
+vavr-io,vavr,ok,
+apache,hudi,ok,
+ikew0ng,SwipeBackLayout,ok,
+rengwuxian,MaterialEditText,ok,
+google,google-java-format,ok,
+daimajia,NumberProgressBar,ok,
+javaparser,javaparser,ok,
+apache,pinot,ok,
+Anuken,Mindustry,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Anuken__Mindustry', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Anuken__Mindustry']' returned non-zero exit status 1."
+NationalSecurityAgency,ghidra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/NationalSecurityAgency__ghidra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/NationalSecurityAgency__ghidra']' returned non-zero exit status 1."
+kestra-io,kestra,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/kestra-io__kestra', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/kestra-io__kestra']' returned non-zero exit status 1."
+openjdk,jdk,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openjdk__jdk', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openjdk__jdk']' returned non-zero exit status 1."
+dbeaver,dbeaver,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/dbeaver__dbeaver', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/dbeaver__dbeaver']' returned non-zero exit status 1."
+thingsboard,thingsboard,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/thingsboard__thingsboard', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/thingsboard__thingsboard']' returned non-zero exit status 1."
+openzipkin,zipkin,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/openzipkin__zipkin', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/openzipkin__zipkin']' returned non-zero exit status 1."
+oracle,graal,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/oracle__graal', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/oracle__graal']' returned non-zero exit status 1."
+elastic,elasticsearch,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/elastic__elasticsearch', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/elastic__elasticsearch']' returned non-zero exit status 1."
+JetBrains,intellij-community,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/JetBrains__intellij-community', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/JetBrains__intellij-community']' returned non-zero exit status 1."
+Grasscutters,Grasscutter,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/Grasscutters__Grasscutter', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/Grasscutters__Grasscutter']' returned non-zero exit status 1."
+projectlombok,lombok,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/projectlombok__lombok', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/projectlombok__lombok']' returned non-zero exit status 1."
+provectus,kafka-ui,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/provectus__kafka-ui', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/provectus__kafka-ui']' returned non-zero exit status 1."
+neo4j,neo4j,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/neo4j__neo4j', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/neo4j__neo4j']' returned non-zero exit status 1."
+checkstyle,checkstyle,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/checkstyle__checkstyle', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/checkstyle__checkstyle']' returned non-zero exit status 1."
+questdb,questdb,error,"Command '['java', '-jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/tools/ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/work/questdb__questdb', 'true', '0', 'false', '/home/pedro/Desktop/Projetos/LabExperimentacaoDeSoftware/enunciado2/output/questdb__questdb']' returned non-zero exit status 1."

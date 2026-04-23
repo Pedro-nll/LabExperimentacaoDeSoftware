@@ -1,0 +1,149 @@
+Methodology Notes - Java Quality Study Pipeline
+Date: 2026-04-09
+Project: LabExperimentacaoDeSoftware / enunciado2
+
+1) Study Goal and Research Questions
+This pipeline was built to analyze quality attributes of popular Java repositories
+and compare quality metrics against repository-level characteristics.
+
+Research Questions (RQs):
+- RQ1: Quality vs popularity
+- RQ2: Quality vs maturity
+- RQ3: Quality vs activity
+- RQ4: Quality vs size
+
+Quality metrics (CK):
+- CBO (coupling)
+- DIT (inheritance depth)
+- LCOM (lack of cohesion)
+- LCOM* (normalized cohesion indicator)
+
+2) Dataset Scope and Unit of Analysis
+- Universe: top 1000 Java repositories from GitHub search.
+- Repository-level analysis is done by aggregating class-level CK metrics into
+  per-repository summary values (mean, median, standard deviation).
+- Class-level CK outputs are produced for each repository by static analysis.
+
+3) End-to-End Pipeline
+The implemented pipeline has six executable steps:
+
+Step A - Collect repository list
+Script: enunciado2/scripts/collect_java_repos.py
+Input: GitHub Search API
+Output: enunciado2/data/java_top1000.csv
+Key behavior:
+- Pagination fixed to 10 items per page.
+- Retry with backoff for transient failures.
+- Checkpoint file for resumable collection.
+- Deduplication by owner/repo.
+
+Step B - Prepare CK tool
+Script: enunciado2/scripts/setup_ck.py
+Input: CK repository URL
+Output: built CK standalone JAR in enunciado2/tools/ck/target/
+Key behavior:
+- Clone or update CK repository.
+- Build with Maven wrapper (or system Maven fallback).
+
+Step C - Run CK over repositories
+Script: enunciado2/scripts/run_ck_pipeline.py
+Input: java_top1000.csv + CK JAR
+Output: per-repository folders under enunciado2/output/
+Key behavior:
+- Shallow clone (depth=1) to reduce bandwidth and storage.
+- Parallel processing via configurable workers.
+- Incremental logging to pipeline_run_log.csv for safe resume.
+  - Each repository attempt (ok/error) is appended to the log as soon as it finishes.
+  - The latest status per owner/repo is used as the authoritative state.
+  - On restart, repositories marked as ok and with class.csv present are skipped.
+  - Failed entries remain eligible for retry in later executions.
+  - This design avoids losing global progress if execution is interrupted.
+- Skip repositories already processed successfully (if class.csv exists).
+- Delete cloned repository after each run to control disk usage.
+
+Step D - Consolidate CK metrics
+Script: enunciado2/scripts/summarize_ck_metrics.py
+Input: enunciado2/output/*/class.csv
+Output: enunciado2/output/ck_summary.csv
+Key behavior:
+- Aggregates CBO, DIT, LCOM, LCOM* and LOC statistics per repository.
+- Handles non-finite values (NaN/inf) before statistical calculations.
+  - CK class outputs may contain NaN/inf values for some classes/metrics.
+  - Values are parsed as float and filtered with finite checks.
+  - Only finite values are used in mean/median/std calculations.
+  - Empty metric sets default to 0.0 summary values to keep schema stability.
+  - Single-value sets return std=0.0 to avoid invalid stdev operations.
+
+Step E - Generate exploratory scatter plots
+Script: enunciado2/scripts/plot_rq_scatter.py
+Input: java_top1000.csv + ck_summary.csv
+Output: enunciado2/output/rq_graphs/*.png + rq_scatter_summary.txt
+Key behavior:
+- Merges GitHub metadata with CK summary by owner/repo.
+- Generates one scatter plot per RQ x quality-metric combination.
+- Computes Pearson and Spearman correlations for quick pattern detection.
+
+Step F - Monitor processing status
+Script: enunciado2/scripts/check_pipeline_progress.py
+Input: java_top1000.csv + pipeline_run_log.csv + output folder
+Output: terminal progress report
+Key behavior:
+- Reports total, processed, successful, failed, pending.
+- Reports output folder counts and class.csv coverage.
+- Shows top error groups (latest status and all attempts).
+
+4) Resume, Reliability, and Operational Decisions
+Resume strategy:
+- The run log (pipeline_run_log.csv) is the resume source of truth.
+- Repositories with latest status=ok and existing class.csv are skipped.
+- Failed repositories are kept in the queue for future retries.
+
+Storage strategy:
+- Clones are temporary and are deleted after each repository processing.
+- This enables long runs on limited disk capacity.
+
+Parallel strategy:
+- The pipeline supports worker-level parallelism at repository granularity.
+- A conservative worker count (e.g., 4) is used to balance throughput and stability.
+
+Failure handling:
+- Network clone failures and CK runtime failures are logged per repository.
+- The run continues after individual failures.
+- Non-zero CK exit statuses are recorded and can be retried later.
+
+5) Definitions Used in Current Exploratory Analysis
+Popularity (RQ1): stargazers_count
+Maturity (RQ2): age in years, derived from created_at
+Activity (RQ3): final metric adopted is days_since_push.
+Size (RQ4): final metric adopted is CK LOC median.
+
+Metric-definition decision log:
+- Initial idea for RQ3 was release count.
+- Final decision for RQ3 was days_since_push because it is consistently available
+  for all repositories in the metadata pipeline and avoids sparse/missing release
+  data issues in this study setup.
+- Initial idea for RQ4 was LOC + comments.
+- Final decision for RQ4 was CK LOC median because it is directly generated by the
+  same static-analysis tool used for quality metrics and provides a homogeneous
+  repository-size indicator in the current pipeline.
+
+6) Current Artifacts Used in Methodology Section
+- Repository list: enunciado2/data/java_top1000.csv
+- CK run log: enunciado2/output/pipeline_run_log.csv
+- Consolidated metrics: enunciado2/output/ck_summary.csv
+- Scatter plots and summary: enunciado2/output/rq_graphs/
+
+7) Reproducibility Commands (Reference)
+From repository root:
+- python enunciado2/scripts/collect_java_repos.py --output enunciado2/data/java_top1000.csv --target 1000 --per-page 10
+- python enunciado2/scripts/setup_ck.py --ck-dir enunciado2/tools/ck --build
+- python enunciado2/scripts/run_ck_pipeline.py --repos-csv enunciado2/data/java_top1000.csv --sample-size 1000 --workspace enunciado2/work --output enunciado2/output --ck-dir enunciado2/tools/ck --workers 4 --timeout-minutes 30
+- python enunciado2/scripts/summarize_ck_metrics.py --input-dir enunciado2/output --output-csv enunciado2/output/ck_summary.csv
+- python enunciado2/scripts/plot_rq_scatter.py --repos-csv enunciado2/data/java_top1000.csv --ck-summary-csv enunciado2/output/ck_summary.csv --output-dir enunciado2/output/rq_graphs
+- python enunciado2/scripts/check_pipeline_progress.py
+
+8) Interpretation Guidance for Final Report
+Recommended positioning for this stage:
+- Treat this as the experimental methodology and exploratory phase.
+- Keep a clear distinction between design choices, operational constraints,
+  and final inferential claims.
