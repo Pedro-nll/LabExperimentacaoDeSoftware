@@ -1,0 +1,8 @@
+owner,repo,full_name,html_url,stargazers_count,forks_count,open_issues_count,language,created_at,pushed_at,default_branch,total_prs,review_probe_pr,review_probe_state,review_probe_human_reviewer
+codecrafters-io,build-your-own-x,codecrafters-io/build-your-own-x,https://github.com/codecrafters-io/build-your-own-x,493373,46697,467,Markdown,2018-05-09T12:03:18Z,2026-02-21T09:34:54Z,master,553,1740,APPROVED,atacanjacques
+sindresorhus,awesome,sindresorhus/awesome,https://github.com/sindresorhus/awesome,458249,34431,66,,2014-07-11T13:42:37Z,2026-04-19T17:04:38Z,main,2381,4110,COMMENTED,sharf-shawon
+freeCodeCamp,freeCodeCamp,freeCodeCamp/freeCodeCamp,https://github.com/freeCodeCamp/freeCodeCamp,443435,44363,191,TypeScript,2014-12-24T17:49:19Z,2026-04-23T15:55:09Z,main,44287,67055,CHANGES_REQUESTED,majestic-owl448
+openclaw,openclaw,openclaw/openclaw,https://github.com/openclaw/openclaw,362833,74149,19141,TypeScript,2025-11-24T10:16:47Z,2026-04-23T17:13:14Z,main,37977,70532,COMMENTED,chen-zhang-cs-code
+donnemartin,system-design-primer,donnemartin/system-design-primer,https://github.com/donnemartin/system-design-primer,343833,55522,529,Python,2017-02-26T16:15:28Z,2026-03-20T01:52:19Z,master,648,1172,COMMENTED,Shramkoweb
+jwasham,coding-interview-university,jwasham/coding-interview-university,https://github.com/jwasham/coding-interview-university,341945,82050,104,,2016-06-06T02:34:12Z,2025-08-28T14:42:47Z,main,1026,2078,COMMENTED,andrzejsydor
+vinta,awesome-python,vinta/awesome-python,https://github.com/vinta/awesome-python,293988,27749,19,Python,2014-06-27T21:00:06Z,2026-04-22T10:11:49Z,master,2345,3079,APPROVED,JinyangWang27
