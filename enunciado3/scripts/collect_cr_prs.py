@@ -4,8 +4,11 @@
 from __future__ import annotations
 
 import argparse
+import csv
 from collections import OrderedDict
+import math
 from pathlib import Path
+import random
 from typing import Any, Dict, List, Optional
 
 from github_cr import (
@@ -53,6 +56,10 @@ PR_COLUMNS = [
     "has_human_review",
     "author_login",
     "merged_at",
+    "population_total_prs",
+    "sample_target_prs",
+    "sampling_confidence",
+    "sampling_margin_error",
 ]
 
 RUN_LOG_COLUMNS = ["owner", "repo", "status", "message"]
@@ -62,11 +69,142 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Collect code review PR metrics")
     parser.add_argument("--repos-csv", required=True, help="CSV with selected repositories")
     parser.add_argument("--output", required=True, help="Output directory for per-repo PR CSVs")
-    parser.add_argument("--repo-limit", type=int, default=1, help="How many repositories to process")
+    parser.add_argument(
+        "--repo-limit",
+        type=int,
+        default=0,
+        help="How many repositories to process from checkpoint (0 = all remaining)",
+    )
     parser.add_argument("--pr-limit", type=int, default=50, help="Maximum PRs to collect per repository")
+    parser.add_argument(
+        "--confidence",
+        type=int,
+        default=95,
+        choices=[90, 95, 99],
+        help="Confidence level for statistical sample size (used when --pr-limit <= 0)",
+    )
+    parser.add_argument(
+        "--margin-error",
+        type=float,
+        default=0.05,
+        help="Margin of error for statistical sample size (used when --pr-limit <= 0)",
+    )
+    parser.add_argument(
+        "--population-proportion",
+        type=float,
+        default=0.5,
+        help="Expected proportion p in sample size formula (default worst-case 0.5)",
+    )
+    parser.add_argument(
+        "--min-sample",
+        type=int,
+        default=30,
+        help="Minimum sample size per repository when using statistical mode",
+    )
+    parser.add_argument(
+        "--max-sample",
+        type=int,
+        default=500,
+        help="Maximum sample size per repository when using statistical mode",
+    )
+    parser.add_argument(
+        "--interaction-mode",
+        choices=["summary", "full"],
+        default="summary",
+        help="summary uses PR payload counts only; full also fetches comment threads",
+    )
     parser.add_argument("--max-retries", type=int, default=5, help="API retries")
     parser.add_argument("--checkpoint", default="", help="Checkpoint JSON file")
     return parser.parse_args()
+
+
+def z_for_confidence(confidence: int) -> float:
+    if confidence == 90:
+        return 1.645
+    if confidence == 99:
+        return 2.576
+    return 1.96
+
+
+def compute_sample_size(
+    population_size: int,
+    confidence: int,
+    margin_error: float,
+    proportion: float,
+    min_sample: int,
+    max_sample: int,
+) -> int:
+    if population_size <= 0:
+        return max(1, min_sample)
+
+    safe_margin = margin_error if margin_error > 0 else 0.05
+    p = min(0.999, max(0.001, proportion))
+    z = z_for_confidence(confidence)
+
+    n0 = (z * z * p * (1.0 - p)) / (safe_margin * safe_margin)
+    n = n0 / (1.0 + ((n0 - 1.0) / float(population_size)))
+    n_int = int(math.ceil(n))
+    n_int = max(min_sample, n_int)
+    n_int = min(max_sample, n_int)
+    return min(population_size, max(1, n_int))
+
+
+def sample_pull_summaries(
+    owner: str,
+    repo: str,
+    population_size: int,
+    target_count: int,
+    token: Optional[str],
+    max_retries: int,
+) -> List[Dict[str, Any]]:
+    if target_count <= 0 or population_size <= 0:
+        return []
+
+    sample_size = min(target_count, population_size)
+    rng = random.Random(f"{owner}/{repo}:{population_size}:{sample_size}")
+    selected_indexes = sorted(rng.sample(range(population_size), k=sample_size))
+
+    page_to_offsets: Dict[int, List[int]] = {}
+    for index in selected_indexes:
+        page = (index // 100) + 1
+        offset = index % 100
+        page_to_offsets.setdefault(page, []).append(offset)
+
+    selected: List[Dict[str, Any]] = []
+    seen_numbers = set()
+
+    for page in sorted(page_to_offsets.keys()):
+        pulls = list_repo_pulls(owner, repo, token=token, max_retries=max_retries, page=page)
+        if not pulls:
+            continue
+        for offset in page_to_offsets[page]:
+            if offset >= len(pulls):
+                continue
+            pull = pulls[offset]
+            number = safe_int(pull.get("number"), default=0)
+            if number <= 0 or number in seen_numbers:
+                continue
+            seen_numbers.add(number)
+            selected.append(pull)
+
+    if len(selected) < sample_size:
+        max_pages = max(1, int(math.ceil(population_size / 100.0)))
+        for page in range(1, max_pages + 1):
+            if len(selected) >= sample_size:
+                break
+            pulls = list_repo_pulls(owner, repo, token=token, max_retries=max_retries, page=page)
+            if not pulls:
+                break
+            for pull in pulls:
+                number = safe_int(pull.get("number"), default=0)
+                if number <= 0 or number in seen_numbers:
+                    continue
+                seen_numbers.add(number)
+                selected.append(pull)
+                if len(selected) >= sample_size:
+                    break
+
+    return selected[:sample_size]
 
 
 def repo_slug(owner: str, repo: str) -> str:
@@ -135,6 +273,16 @@ def participant_logins(
     return list(logins.keys())
 
 
+def participant_proxy(author_login: str, reviewers: List[str]) -> List[str]:
+    logins = OrderedDict()
+    if author_login:
+        logins[author_login] = None
+    for login in reviewers:
+        if login:
+            logins[login] = None
+    return list(logins.keys())
+
+
 def human_reviews(reviews: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     result = []
     for review in reviews:
@@ -153,95 +301,124 @@ def final_review_state(reviews: List[Dict[str, Any]]) -> str:
     return str(latest.get("state", "NO_REVIEW") or "NO_REVIEW")
 
 
-def collect_pr_rows(owner: str, repo: str, token: Optional[str], max_retries: int, pr_limit: int) -> List[Dict[str, str]]:
+def collect_pr_rows(
+    owner: str,
+    repo: str,
+    token: Optional[str],
+    max_retries: int,
+    pull_summaries: List[Dict[str, Any]],
+    population_total_prs: int,
+    sample_target_prs: int,
+    confidence: int,
+    margin_error: float,
+    interaction_mode: str,
+    repo_csv_path: Optional[Path] = None,
+) -> List[Dict[str, str]]:
     rows: List[Dict[str, str]] = []
-    page = 1
-    while len(rows) < pr_limit:
-        pulls = list_repo_pulls(owner, repo, token=token, max_retries=max_retries, page=page)
-        if not pulls:
-            break
-        for pull in pulls:
-            if len(rows) >= pr_limit:
-                break
+    for pull in pull_summaries:
+        number = safe_int(pull.get("number"), default=0)
+        if number <= 0:
+            continue
 
-            number = safe_int(pull.get("number"), default=0)
-            if number <= 0:
-                continue
+        details = pull_details(owner, repo, number, token=token, max_retries=max_retries)
+        reviews = list_pull_reviews(owner, repo, number, token=token, max_retries=max_retries)
 
-            details = pull_details(owner, repo, number, token=token, max_retries=max_retries)
-            reviews = list_pull_reviews(owner, repo, number, token=token, max_retries=max_retries)
+        created_at = str(details.get("created_at", "") or pull.get("created_at", ""))
+        updated_at = str(details.get("updated_at", "") or pull.get("updated_at", ""))
+        last_activity = max_datetime(
+            [
+                updated_at,
+                *(review.get("submitted_at") for review in reviews),
+            ]
+        )
+        created_dt = parse_iso8601(created_at) if created_at else None
+        analysis_hours = 0.0
+        if created_dt and last_activity:
+            delta = last_activity - created_dt
+            analysis_hours = delta.total_seconds() / 3600.0
+
+        body = str(details.get("body", "") or "")
+        review_states = [str(review.get("state", "") or "") for review in reviews]
+        human_review_list = human_reviews(reviews)
+        human_reviewers = [str((review.get("user") or {}).get("login", "")) for review in human_review_list]
+        author_login = str((details.get("user") or {}).get("login", "") or "")
+        if interaction_mode == "full":
             issue_comments = list_issue_comments(owner, repo, number, token=token, max_retries=max_retries)
             review_comments = list_review_comments(owner, repo, number, token=token, max_retries=max_retries)
-
-            created_at = str(details.get("created_at", "") or pull.get("created_at", ""))
-            updated_at = str(details.get("updated_at", "") or pull.get("updated_at", ""))
-            last_activity = max_datetime(
-                [
-                    updated_at,
-                    *(comment.get("created_at") for comment in issue_comments),
-                    *(review.get("submitted_at") for review in reviews),
-                    *(comment.get("created_at") for comment in review_comments),
-                ]
-            )
-            created_dt = parse_iso8601(created_at) if created_at else None
-            analysis_hours = 0.0
-            if created_dt and last_activity:
-                delta = last_activity - created_dt
-                analysis_hours = delta.total_seconds() / 3600.0
-
-            body = str(details.get("body", "") or "")
-            review_states = [str(review.get("state", "") or "") for review in reviews]
-            human_review_list = human_reviews(reviews)
-            human_reviewers = [str((review.get("user") or {}).get("login", "")) for review in human_review_list]
             participants = participant_logins(
-                author_login=str((details.get("user") or {}).get("login", "") or ""),
+                author_login=author_login,
                 issue_comments=issue_comments,
                 reviews=reviews,
                 review_comments=review_comments,
             )
-            final_state = final_review_state(reviews)
-
-            rows.append(
-                {
-                    "owner": owner,
-                    "repo": repo,
-                    "full_name": f"{owner}/{repo}",
-                    "pr_number": str(number),
-                    "html_url": str(details.get("html_url", pull.get("html_url", "")) or ""),
-                    "title": str(details.get("title", pull.get("title", "")) or ""),
-                    "state": str(details.get("state", pull.get("state", "")) or ""),
-                    "created_at": created_at,
-                    "updated_at": updated_at,
-                    "last_activity_at": format_iso8601(last_activity) if last_activity else "",
-                    "analysis_hours": f"{analysis_hours:.6f}",
-                    "body_chars": str(len(body)),
-                    "changed_files": str(safe_int(details.get("changed_files"), default=0)),
-                    "additions": str(safe_int(details.get("additions"), default=0)),
-                    "deletions": str(safe_int(details.get("deletions"), default=0)),
-                    "total_changes": str(
-                        safe_int(details.get("additions"), default=0) + safe_int(details.get("deletions"), default=0)
-                    ),
-                    "issue_comments": str(len(issue_comments)),
-                    "review_comments": str(len(review_comments)),
-                    "total_comments": str(len(issue_comments) + len(review_comments)),
-                    "human_review_count": str(len(human_review_list)),
-                    "participant_count": str(len(participants)),
-                    "final_review_state": final_state,
-                    "final_feedback": normalize_feedback(final_state),
-                    "review_states": "|".join(review_states),
-                    "review_participants": "|".join(human_reviewers),
-                    "has_human_review": "yes" if human_review_list else "no",
-                    "author_login": str((details.get("user") or {}).get("login", "") or ""),
-                    "merged_at": str(details.get("merged_at", "") or ""),
-                }
+            issue_comment_count = len(issue_comments)
+            review_comment_count = len(review_comments)
+        else:
+            issue_comment_count = safe_int(pull.get("comments"), default=safe_int(details.get("comments"), default=0))
+            review_comment_count = safe_int(
+                pull.get("review_comments"), default=safe_int(details.get("review_comments"), default=0)
             )
-        page += 1
+            participants = participant_proxy(author_login=author_login, reviewers=human_reviewers)
+        final_state = final_review_state(reviews)
+
+        rows.append(
+            {
+                "owner": owner,
+                "repo": repo,
+                "full_name": f"{owner}/{repo}",
+                "pr_number": str(number),
+                "html_url": str(details.get("html_url", pull.get("html_url", "")) or ""),
+                "title": str(details.get("title", pull.get("title", "")) or ""),
+                "state": str(details.get("state", pull.get("state", "")) or ""),
+                "created_at": created_at,
+                "updated_at": updated_at,
+                "last_activity_at": format_iso8601(last_activity) if last_activity else "",
+                "analysis_hours": f"{analysis_hours:.6f}",
+                "body_chars": str(len(body)),
+                "changed_files": str(safe_int(details.get("changed_files"), default=0)),
+                "additions": str(safe_int(details.get("additions"), default=0)),
+                "deletions": str(safe_int(details.get("deletions"), default=0)),
+                "total_changes": str(
+                    safe_int(details.get("additions"), default=0) + safe_int(details.get("deletions"), default=0)
+                ),
+                "issue_comments": str(issue_comment_count),
+                "review_comments": str(review_comment_count),
+                "total_comments": str(issue_comment_count + review_comment_count),
+                "human_review_count": str(len(human_review_list)),
+                "participant_count": str(len(participants)),
+                "final_review_state": final_state,
+                "final_feedback": normalize_feedback(final_state),
+                "review_states": "|".join(review_states),
+                "review_participants": "|".join(human_reviewers),
+                "has_human_review": "yes" if human_review_list else "no",
+                "author_login": author_login,
+                "merged_at": str(details.get("merged_at", "") or ""),
+                "population_total_prs": str(max(0, population_total_prs)),
+                "sample_target_prs": str(max(0, sample_target_prs)),
+                "sampling_confidence": str(confidence),
+                "sampling_margin_error": f"{margin_error:.6f}",
+            }
+        )
+
+        if repo_csv_path is not None:
+            append_csv_row(repo_csv_path, rows[-1], PR_COLUMNS)
+            print(f"Saved {len(rows)}/{len(pull_summaries)} PRs to {repo_csv_path.name}")
 
     return rows
 
 
 def write_run_log(path: Path, rows: List[Dict[str, str]]) -> None:
     write_csv_rows(path, rows, RUN_LOG_COLUMNS)
+
+
+def append_csv_row(path: Path, row: Dict[str, Any], fieldnames: List[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    write_header = not path.exists() or path.stat().st_size == 0
+    with path.open("a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        if write_header:
+            writer.writeheader()
+        writer.writerow(row)
 
 
 def main() -> int:
@@ -257,7 +434,16 @@ def main() -> int:
 
     checkpoint = load_checkpoint(checkpoint_path, {"repo_index": 0})
     start_index = int(checkpoint.get("repo_index", 0) or 0)
-    selected_repos = repos[: max(1, args.repo_limit)]
+    if start_index < 0:
+        start_index = 0
+    if start_index >= len(repos):
+        print(f"Checkpoint already at end (repo_index={start_index}, total={len(repos)})")
+        return 0
+
+    remaining = len(repos) - start_index
+    batch_size = remaining if args.repo_limit <= 0 else max(1, args.repo_limit)
+    end_index = min(len(repos), start_index + batch_size)
+    selected_repos = repos[start_index:end_index]
 
     run_log_path = output_root / "pipeline_run_log.csv"
     run_log: List[Dict[str, str]] = read_csv_rows(run_log_path)
@@ -267,7 +453,7 @@ def main() -> int:
         if row.get("status") == "ok"
     }
 
-    for repo_index, row in enumerate(selected_repos[start_index:], start=start_index):
+    for repo_index, row in enumerate(selected_repos, start=start_index):
         owner = row.get("owner", "").strip()
         repo = row.get("repo", "").strip()
         if not owner or not repo:
@@ -281,11 +467,61 @@ def main() -> int:
             print(f"Skipping completed {slug}")
             continue
 
+        if repo_csv.exists():
+            repo_csv.unlink()
+
         try:
             print(f"Collecting {slug}")
-            rows = collect_pr_rows(owner, repo, token=token, max_retries=args.max_retries, pr_limit=args.pr_limit)
-            write_csv_rows(repo_csv, rows, PR_COLUMNS)
-            result = {"owner": owner, "repo": repo, "status": "ok", "message": f"rows={len(rows)}"}
+            population_total_prs = safe_int(row.get("total_prs"), default=0)
+            if args.pr_limit > 0:
+                sample_target_prs = args.pr_limit
+                if population_total_prs > 0:
+                    sample_target_prs = min(sample_target_prs, population_total_prs)
+            else:
+                sample_target_prs = compute_sample_size(
+                    population_size=population_total_prs,
+                    confidence=args.confidence,
+                    margin_error=args.margin_error,
+                    proportion=args.population_proportion,
+                    min_sample=max(1, args.min_sample),
+                    max_sample=max(1, args.max_sample),
+                )
+
+            if population_total_prs <= 0:
+                pull_summaries = list_repo_pulls(owner, repo, token=token, max_retries=args.max_retries, page=1)
+                sample_target_prs = min(len(pull_summaries), max(1, sample_target_prs))
+                pull_summaries = pull_summaries[:sample_target_prs]
+            else:
+                pull_summaries = sample_pull_summaries(
+                    owner=owner,
+                    repo=repo,
+                    population_size=population_total_prs,
+                    target_count=sample_target_prs,
+                    token=token,
+                    max_retries=args.max_retries,
+                )
+
+            rows = collect_pr_rows(
+                owner,
+                repo,
+                token=token,
+                max_retries=args.max_retries,
+                pull_summaries=pull_summaries,
+                population_total_prs=population_total_prs,
+                sample_target_prs=sample_target_prs,
+                confidence=args.confidence,
+                margin_error=args.margin_error,
+                interaction_mode=args.interaction_mode,
+                repo_csv_path=repo_csv,
+            )
+            if rows and not repo_csv.exists():
+                write_csv_rows(repo_csv, rows, PR_COLUMNS)
+            result = {
+                "owner": owner,
+                "repo": repo,
+                "status": "ok",
+                "message": f"rows={len(rows)} sample_target={sample_target_prs} population={population_total_prs}",
+            }
         except Exception as exc:  # noqa: BLE001
             result = {"owner": owner, "repo": repo, "status": "error", "message": str(exc)}
 
