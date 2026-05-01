@@ -1,3 +1,16 @@
 {
-  "repo_index": 2
+  "completed_repos": [
+    "996icu__996.ICU",
+    "EbookFoundation__free-programming-books",
+    "awesome-selfhosted__awesome-selfhosted",
+    "codecrafters-io/build-your-own-x",
+    "donnemartin/system-design-primer",
+    "freeCodeCamp__freeCodeCamp",
+    "jwasham__coding-interview-university",
+    "openclaw__openclaw",
+    "sindresorhus/awesome",
+    "trekhleb__javascript-algorithms",
+    "trimstray__the-book-of-secret-knowledge",
+    "vinta__awesome-python"
+  ]
 }

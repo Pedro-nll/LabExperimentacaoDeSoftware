@@ -2,3 +2,13 @@ owner,repo,status,message
 codecrafters-io,build-your-own-x,ok,rows=5 sample_target=5 population=558
 sindresorhus,awesome,ok,rows=300 sample_target=300 population=2387
 freeCodeCamp,freeCodeCamp,error,"IncompleteRead(722801 bytes read, 1247528 more expected)"
+donnemartin,system-design-primer,ok,rows=242 sample_target=242 population=648
+jwasham,coding-interview-university,ok,rows=280 sample_target=280 population=1026
+vinta,awesome-python,ok,rows=300 sample_target=300 population=1427
+EbookFoundation,free-programming-books,ok,rows=300 sample_target=300 population=11393
+996icu,996.ICU,ok,rows=300 sample_target=300 population=1920
+freeCodeCamp,freeCodeCamp,ok,rows=300 sample_target=300 population=44365
+openclaw,openclaw,ok,rows=300 sample_target=300 population=40096
+awesome-selfhosted,awesome-selfhosted,ok,rows=300 sample_target=300 population=2990
+trimstray,the-book-of-secret-knowledge,ok,rows=188 sample_target=188 population=367
+trekhleb,javascript-algorithms,ok,rows=263 sample_target=263 population=829

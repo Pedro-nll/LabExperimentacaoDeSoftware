@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import argparse
 import csv
+import concurrent.futures
+import threading
 from collections import OrderedDict
 import math
 from pathlib import Path
@@ -115,6 +117,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--max-retries", type=int, default=5, help="API retries")
     parser.add_argument("--checkpoint", default="", help="Checkpoint JSON file")
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=1,
+        help="Number of repo-level workers to run in parallel (default 1)",
+    )
     return parser.parse_args()
 
 
@@ -312,6 +320,7 @@ def collect_pr_rows(
     confidence: int,
     margin_error: float,
     interaction_mode: str,
+    worker_label: str = "",
     repo_csv_path: Optional[Path] = None,
 ) -> List[Dict[str, str]]:
     rows: List[Dict[str, str]] = []
@@ -402,13 +411,14 @@ def collect_pr_rows(
 
         if repo_csv_path is not None:
             append_csv_row(repo_csv_path, rows[-1], PR_COLUMNS)
-            print(f"Saved {len(rows)}/{len(pull_summaries)} PRs to {repo_csv_path.name}")
+            prefix = f"[{worker_label}] " if worker_label else ""
+            print(f"{prefix}Saved {len(rows)}/{len(pull_summaries)} PRs to {repo_csv_path.name}")
 
     return rows
 
 
-def write_run_log(path: Path, rows: List[Dict[str, str]]) -> None:
-    write_csv_rows(path, rows, RUN_LOG_COLUMNS)
+def append_run_log_row(path: Path, row: Dict[str, Any]) -> None:
+    append_csv_row(path, row, RUN_LOG_COLUMNS)
 
 
 def append_csv_row(path: Path, row: Dict[str, Any], fieldnames: List[str]) -> None:
@@ -432,47 +442,80 @@ def main() -> int:
     if not repos:
         raise RuntimeError(f"No repositories found in {repos_csv}")
 
-    checkpoint = load_checkpoint(checkpoint_path, {"repo_index": 0})
-    start_index = int(checkpoint.get("repo_index", 0) or 0)
-    if start_index < 0:
-        start_index = 0
-    if start_index >= len(repos):
-        print(f"Checkpoint already at end (repo_index={start_index}, total={len(repos)})")
-        return 0
-
-    remaining = len(repos) - start_index
-    batch_size = remaining if args.repo_limit <= 0 else max(1, args.repo_limit)
-    end_index = min(len(repos), start_index + batch_size)
-    selected_repos = repos[start_index:end_index]
+    checkpoint = load_checkpoint(checkpoint_path, {"completed_repos": []})
+    completed_repos = {
+        str(item)
+        for item in (checkpoint.get("completed_repos") or [])
+        if str(item).strip()
+    }
 
     run_log_path = output_root / "pipeline_run_log.csv"
     run_log: List[Dict[str, str]] = read_csv_rows(run_log_path)
+    completed_repos.update(
+        {
+            f"{row.get('owner', '').strip()}/{row.get('repo', '').strip()}"
+            for row in run_log
+            if row.get("status") == "ok" and row.get("owner") and row.get("repo")
+        }
+    )
     completed = {
         (row.get("owner", ""), row.get("repo", ""))
         for row in run_log
         if row.get("status") == "ok"
     }
 
-    for repo_index, row in enumerate(selected_repos, start=start_index):
+    pending_repos = []
+    for row in repos:
         owner = row.get("owner", "").strip()
         repo = row.get("repo", "").strip()
         if not owner or not repo:
             continue
-
-        slug = repo_slug(owner, repo)
-        repo_output_dir = output_root / slug
-        repo_csv = repo_output_dir / "prs.csv"
-
-        if (owner, repo) in completed and repo_csv.exists():
-            print(f"Skipping completed {slug}")
+        slug = f"{owner}/{repo}"
+        if slug in completed_repos:
             continue
+        pending_repos.append(row)
 
-        if repo_csv.exists():
+    if not pending_repos:
+        print(f"No pending repositories remain (completed={len(completed_repos)})")
+        return 0
+
+    selected_repos = pending_repos if args.repo_limit <= 0 else pending_repos[: max(1, args.repo_limit)]
+
+    lock = threading.Lock()
+
+    def save_completion_checkpoint_locked() -> None:
+        save_checkpoint(checkpoint_path, {"completed_repos": sorted(completed_repos)})
+
+    def process_single(repo_row: Dict[str, str]) -> Dict[str, str]:
+        thread_id = threading.get_ident()
+        worker_label = f"worker-{thread_id}"
+        owner = repo_row.get("owner", "").strip()
+        repo = repo_row.get("repo", "").strip()
+        slug = repo_slug(owner, repo) if owner and repo else ""
+        repo_output_dir = output_root / slug if slug else None
+        repo_csv = repo_output_dir / "prs.csv" if slug else None
+        repo_done_marker = repo_output_dir / "done.json" if repo_output_dir else None
+
+        if not owner or not repo:
+            result = {"owner": owner, "repo": repo, "status": "skip", "message": "empty owner/repo"}
+            with lock:
+                append_run_log_row(run_log_path, result)
+            return result
+
+        if (owner, repo) in completed and repo_csv and repo_csv.exists():
+            result = {"owner": owner, "repo": repo, "status": "ok", "message": "already completed"}
+            with lock:
+                append_run_log_row(run_log_path, result)
+            return result
+
+        if repo_csv and repo_csv.exists():
             repo_csv.unlink()
+        if repo_done_marker and repo_done_marker.exists():
+            repo_done_marker.unlink()
 
         try:
-            print(f"Collecting {slug}")
-            population_total_prs = safe_int(row.get("total_prs"), default=0)
+            print(f"[{worker_label}] Collecting {slug}")
+            population_total_prs = safe_int(repo_row.get("total_prs"), default=0)
             if args.pr_limit > 0:
                 sample_target_prs = args.pr_limit
                 if population_total_prs > 0:
@@ -512,10 +555,14 @@ def main() -> int:
                 confidence=args.confidence,
                 margin_error=args.margin_error,
                 interaction_mode=args.interaction_mode,
+                worker_label=worker_label,
                 repo_csv_path=repo_csv,
             )
-            if rows and not repo_csv.exists():
+            if rows and repo_csv and not repo_csv.exists():
                 write_csv_rows(repo_csv, rows, PR_COLUMNS)
+            if repo_done_marker:
+                repo_done_marker.parent.mkdir(parents=True, exist_ok=True)
+                repo_done_marker.write_text("done\n", encoding="utf-8")
             result = {
                 "owner": owner,
                 "repo": repo,
@@ -525,9 +572,26 @@ def main() -> int:
         except Exception as exc:  # noqa: BLE001
             result = {"owner": owner, "repo": repo, "status": "error", "message": str(exc)}
 
-        run_log.append(result)
-        write_run_log(run_log_path, run_log)
-        save_checkpoint(checkpoint_path, {"repo_index": repo_index + 1})
+        with lock:
+            run_log.append(result)
+            append_run_log_row(run_log_path, result)
+            if result.get("status") == "ok":
+                completed_repos.add(slug)
+                save_completion_checkpoint_locked()
+
+        return result
+
+    if args.workers <= 1:
+        for row in selected_repos:
+            _ = process_single(row)
+    else:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, args.workers)) as exe:
+            futures = {exe.submit(process_single, row): row for row in selected_repos}
+            for fut in concurrent.futures.as_completed(futures):
+                try:
+                    _ = fut.result()
+                except Exception as exc:  # pragma: no cover - defensive
+                    print(f"Worker error: {exc}")
 
     failures = [row for row in run_log if row.get("status") != "ok"]
     print(f"Processed {len(run_log)} repositories | failed={len(failures)}")
