@@ -1,16 +1,31 @@
 {
   "completed_repos": [
+    "996icu/996.ICU",
     "996icu__996.ICU",
+    "EbookFoundation/free-programming-books",
     "EbookFoundation__free-programming-books",
+    "Significant-Gravitas__AutoGPT",
+    "TheAlgorithms__Python",
+    "awesome-selfhosted/awesome-selfhosted",
     "awesome-selfhosted__awesome-selfhosted",
     "codecrafters-io/build-your-own-x",
     "donnemartin/system-design-primer",
+    "facebook__react",
+    "freeCodeCamp/freeCodeCamp",
     "freeCodeCamp__freeCodeCamp",
+    "getify__You-Dont-Know-JS",
+    "github__gitignore",
+    "jwasham/coding-interview-university",
     "jwasham__coding-interview-university",
+    "ohmyzsh__ohmyzsh",
+    "openclaw/openclaw",
     "openclaw__openclaw",
     "sindresorhus/awesome",
+    "trekhleb/javascript-algorithms",
     "trekhleb__javascript-algorithms",
+    "trimstray/the-book-of-secret-knowledge",
     "trimstray__the-book-of-secret-knowledge",
+    "vinta/awesome-python",
     "vinta__awesome-python"
   ]
 }

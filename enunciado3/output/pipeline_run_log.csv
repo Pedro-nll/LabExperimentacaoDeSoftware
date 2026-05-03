@@ -12,3 +12,9 @@ openclaw,openclaw,ok,rows=300 sample_target=300 population=40096
 awesome-selfhosted,awesome-selfhosted,ok,rows=300 sample_target=300 population=2990
 trimstray,the-book-of-secret-knowledge,ok,rows=188 sample_target=188 population=367
 trekhleb,javascript-algorithms,ok,rows=263 sample_target=263 population=829
+getify,You-Dont-Know-JS,ok,rows=268 sample_target=268 population=881
+ohmyzsh,ohmyzsh,ok,rows=300 sample_target=300 population=7950
+TheAlgorithms,Python,ok,rows=300 sample_target=300 population=12072
+facebook,react,ok,rows=300 sample_target=300 population=19277
+github,gitignore,ok,rows=300 sample_target=300 population=4656
+Significant-Gravitas,AutoGPT,ok,rows=300 sample_target=300 population=7851

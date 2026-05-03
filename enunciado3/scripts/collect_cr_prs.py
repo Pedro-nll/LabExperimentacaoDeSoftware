@@ -164,6 +164,7 @@ def sample_pull_summaries(
     target_count: int,
     token: Optional[str],
     max_retries: int,
+    worker_label: str = "",
 ) -> List[Dict[str, Any]]:
     if target_count <= 0 or population_size <= 0:
         return []
@@ -181,7 +182,13 @@ def sample_pull_summaries(
     selected: List[Dict[str, Any]] = []
     seen_numbers = set()
 
+    prefix = f"[{worker_label}] " if worker_label else ""
+    print(
+        f"{prefix}Sampling {sample_size} PRs from population={population_size} ({len(page_to_offsets)} pages to fetch)",
+    )
+
     for page in sorted(page_to_offsets.keys()):
+        print(f"{prefix}Fetching sampled page {page}")
         pulls = list_repo_pulls(owner, repo, token=token, max_retries=max_retries, page=page)
         if not pulls:
             continue
@@ -197,9 +204,12 @@ def sample_pull_summaries(
 
     if len(selected) < sample_size:
         max_pages = max(1, int(math.ceil(population_size / 100.0)))
+        print(f"{prefix}Sample backfill required ({len(selected)}/{sample_size}), scanning up to {max_pages} pages")
         for page in range(1, max_pages + 1):
             if len(selected) >= sample_size:
                 break
+            if page == 1 or page % 10 == 0:
+                print(f"{prefix}Backfill page {page} ({len(selected)}/{sample_size})")
             pulls = list_repo_pulls(owner, repo, token=token, max_retries=max_retries, page=page)
             if not pulls:
                 break
@@ -212,6 +222,7 @@ def sample_pull_summaries(
                 if len(selected) >= sample_size:
                     break
 
+    print(f"{prefix}Sample ready: {len(selected[:sample_size])} PRs")
     return selected[:sample_size]
 
 
@@ -542,6 +553,7 @@ def main() -> int:
                     target_count=sample_target_prs,
                     token=token,
                     max_retries=args.max_retries,
+                    worker_label=worker_label,
                 )
 
             rows = collect_pr_rows(
