@@ -17,6 +17,7 @@ from urllib.request import Request, urlopen
 
 API_VERSION = "2022-11-28"
 GITHUB_API = "https://api.github.com"
+GITHUB_GRAPHQL = "https://api.github.com/graphql"
 
 
 def github_token() -> Optional[str]:
@@ -160,3 +161,113 @@ def normalize_feedback(state: str) -> str:
     if normalized == "NO_REVIEW":
         return "no_review"
     return normalized.lower() or "unknown"
+
+
+def github_graphql_query(query: str, variables: Optional[Dict[str, Any]] = None, token: Optional[str] = None, max_retries: int = 5) -> Dict[str, Any]:
+    """Execute a GraphQL query against GitHub API."""
+    headers = build_headers(token)
+    headers["Content-Type"] = "application/json"
+    backoff = 2.0
+    payload_dict = {"query": query}
+    if variables:
+        payload_dict["variables"] = variables
+    payload = json.dumps(payload_dict).encode("utf-8")
+    
+    for attempt in range(1, max_retries + 1):
+        request = Request(GITHUB_GRAPHQL, data=payload, headers=headers, method="POST")
+        try:
+            with urlopen(request, timeout=60) as response:
+                response_data = response.read().decode("utf-8")
+            result = json.loads(response_data)
+            # Check for GraphQL errors even on 200 status
+            if "errors" in result:
+                errors = result.get("errors", [])
+                error_msg = str(errors[0].get("message", "")) if errors else ""
+                if "API rate limit" in error_msg and attempt < max_retries:
+                    sleep_for = backoff
+                    backoff *= 2
+                    time.sleep(sleep_for)
+                    continue
+                raise RuntimeError(f"GraphQL error: {error_msg}")
+            return result
+        except HTTPError as exc:
+            if exc.code in (403, 408, 409, 425, 429, 500, 502, 503, 504) and attempt < max_retries:
+                sleep_for = backoff
+                backoff *= 2
+                time.sleep(sleep_for)
+                continue
+            raise
+        except URLError:
+            if attempt < max_retries:
+                time.sleep(backoff)
+                backoff *= 2
+                continue
+            raise
+    
+    raise RuntimeError("Max retries reached for GraphQL query")
+
+
+def graphql_fetch_prs_batch(
+    owner: str,
+    repo: str,
+    first: int = 20,
+    after: Optional[str] = None,
+    token: Optional[str] = None,
+    max_retries: int = 5,
+) -> Dict[str, Any]:
+    """Fetch a batch of PRs using GraphQL. Returns dict with 'nodes' and pageInfo."""
+    query = """
+    query GetRepositoryPRs($owner: String!, $repo: String!, $after: String, $first: Int!) {
+      repository(owner: $owner, name: $repo) {
+        pullRequests(first: $first, after: $after, orderBy: {field: UPDATED_AT, direction: DESC}) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          nodes {
+            number
+            title
+            state
+            createdAt
+            updatedAt
+            bodyText
+            changedFiles
+            additions
+            deletions
+            comments {
+              totalCount
+            }
+            reviews(first: 100) {
+              nodes {
+                state
+                submittedAt
+                                author {
+                  login
+                }
+              }
+            }
+            author {
+              login
+            }
+            mergedAt
+          }
+        }
+      }
+    }
+    """
+    
+    variables = {
+        "owner": owner,
+        "repo": repo,
+        "first": first,
+        "after": after,
+    }
+    
+    result = github_graphql_query(query, variables, token=token, max_retries=max_retries)
+    
+    # Extract PR data from nested response
+    try:
+        prs = result.get("data", {}).get("repository", {}).get("pullRequests", {})
+        return prs
+    except (KeyError, TypeError):
+        return {"nodes": [], "pageInfo": {"hasNextPage": False, "endCursor": None}}

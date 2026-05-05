@@ -120,8 +120,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--workers",
         type=int,
-        default=1,
-        help="Number of repo-level workers to run in parallel (default 1)",
+        default=2,
+        help="Number of repo-level workers to run in parallel (default 2; use 1 for lowest API load)",
+    )
+    parser.add_argument(
+        "--api-delay",
+        type=float,
+        default=0.1,
+        help="Delay in seconds between API calls per worker (default 0.1s)",
+    )
+    parser.add_argument(
+        "--batch-writes",
+        type=int,
+        default=10,
+        help="Batch CSV writes (write every N rows instead of per-row; default 10)",
     )
     return parser.parse_args()
 
@@ -187,8 +199,9 @@ def sample_pull_summaries(
         f"{prefix}Sampling {sample_size} PRs from population={population_size} ({len(page_to_offsets)} pages to fetch)",
     )
 
-    for page in sorted(page_to_offsets.keys()):
-        print(f"{prefix}Fetching sampled page {page}")
+    for page_idx, page in enumerate(sorted(page_to_offsets.keys()), 1):
+        if page_idx == 1 or page_idx % 50 == 0:
+            print(f"{prefix}Fetching sampled pages {page_to_offsets.keys()}: {page_idx}/{len(page_to_offsets)}")
         pulls = list_repo_pulls(owner, repo, token=token, max_retries=max_retries, page=page)
         if not pulls:
             continue
@@ -208,8 +221,8 @@ def sample_pull_summaries(
         for page in range(1, max_pages + 1):
             if len(selected) >= sample_size:
                 break
-            if page == 1 or page % 10 == 0:
-                print(f"{prefix}Backfill page {page} ({len(selected)}/{sample_size})")
+            if page == 1 or page % 50 == 0:
+                print(f"{prefix}Backfill page {page}/{max_pages} ({len(selected)}/{sample_size})")
             pulls = list_repo_pulls(owner, repo, token=token, max_retries=max_retries, page=page)
             if not pulls:
                 break
@@ -333,9 +346,15 @@ def collect_pr_rows(
     interaction_mode: str,
     worker_label: str = "",
     repo_csv_path: Optional[Path] = None,
+    api_delay: float = 0.1,
+    batch_writes: int = 10,
 ) -> List[Dict[str, str]]:
+    import time
     rows: List[Dict[str, str]] = []
+    batch_count = 0
+    prefix = f"[{worker_label}] " if worker_label else ""
     for pull in pull_summaries:
+        time.sleep(api_delay)
         number = safe_int(pull.get("number"), default=0)
         if number <= 0:
             continue
@@ -420,10 +439,14 @@ def collect_pr_rows(
             }
         )
 
-        if repo_csv_path is not None:
-            append_csv_row(repo_csv_path, rows[-1], PR_COLUMNS)
-            prefix = f"[{worker_label}] " if worker_label else ""
-            print(f"{prefix}Saved {len(rows)}/{len(pull_summaries)} PRs to {repo_csv_path.name}")
+        batch_count += 1
+        if batch_count >= batch_writes or len(rows) == len(pull_summaries):
+            if repo_csv_path is not None:
+                for row in rows[-batch_count:]:
+                    append_csv_row(repo_csv_path, row, PR_COLUMNS)
+            if len(rows) % (batch_writes * 2) == 0 or len(rows) == len(pull_summaries):
+                print(f"{prefix}Saved {len(rows)}/{len(pull_summaries)} PRs to {repo_csv_path.name}")
+            batch_count = 0
 
     return rows
 
@@ -569,6 +592,8 @@ def main() -> int:
                 interaction_mode=args.interaction_mode,
                 worker_label=worker_label,
                 repo_csv_path=repo_csv,
+                api_delay=args.api_delay,
+                batch_writes=args.batch_writes,
             )
             if rows and repo_csv and not repo_csv.exists():
                 write_csv_rows(repo_csv, rows, PR_COLUMNS)

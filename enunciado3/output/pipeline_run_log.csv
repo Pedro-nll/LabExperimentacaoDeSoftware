@@ -18,3 +18,14 @@ TheAlgorithms,Python,ok,rows=300 sample_target=300 population=12072
 facebook,react,ok,rows=300 sample_target=300 population=19277
 github,gitignore,ok,rows=300 sample_target=300 population=4656
 Significant-Gravitas,AutoGPT,ok,rows=300 sample_target=300 population=7851
+obra,superpowers,ok,rows=246 sample_target=246 population=675
+flutter,flutter,error,HTTP Error 502: Bad Gateway
+affaan-m,everything-claude-code,ok,rows=282 sample_target=282 population=1049
+avelino,awesome-go,error,'NoneType' object has no attribute 'get'
+f,prompts.chat,error,'NoneType' object has no attribute 'get'
+jlevy,the-art-of-command-line,error,'NoneType' object has no attribute 'get'
+ollama,ollama,ok,rows=300 sample_target=300 population=5422
+AUTOMATIC1111,stable-diffusion-webui,error,'NoneType' object has no attribute 'get'
+airbnb,javascript,error,'NoneType' object has no attribute 'get'
+yt-dlp,yt-dlp,error,'NoneType' object has no attribute 'get'
+ytdl-org,youtube-dl,error,'NoneType' object has no attribute 'get'
