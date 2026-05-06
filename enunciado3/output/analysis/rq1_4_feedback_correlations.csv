@@ -1,0 +1,33 @@
+metric,feedback_type,n_samples,spearman_rho,spearman_p,pearson_r,pearson_p
+Changed Files,Approved,6822,0.0337,0.0053,-0.0231,0.0567
+Changed Files,Changes Requested,6822,-0.0420,0.0005,-0.0094,0.4359
+Changed Files,Commented,6822,0.2809,0.0000,0.0012,0.9214
+Changed Files,Has Any Review,6822,0.1924,0.0000,-0.0164,0.1747
+Total Changes (lines),Approved,6822,-0.0171,0.1590,-0.0230,0.0573
+Total Changes (lines),Changes Requested,6822,-0.0348,0.0040,-0.0087,0.4737
+Total Changes (lines),Commented,6822,0.3000,0.0000,-0.0013,0.9167
+Total Changes (lines),Has Any Review,6822,0.1720,0.0000,-0.0175,0.1494
+Lines Added,Approved,6822,-0.0282,0.0201,-0.0205,0.0898
+Lines Added,Changes Requested,6822,-0.0164,0.1749,-0.0079,0.5140
+Lines Added,Commented,6822,0.3137,0.0000,-0.0016,0.8935
+Lines Added,Has Any Review,6822,0.1732,0.0000,-0.0160,0.1869
+Lines Deleted,Approved,6822,0.0863,0.0000,-0.0125,0.3033
+Lines Deleted,Changes Requested,6822,-0.0469,0.0001,-0.0041,0.7355
+Lines Deleted,Commented,6822,0.1399,0.0000,0.0012,0.9236
+Lines Deleted,Has Any Review,6822,0.1322,0.0000,-0.0079,0.5121
+Analysis Time (hours),Approved,6822,0.0910,0.0000,0.0003,0.9815
+Analysis Time (hours),Changes Requested,6822,0.1299,0.0000,0.0329,0.0066
+Analysis Time (hours),Commented,6822,0.0217,0.0727,-0.0764,0.0000
+Analysis Time (hours),Has Any Review,6822,0.0834,0.0000,-0.0382,0.0016
+Description Length (chars),Approved,6822,0.0857,0.0000,0.0173,0.1522
+Description Length (chars),Changes Requested,6822,0.1186,0.0000,0.0476,0.0001
+Description Length (chars),Commented,6822,0.3133,0.0000,0.1284,0.0000
+Description Length (chars),Has Any Review,6822,0.3051,0.0000,0.1132,0.0000
+Total Comments,Approved,6822,0.0233,0.0544,0.0411,0.0007
+Total Comments,Changes Requested,6822,0.1930,0.0000,0.1711,0.0000
+Total Comments,Commented,6822,0.4037,0.0000,0.2394,0.0000
+Total Comments,Has Any Review,6822,0.2594,0.0000,0.1579,0.0000
+Participant Count,Approved,6822,0.7176,0.0000,0.5154,0.0000
+Participant Count,Changes Requested,6822,0.2909,0.0000,0.2766,0.0000
+Participant Count,Commented,6822,0.5395,0.0000,0.4350,0.0000
+Participant Count,Has Any Review,6822,0.8878,0.0000,0.6105,0.0000

@@ -30,7 +30,7 @@ Hipoteses:
 - Uma descrição boa vai atrair mais pessoas a revisao
 - Mais iterações vai levar a mais revisões
 
-FEEDBACK RECEBIDO DO RELATÓRIO DO ENUNCIADO 2:
+# FEEDBACK RECEBIDO DO RELATÓRIO DO ENUNCIADO 2:
 1. Boa contextualização.
 2. Senti falta de número nos capítulos/sections
 3. As legendas/fontes dos gráficos poderiam ser mais legíveis.
