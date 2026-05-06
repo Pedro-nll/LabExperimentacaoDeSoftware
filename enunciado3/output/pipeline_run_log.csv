@@ -29,3 +29,16 @@ AUTOMATIC1111,stable-diffusion-webui,error,'NoneType' object has no attribute 'g
 airbnb,javascript,error,'NoneType' object has no attribute 'get'
 yt-dlp,yt-dlp,error,'NoneType' object has no attribute 'get'
 ytdl-org,youtube-dl,error,'NoneType' object has no attribute 'get'
+flutter,flutter,error,HTTP Error 502: Bad Gateway
+AUTOMATIC1111,stable-diffusion-webui,error,'NoneType' object has no attribute 'get'
+jlevy,the-art-of-command-line,error,'NoneType' object has no attribute 'get'
+f,prompts.chat,error,'NoneType' object has no attribute 'get'
+yt-dlp,yt-dlp,error,'NoneType' object has no attribute 'get'
+airbnb,javascript,error,'NoneType' object has no attribute 'get'
+avelino,awesome-go,error,'NoneType' object has no attribute 'get'
+ytdl-org,youtube-dl,error,'NoneType' object has no attribute 'get'
+langflow-ai,langflow,error,HTTP Error 502: Bad Gateway
+langgenius,dify,error,'NoneType' object has no attribute 'get'
+Genymobile,scrcpy,error,'NoneType' object has no attribute 'get'
+yangshun,tech-interview-handbook,error,'NoneType' object has no attribute 'get'
+x1xhlol,system-prompts-and-models-of-ai-tools,error,'NoneType' object has no attribute 'get'

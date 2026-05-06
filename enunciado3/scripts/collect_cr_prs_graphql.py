@@ -385,15 +385,22 @@ def main() -> int:
             rows: List[Dict[str, str]] = []
             after_cursor = None
             pr_index = 0
-            fetched_prs = {}
+            batch_number = 0
             
             while pr_index < population_total_prs and len(rows) < sample_target_prs:
+                batch_number += 1
+                print(
+                    f"[{worker_label}] Fetching batch {batch_number} "
+                    f"(saved={len(rows)}/{sample_target_prs}, offset={pr_index})"
+                )
                 batch = graphql_fetch_prs_batch(
                     owner, repo, first=min(args.batch_size, 100), after=after_cursor, token=token, max_retries=args.max_retries
                 )
                 nodes = batch.get("nodes", [])
                 if not nodes:
+                    print(f"[{worker_label}] No more PR nodes returned for {slug}")
                     break
+                print(f"[{worker_label}] Batch {batch_number} returned {len(nodes)} PR nodes")
                 
                 # Map PR nodes by their index in the full list
                 for node in nodes:
@@ -409,6 +416,7 @@ def main() -> int:
                 # Check for next page
                 page_info = batch.get("pageInfo", {})
                 if not page_info.get("hasNextPage"):
+                    print(f"[{worker_label}] Reached last GraphQL page for {slug}")
                     break
                 after_cursor = page_info.get("endCursor")
                 time.sleep(0.05)  # Small delay between batches
