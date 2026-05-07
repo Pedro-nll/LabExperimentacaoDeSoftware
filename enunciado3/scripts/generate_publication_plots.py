@@ -48,6 +48,15 @@ def load_data(csv_path: Path) -> pd.DataFrame:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
     df = df.replace([np.inf, -np.inf], np.nan)
+    
+    # Create binary columns for feedback types
+    if "approved_count" in df.columns:
+        df["has_approved"] = (df["approved_count"] > 0).astype(int)
+    if "changes_requested_count" in df.columns:
+        df["has_changes_requested"] = (df["changes_requested_count"] > 0).astype(int)
+    if "commented_count" in df.columns:
+        df["has_commented"] = (df["commented_count"] > 0).astype(int)
+    
     return df
 
 

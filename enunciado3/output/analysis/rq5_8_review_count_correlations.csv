@@ -1,33 +1,33 @@
 metric,review_type,n_samples,spearman_rho,spearman_p,pearson_r,pearson_p
-Changed Files,Human Reviews,6822,0.1845,0.0000,-0.0063,0.6010
-Changed Files,Approved,6822,0.0308,0.0109,-0.0148,0.2213
-Changed Files,Changes Requested,6822,-0.0412,0.0007,-0.0028,0.8142
-Changed Files,Commented,6822,0.2996,0.0000,-0.0017,0.8912
-Total Changes (lines),Human Reviews,6822,0.1568,0.0000,-0.0067,0.5794
-Total Changes (lines),Approved,6822,-0.0244,0.0438,-0.0144,0.2346
-Total Changes (lines),Changes Requested,6822,-0.0340,0.0050,-0.0024,0.8400
-Total Changes (lines),Commented,6822,0.3193,0.0000,-0.0019,0.8728
-Lines Added,Human Reviews,6822,0.1590,0.0000,-0.0060,0.6176
-Lines Added,Approved,6822,-0.0336,0.0056,-0.0128,0.2887
-Lines Added,Changes Requested,6822,-0.0157,0.1959,-0.0026,0.8313
-Lines Added,Commented,6822,0.3335,0.0000,-0.0015,0.9021
-Lines Deleted,Human Reviews,6822,0.1293,0.0000,-0.0034,0.7777
-Lines Deleted,Approved,6822,0.0778,0.0000,-0.0078,0.5204
-Lines Deleted,Changes Requested,6822,-0.0463,0.0001,0.0002,0.9884
-Lines Deleted,Commented,6822,0.1525,0.0000,-0.0020,0.8717
-Analysis Time (hours),Human Reviews,6822,0.1103,0.0000,-0.0030,0.8062
-Analysis Time (hours),Approved,6822,0.1076,0.0000,0.0855,0.0000
-Analysis Time (hours),Changes Requested,6822,0.1299,0.0000,-0.0032,0.7932
-Analysis Time (hours),Commented,6822,0.0240,0.0473,-0.0429,0.0004
-Description Length (chars),Human Reviews,6822,0.2626,0.0000,0.0601,0.0000
-Description Length (chars),Approved,6822,0.0827,0.0000,-0.0006,0.9625
-Description Length (chars),Changes Requested,6822,0.1189,0.0000,0.0129,0.2875
-Description Length (chars),Commented,6822,0.3201,0.0000,0.0835,0.0000
-Total Comments (Issue),Human Reviews,6822,0.2656,0.0000,0.5140,0.0000
-Total Comments (Issue),Approved,6822,0.0340,0.0050,0.0830,0.0000
-Total Comments (Issue),Changes Requested,6822,0.1939,0.0000,0.0623,0.0000
-Total Comments (Issue),Commented,6822,0.4259,0.0000,0.6097,0.0000
-Participant Count,Human Reviews,6822,0.9628,0.0000,0.5556,0.0000
-Participant Count,Approved,6822,0.7277,0.0000,0.8152,0.0000
-Participant Count,Changes Requested,6822,0.2914,0.0000,0.1218,0.0000
-Participant Count,Commented,6822,0.5464,0.0000,0.2613,0.0000
+Changed Files,Human Reviews,6768,0.1783,0.0000,-0.0041,0.7382
+Changed Files,Approved,6768,0.0403,0.0009,-0.0119,0.3282
+Changed Files,Changes Requested,6768,-0.0196,0.1060,-0.0022,0.8545
+Changed Files,Commented,6768,0.2804,0.0000,0.0005,0.9645
+Total Changes (lines),Human Reviews,6768,0.1421,0.0000,-0.0047,0.6973
+Total Changes (lines),Approved,6768,-0.0234,0.0544,-0.0112,0.3588
+Total Changes (lines),Changes Requested,6768,-0.0140,0.2507,-0.0020,0.8661
+Total Changes (lines),Commented,6768,0.2951,0.0000,-0.0004,0.9752
+Lines Added,Human Reviews,6768,0.1500,0.0000,-0.0038,0.7576
+Lines Added,Approved,6768,-0.0296,0.0148,-0.0093,0.4435
+Lines Added,Changes Requested,6768,0.0058,0.6354,-0.0021,0.8661
+Lines Added,Commented,6768,0.3163,0.0000,0.0004,0.9752
+Lines Deleted,Human Reviews,6768,0.1135,0.0000,-0.0037,0.7594
+Lines Deleted,Approved,6768,0.0634,0.0000,-0.0074,0.5427
+Lines Deleted,Changes Requested,6768,-0.0380,0.0018,-0.0004,0.9770
+Lines Deleted,Commented,6768,0.1332,0.0000,-0.0023,0.8490
+Analysis Time (hours),Human Reviews,6768,0.1262,0.0000,0.0016,0.8945
+Analysis Time (hours),Approved,6768,0.1303,0.0000,0.0989,0.0000
+Analysis Time (hours),Changes Requested,6768,0.1289,0.0000,-0.0036,0.7702
+Analysis Time (hours),Commented,6768,0.0301,0.0134,-0.0451,0.0002
+Description Length (chars),Human Reviews,6768,0.2589,0.0000,0.0642,0.0000
+Description Length (chars),Approved,6768,0.0750,0.0000,-0.0004,0.9757
+Description Length (chars),Changes Requested,6768,0.1152,0.0000,0.0133,0.2743
+Description Length (chars),Commented,6768,0.3331,0.0000,0.0910,0.0000
+Total Comments (Issue),Human Reviews,6768,0.2506,0.0000,0.5125,0.0000
+Total Comments (Issue),Approved,6768,0.0160,0.1890,0.0862,0.0000
+Total Comments (Issue),Changes Requested,6768,0.1968,0.0000,0.0654,0.0000
+Total Comments (Issue),Commented,6768,0.4262,0.0000,0.6173,0.0000
+Participant Count,Human Reviews,6768,0.9656,0.0000,0.5792,0.0000
+Participant Count,Approved,6768,0.7378,0.0000,0.8231,0.0000
+Participant Count,Changes Requested,6768,0.3175,0.0000,0.1289,0.0000
+Participant Count,Commented,6768,0.5251,0.0000,0.2587,0.0000
