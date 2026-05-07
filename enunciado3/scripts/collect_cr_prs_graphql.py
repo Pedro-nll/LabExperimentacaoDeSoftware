@@ -8,6 +8,7 @@ import csv
 import concurrent.futures
 import threading
 import math
+from datetime import datetime, timezone
 from pathlib import Path
 import random
 import time
@@ -16,7 +17,9 @@ from typing import Any, Dict, List, Optional
 from github_cr import (
     format_iso8601,
     github_token,
+    graphql_fetch_pr_detail,
     graphql_fetch_prs_batch,
+    graphql_rate_limit_status,
     is_human_login,
     load_checkpoint,
     max_datetime,
@@ -80,7 +83,7 @@ def parse_args() -> argparse.Namespace:
         default=0,
         help="How many repositories to process (0 = all remaining)",
     )
-    parser.add_argument("--pr-limit", type=int, default=50, help="Maximum PRs to collect per repository")
+    parser.add_argument("--pr-limit", type=int, default=10, help="Maximum PRs to collect per repository (default 10 for 8-hour collection)")
     parser.add_argument(
         "--confidence",
         type=int,
@@ -117,14 +120,25 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--workers",
         type=int,
-        default=2,
-        help="Number of repo-level workers to run in parallel (default 2)",
+        default=4,
+        help="Number of repo-level workers to run in parallel (default 4 for 8-hour target; use --workers=1 to minimize rate-limit pressure)",
     )
     parser.add_argument(
         "--batch-size",
         type=int,
+        default=100,
+        help="Number of PRs to fetch per GraphQL query (default 100, max 100)",
+    )
+    parser.add_argument(
+        "--preflight-min-remaining",
+        type=int,
         default=20,
-        help="Number of PRs to fetch per GraphQL query (default 20, max 100)",
+        help="Minimum GraphQL remaining quota required to start (default 20)",
+    )
+    parser.add_argument(
+        "--preflight-wait-until-reset",
+        action="store_true",
+        help="Wait for the rate-limit reset instead of exiting when quota is below the threshold",
     )
     return parser.parse_args()
 
@@ -170,6 +184,52 @@ def sample_pr_indexes(population_size: int, target_count: int, owner: str, repo:
     return sorted(rng.sample(range(population_size), k=sample_size))
 
 
+def log_repo_event(worker_label: str, message: str) -> None:
+    prefix = f"[{worker_label}] " if worker_label else ""
+    print(f"{prefix}{message}")
+
+
+def preflight_rate_limit(token: Optional[str], min_remaining: int, wait_until_reset: bool, max_retries: int) -> bool:
+    status = graphql_rate_limit_status(token=token, max_retries=1)
+    remaining = safe_int(status.get("remaining"), default=-1)
+    limit = safe_int(status.get("limit"), default=-1)
+    reset_at = str(status.get("resetAt", "") or "")
+    cost = safe_int(status.get("cost"), default=-1)
+    print(
+        "[preflight] GraphQL rate limit "
+        f"remaining={remaining} limit={limit} cost={cost} resetAt={reset_at or 'unknown'}"
+    )
+
+    if remaining >= min_remaining:
+        print(f"[preflight] quota is sufficient (threshold={min_remaining})")
+        return True
+
+    message = (
+        f"[preflight] quota below threshold: remaining={remaining} < {min_remaining}; "
+        f"this run would likely stall or fail"
+    )
+    if not wait_until_reset:
+        print(message)
+        return False
+
+    if not reset_at:
+        print(message)
+        print("[preflight] missing resetAt; cannot wait safely")
+        return False
+
+    try:
+        reset_dt = parse_iso8601(reset_at)
+    except ValueError:
+        print(message)
+        print(f"[preflight] invalid resetAt value: {reset_at}")
+        return False
+
+    wait_seconds = max(1, int((reset_dt - datetime.now(timezone.utc)).total_seconds()) + 1)
+    print(f"[preflight] waiting {wait_seconds}s for rate limit reset at {reset_at}")
+    time.sleep(wait_seconds)
+    return True
+
+
 def repo_slug(owner: str, repo: str) -> str:
     return f"{owner}__{repo}"
 
@@ -206,7 +266,7 @@ def extract_pr_row(
     
     # Calculate last activity from reviews
     last_activity_candidates = [updated_at]
-    reviews = pr_data.get("reviews", {}).get("nodes", [])
+    reviews = (pr_data.get("reviews") or {}).get("nodes", []) or []
     for review in reviews:
         submitted = review.get("submittedAt")
         if submitted:
@@ -222,14 +282,14 @@ def extract_pr_row(
     # Review data
     review_states = [str(review.get("state", "") or "") for review in reviews]
     human_reviewers = [
-        str(review.get("author", {}).get("login", ""))
+        str((review.get("author") or {}).get("login", ""))
         for review in reviews
-        if is_human_login(str(review.get("author", {}).get("login", "")))
+        if is_human_login(str((review.get("author") or {}).get("login", "")))
     ]
     human_review_count = len(human_reviewers)
     
     # Participants
-    participants = {pr_data.get("author", {}).get("login", ""): None}
+    participants = {str((pr_data.get("author") or {}).get("login", "")): None}
     for reviewer in human_reviewers:
         if reviewer:
             participants[reviewer] = None
@@ -285,9 +345,78 @@ def extract_pr_row(
     }
 
 
+def collect_sampled_pr_numbers(
+    owner: str,
+    repo: str,
+    population_total_prs: int,
+    sample_target_prs: int,
+    token: Optional[str],
+    max_retries: int,
+    batch_size: int,
+    worker_label: str = "",
+) -> List[int]:
+    sample_indexes = sample_pr_indexes(population_total_prs, sample_target_prs, owner, repo)
+    if not sample_indexes:
+        return []
+
+    wanted_indexes = set(sample_indexes)
+    selected_numbers: List[int] = []
+    after_cursor = None
+    global_index = 0
+    highest_index = sample_indexes[-1]
+    total_pages = max(1, int(math.ceil(population_total_prs / float(max(1, batch_size)))))
+    pages_seen = 0
+
+    log_repo_event(worker_label, f"Sampling {len(sample_indexes)} PRs from population={population_total_prs} using lightweight page scans")
+    while global_index <= highest_index:
+        pages_seen += 1
+        batch = graphql_fetch_prs_batch(
+            owner,
+            repo,
+            first=min(max(1, batch_size), 100),
+            after=after_cursor,
+            token=token,
+            max_retries=max_retries,
+        )
+        nodes = batch.get("nodes") or []
+        if not nodes:
+            log_repo_event(worker_label, f"Page scan stopped early at page {pages_seen}/{total_pages}; no nodes returned")
+            break
+        log_repo_event(worker_label, f"Scanned page {pages_seen}/{total_pages} with {len(nodes)} PR headers")
+
+        for node in nodes:
+            if global_index in wanted_indexes:
+                number = safe_int(node.get("number"), default=0)
+                if number > 0:
+                    selected_numbers.append(number)
+            global_index += 1
+            if global_index > highest_index:
+                break
+
+        page_info = batch.get("pageInfo") or {}
+        if not page_info.get("hasNextPage"):
+            break
+        after_cursor = page_info.get("endCursor")
+
+        if pages_seen % 10 == 0:
+            log_repo_event(worker_label, f"Page scan progress: sampled={len(selected_numbers)}/{len(sample_indexes)} global_index={global_index}/{population_total_prs}")
+
+    return selected_numbers[:sample_target_prs]
+
+
 def main() -> int:
     args = parse_args()
     token = github_token()
+    start_time = time.time()
+
+    if not preflight_rate_limit(
+        token=token,
+        min_remaining=max(0, args.preflight_min_remaining),
+        wait_until_reset=args.preflight_wait_until_reset,
+        max_retries=args.max_retries,
+    ):
+        return 2
+
     repos_csv = Path(args.repos_csv).resolve()
     output_root = Path(args.output).resolve()
     checkpoint_path = Path(args.checkpoint).resolve() if args.checkpoint else output_root / "pipeline_run_log.checkpoint.json"
@@ -329,6 +458,9 @@ def main() -> int:
         return 0
 
     selected_repos = pending_repos if args.repo_limit <= 0 else pending_repos[: max(1, args.repo_limit)]
+    
+    # Sort repos by population size (ascending) to complete small ones first for faster feedback
+    selected_repos = sorted(selected_repos, key=lambda r: safe_int(r.get("total_prs", 0), default=0))
 
     lock = threading.Lock()
 
@@ -378,48 +510,51 @@ def main() -> int:
                     max_sample=max(1, args.max_sample),
                 )
 
-            # Fetch PRs via GraphQL in batches
-            sample_indexes = sample_pr_indexes(population_total_prs, sample_target_prs, owner, repo)
-            print(f"[{worker_label}] Sampling {len(sample_indexes)} PRs from population {population_total_prs}")
+            if population_total_prs <= 0:
+                log_repo_event(worker_label, f"Population unknown for {slug}; falling back to first page only")
             
             rows: List[Dict[str, str]] = []
-            after_cursor = None
-            pr_index = 0
-            batch_number = 0
-            
-            while pr_index < population_total_prs and len(rows) < sample_target_prs:
-                batch_number += 1
-                print(
-                    f"[{worker_label}] Fetching batch {batch_number} "
-                    f"(saved={len(rows)}/{sample_target_prs}, offset={pr_index})"
+            selected_numbers = []
+            if population_total_prs > 0:
+                selected_numbers = collect_sampled_pr_numbers(
+                    owner=owner,
+                    repo=repo,
+                    population_total_prs=population_total_prs,
+                    sample_target_prs=sample_target_prs,
+                    token=token,
+                    max_retries=args.max_retries,
+                    batch_size=args.batch_size,
+                    worker_label=worker_label,
                 )
-                batch = graphql_fetch_prs_batch(
-                    owner, repo, first=min(args.batch_size, 100), after=after_cursor, token=token, max_retries=args.max_retries
-                )
-                nodes = batch.get("nodes", [])
-                if not nodes:
-                    print(f"[{worker_label}] No more PR nodes returned for {slug}")
-                    break
-                print(f"[{worker_label}] Batch {batch_number} returned {len(nodes)} PR nodes")
-                
-                # Map PR nodes by their index in the full list
-                for node in nodes:
-                    if pr_index in sample_indexes:
-                        row = extract_pr_row(node, owner, repo, population_total_prs, sample_target_prs, args.confidence, args.margin_error)
-                        rows.append(row)
-                        if repo_csv:
-                            append_csv_row(repo_csv, row, PR_COLUMNS)
-                        if len(rows) % 20 == 0:
-                            print(f"[{worker_label}] Saved {len(rows)}/{len(sample_indexes)} PRs to prs.csv")
-                    pr_index += 1
-                
-                # Check for next page
-                page_info = batch.get("pageInfo", {})
-                if not page_info.get("hasNextPage"):
-                    print(f"[{worker_label}] Reached last GraphQL page for {slug}")
-                    break
-                after_cursor = page_info.get("endCursor")
-                time.sleep(0.05)  # Small delay between batches
+            elif args.pr_limit > 0:
+                selected_numbers = [1]
+
+            if not selected_numbers:
+                log_repo_event(worker_label, f"No sampled PR numbers resolved for {slug}")
+            else:
+                log_repo_event(worker_label, f"Fetching full detail for {len(selected_numbers)} sampled PRs")
+
+            for index, pr_number in enumerate(selected_numbers, 1):
+                try:
+                    detail = graphql_fetch_pr_detail(
+                        owner,
+                        repo,
+                        pr_number,
+                        token=token,
+                        max_retries=args.max_retries,
+                    )
+                    if not detail:
+                        log_repo_event(worker_label, f"Skipping PR #{pr_number}: empty detail payload")
+                        continue
+                    row = extract_pr_row(detail, owner, repo, population_total_prs, sample_target_prs, args.confidence, args.margin_error)
+                    rows.append(row)
+                    if repo_csv:
+                        append_csv_row(repo_csv, row, PR_COLUMNS)
+                    if index % 10 == 0 or index == len(selected_numbers):
+                        log_repo_event(worker_label, f"Saved {index}/{len(selected_numbers)} sampled PRs to prs.csv")
+                except Exception as detail_exc:  # noqa: BLE001
+                    log_repo_event(worker_label, f"PR #{pr_number} detail failed: {detail_exc}")
+                    continue
 
             result = {
                 "owner": owner,
@@ -456,7 +591,22 @@ def main() -> int:
                     print(f"Worker error: {exc}")
 
     failures = [row for row in run_log if row.get("status") != "ok"]
-    print(f"Processed {len(run_log)} repositories | failed={len(failures)}")
+    elapsed_sec = time.time() - start_time
+    elapsed_min = elapsed_sec / 60
+    elapsed_hr = elapsed_min / 60
+    
+    print()
+    print("=" * 60)
+    print(f"COLLECTION SUMMARY")
+    print(f"  Total time: {elapsed_sec:.0f}s = {elapsed_min:.1f}m = {elapsed_hr:.2f}h")
+    print(f"  Processed: {len(run_log)} repositories")
+    print(f"  Succeeded: {len(run_log) - len(failures)}")
+    print(f"  Failed: {len(failures)}")
+    if len(run_log) > 0:
+        avg_time = elapsed_sec / len(run_log)
+        print(f"  Avg time/repo: {avg_time:.1f}s")
+    print("=" * 60)
+    
     return 1 if failures else 0
 
 

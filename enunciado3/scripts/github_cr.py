@@ -36,6 +36,47 @@ def build_headers(token: Optional[str]) -> Dict[str, str]:
     return headers
 
 
+def graphql_rate_limit_status(token: Optional[str] = None, max_retries: int = 5) -> Dict[str, Any]:
+        """Return the current GraphQL rate-limit status."""
+        query = """
+        query RateLimitStatus {
+            rateLimit {
+                limit
+                cost
+                remaining
+                resetAt
+            }
+        }
+        """
+        result = github_graphql_query(query, token=token, max_retries=max_retries)
+        try:
+                return result.get("data", {}).get("rateLimit", {}) or {}
+        except (KeyError, TypeError):
+                return {}
+
+
+def _rate_limit_sleep_seconds(headers: Any) -> Optional[int]:
+    if headers is None:
+        return None
+    try:
+        remaining = str(headers.get("X-RateLimit-Remaining", "")).strip()
+        reset_value = str(headers.get("X-RateLimit-Reset", "")).strip()
+    except Exception:
+        return None
+    if remaining != "0" or not reset_value:
+        return None
+    try:
+        reset_time = int(reset_value)
+    except ValueError:
+        return None
+    return max(1, reset_time - int(time.time()) + 1)
+
+
+def _log_rate_limit_wait(source: str, sleep_for: int, attempt: int, max_retries: int, detail: str) -> None:
+    reset_in = f"{sleep_for}s"
+    print(f"[{source}] rate limit hit ({detail}); sleeping {reset_in} before retry {attempt + 1}/{max_retries}")
+
+
 def github_get_json(url: str, token: Optional[str] = None, max_retries: int = 5) -> Dict[str, Any]:
     headers = build_headers(token)
     backoff = 2.0
@@ -47,13 +88,12 @@ def github_get_json(url: str, token: Optional[str] = None, max_retries: int = 5)
             return json.loads(payload)
         except HTTPError as exc:
             if exc.code in (403, 408, 409, 425, 429, 500, 502, 503, 504) and attempt < max_retries:
-                reset_value = exc.headers.get("X-RateLimit-Reset")
-                remaining = exc.headers.get("X-RateLimit-Remaining")
-                if remaining == "0" and reset_value:
-                    reset_time = int(reset_value)
-                    sleep_for = max(1, reset_time - int(time.time()) + 1)
+                sleep_for = _rate_limit_sleep_seconds(exc.headers)
+                if sleep_for is not None:
+                    _log_rate_limit_wait("rest", sleep_for, attempt, max_retries, f"HTTP {exc.code}")
                 else:
                     sleep_for = backoff
+                    print(f"[rest] transient HTTP {exc.code}; sleeping {sleep_for}s before retry {attempt + 1}/{max_retries}")
                     backoff *= 2
                 time.sleep(sleep_for)
                 continue
@@ -183,22 +223,50 @@ def github_graphql_query(query: str, variables: Optional[Dict[str, Any]] = None,
             if "errors" in result:
                 errors = result.get("errors", [])
                 error_msg = str(errors[0].get("message", "")) if errors else ""
-                if "API rate limit" in error_msg and attempt < max_retries:
-                    sleep_for = backoff
-                    backoff *= 2
+                rate_limit_block = "API rate limit" in error_msg or "rate limit exceeded" in error_msg.lower()
+                if rate_limit_block and attempt < max_retries:
+                    rate_limit = result.get("data", {}).get("rateLimit", {}) if isinstance(result.get("data"), dict) else {}
+                    reset_at = str(rate_limit.get("resetAt", "") or "")
+                    sleep_for = None
+                    if reset_at:
+                        try:
+                            reset_dt = parse_iso8601(reset_at)
+                            sleep_for = max(1, int((reset_dt - datetime.now(timezone.utc)).total_seconds()) + 1)
+                        except ValueError:
+                            sleep_for = None
+                    if sleep_for is None:
+                        sleep_for = backoff
+                        backoff *= 2
+                    remaining = rate_limit.get("remaining", "?") if isinstance(rate_limit, dict) else "?"
+                    print(f"[graphql] rate limit hit (remaining={remaining}, resetAt={reset_at or 'unknown'}); sleeping {sleep_for}s before retry {attempt + 1}/{max_retries}")
                     time.sleep(sleep_for)
                     continue
                 raise RuntimeError(f"GraphQL error: {error_msg}")
+            rate_limit = result.get("data", {}).get("rateLimit") if isinstance(result.get("data"), dict) else None
+            if isinstance(rate_limit, dict):
+                remaining = rate_limit.get("remaining", "?")
+                reset_at = rate_limit.get("resetAt", "")
+                cost = rate_limit.get("cost", "?")
+                if attempt == 1 or str(remaining) in {"0", "1", "2", "3", "4", "5"}:
+                    print(f"[graphql] rateLimit remaining={remaining} cost={cost} resetAt={reset_at}")
             return result
         except HTTPError as exc:
             if exc.code in (403, 408, 409, 425, 429, 500, 502, 503, 504) and attempt < max_retries:
-                sleep_for = backoff
-                backoff *= 2
+                sleep_for = _rate_limit_sleep_seconds(exc.headers)
+                if sleep_for is not None:
+                    remaining = exc.headers.get("X-RateLimit-Remaining", "?")
+                    reset_at = exc.headers.get("X-RateLimit-Reset", "?")
+                    print(f"[graphql] HTTP {exc.code} rate limited (remaining={remaining}, reset={reset_at}); sleeping {sleep_for}s before retry {attempt + 1}/{max_retries}")
+                else:
+                    sleep_for = backoff
+                    print(f"[graphql] transient HTTP {exc.code}; sleeping {sleep_for}s before retry {attempt + 1}/{max_retries}")
+                    backoff *= 2
                 time.sleep(sleep_for)
                 continue
             raise
         except URLError:
             if attempt < max_retries:
+                print(f"[graphql] network error; sleeping {backoff}s before retry {attempt + 1}/{max_retries}")
                 time.sleep(backoff)
                 backoff *= 2
                 continue
@@ -208,66 +276,116 @@ def github_graphql_query(query: str, variables: Optional[Dict[str, Any]] = None,
 
 
 def graphql_fetch_prs_batch(
-    owner: str,
-    repo: str,
-    first: int = 20,
-    after: Optional[str] = None,
-    token: Optional[str] = None,
-    max_retries: int = 5,
+        owner: str,
+        repo: str,
+        first: int = 20,
+        after: Optional[str] = None,
+        token: Optional[str] = None,
+        max_retries: int = 5,
 ) -> Dict[str, Any]:
-    """Fetch a batch of PRs using GraphQL. Returns dict with 'nodes' and pageInfo."""
-    query = """
-    query GetRepositoryPRs($owner: String!, $repo: String!, $after: String, $first: Int!) {
-      repository(owner: $owner, name: $repo) {
-        pullRequests(first: $first, after: $after, orderBy: {field: UPDATED_AT, direction: DESC}) {
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
-          nodes {
-            number
-            title
-            state
-            createdAt
-            updatedAt
-            bodyText
-            changedFiles
-            additions
-            deletions
-            comments {
-              totalCount
+        """Fetch a batch of lightweight PR nodes using GraphQL.
+
+        This query is intentionally narrow so the collector can scan repository pages
+        cheaply, then fetch full PR details only for sampled PRs.
+        """
+        query = """
+        query GetRepositoryPRs($owner: String!, $repo: String!, $after: String, $first: Int!) {
+            rateLimit {
+                cost
+                remaining
+                resetAt
             }
-            reviews(first: 100) {
-              nodes {
-                state
-                submittedAt
-                                author {
-                  login
+            repository(owner: $owner, name: $repo) {
+                pullRequests(first: $first, after: $after, orderBy: {field: UPDATED_AT, direction: DESC}) {
+                    pageInfo {
+                        hasNextPage
+                        endCursor
+                    }
+                    nodes {
+                        number
+                        title
+                        state
+                        createdAt
+                        updatedAt
+                        author {
+                            login
+                        }
+                    }
                 }
-              }
             }
-            author {
-              login
-            }
-            mergedAt
-          }
         }
-      }
-    }
-    """
-    
-    variables = {
-        "owner": owner,
-        "repo": repo,
-        "first": first,
-        "after": after,
-    }
-    
-    result = github_graphql_query(query, variables, token=token, max_retries=max_retries)
-    
-    # Extract PR data from nested response
-    try:
-        prs = result.get("data", {}).get("repository", {}).get("pullRequests", {})
-        return prs
-    except (KeyError, TypeError):
-        return {"nodes": [], "pageInfo": {"hasNextPage": False, "endCursor": None}}
+        """
+
+        variables = {
+                "owner": owner,
+                "repo": repo,
+                "first": first,
+                "after": after,
+        }
+
+        result = github_graphql_query(query, variables, token=token, max_retries=max_retries)
+
+        try:
+                prs = result.get("data", {}).get("repository", {}).get("pullRequests", {})
+                return prs
+        except (KeyError, TypeError):
+                return {"nodes": [], "pageInfo": {"hasNextPage": False, "endCursor": None}}
+
+
+def graphql_fetch_pr_detail(
+        owner: str,
+        repo: str,
+        number: int,
+        token: Optional[str] = None,
+        max_retries: int = 5,
+) -> Dict[str, Any]:
+        """Fetch a single PR with full detail for the final row extraction."""
+        query = """
+        query GetRepositoryPRDetail($owner: String!, $repo: String!, $number: Int!) {
+            rateLimit {
+                cost
+                remaining
+                resetAt
+            }
+            repository(owner: $owner, name: $repo) {
+                pullRequest(number: $number) {
+                    number
+                    title
+                    state
+                    createdAt
+                    updatedAt
+                    bodyText
+                    changedFiles
+                    additions
+                    deletions
+                    comments {
+                        totalCount
+                    }
+                    reviews(first: 100) {
+                        nodes {
+                            state
+                            submittedAt
+                            author {
+                                login
+                            }
+                        }
+                    }
+                    author {
+                        login
+                    }
+                    mergedAt
+                }
+            }
+        }
+        """
+
+        variables = {
+                "owner": owner,
+                "repo": repo,
+                "number": number,
+        }
+        result = github_graphql_query(query, variables, token=token, max_retries=max_retries)
+        try:
+                return result.get("data", {}).get("repository", {}).get("pullRequest") or {}
+        except (KeyError, TypeError):
+                return {}
