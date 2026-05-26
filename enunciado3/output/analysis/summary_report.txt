@@ -1,0 +1,66 @@
+================================================================================
+CODE REVIEW METRICS SUMMARY REPORT
+================================================================================
+
+Total PR records analyzed: 6768
+
+Final Feedback Distribution:
+  no_review: 4229 (62.5%)
+  positive: 1531 (22.6%)
+  neutral: 862 (12.7%)
+  negative: 137 (2.0%)
+  dismissed: 9 (0.1%)
+
+
+PR Size Metrics Summary:
+
+  Changed Files:
+    Mean: 9.66
+    Median: 1.00
+    Std: 157.17
+    Min: 0.00, Max: 9932.00
+
+  Total Changes (lines):
+    Mean: 1674.83
+    Median: 8.00
+    Std: 41483.55
+    Min: 0.00, Max: 2429126.00
+
+  Lines Added:
+    Mean: 1261.23
+    Median: 5.00
+    Std: 39213.31
+    Min: 0.00, Max: 2429126.00
+
+  Lines Deleted:
+    Mean: 413.59
+    Median: 1.00
+    Std: 13170.46
+    Min: 0.00, Max: 917406.00
+
+
+Analysis Time (Hours):
+  Mean: 3500.42
+  Median: 69.77
+  Std: 9366.28
+
+
+Description Length (Characters):
+  Mean: 1103.58
+  Median: 388.00
+  Std: 2736.68
+
+
+Interaction Metrics:
+
+  Total Comments:
+    Mean: 2.82
+    Median: 1.00
+    Std: 7.67
+
+  Participant Count:
+    Mean: 1.60
+    Median: 1.00
+    Std: 1.19
+
+================================================================================

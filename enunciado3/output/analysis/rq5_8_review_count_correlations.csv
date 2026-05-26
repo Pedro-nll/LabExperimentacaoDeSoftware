@@ -1,0 +1,33 @@
+metric,review_type,n_samples,spearman_rho,spearman_p,pearson_r,pearson_p
+Changed Files,Human Reviews,6768,0.1783,0.0000,-0.0041,0.7382
+Changed Files,Approved,6768,0.0403,0.0009,-0.0119,0.3282
+Changed Files,Changes Requested,6768,-0.0196,0.1060,-0.0022,0.8545
+Changed Files,Commented,6768,0.2804,0.0000,0.0005,0.9645
+Total Changes (lines),Human Reviews,6768,0.1421,0.0000,-0.0047,0.6973
+Total Changes (lines),Approved,6768,-0.0234,0.0544,-0.0112,0.3588
+Total Changes (lines),Changes Requested,6768,-0.0140,0.2507,-0.0020,0.8661
+Total Changes (lines),Commented,6768,0.2951,0.0000,-0.0004,0.9752
+Lines Added,Human Reviews,6768,0.1500,0.0000,-0.0038,0.7576
+Lines Added,Approved,6768,-0.0296,0.0148,-0.0093,0.4435
+Lines Added,Changes Requested,6768,0.0058,0.6354,-0.0021,0.8661
+Lines Added,Commented,6768,0.3163,0.0000,0.0004,0.9752
+Lines Deleted,Human Reviews,6768,0.1135,0.0000,-0.0037,0.7594
+Lines Deleted,Approved,6768,0.0634,0.0000,-0.0074,0.5427
+Lines Deleted,Changes Requested,6768,-0.0380,0.0018,-0.0004,0.9770
+Lines Deleted,Commented,6768,0.1332,0.0000,-0.0023,0.8490
+Analysis Time (hours),Human Reviews,6768,0.1262,0.0000,0.0016,0.8945
+Analysis Time (hours),Approved,6768,0.1303,0.0000,0.0989,0.0000
+Analysis Time (hours),Changes Requested,6768,0.1289,0.0000,-0.0036,0.7702
+Analysis Time (hours),Commented,6768,0.0301,0.0134,-0.0451,0.0002
+Description Length (chars),Human Reviews,6768,0.2589,0.0000,0.0642,0.0000
+Description Length (chars),Approved,6768,0.0750,0.0000,-0.0004,0.9757
+Description Length (chars),Changes Requested,6768,0.1152,0.0000,0.0133,0.2743
+Description Length (chars),Commented,6768,0.3331,0.0000,0.0910,0.0000
+Total Comments (Issue),Human Reviews,6768,0.2506,0.0000,0.5125,0.0000
+Total Comments (Issue),Approved,6768,0.0160,0.1890,0.0862,0.0000
+Total Comments (Issue),Changes Requested,6768,0.1968,0.0000,0.0654,0.0000
+Total Comments (Issue),Commented,6768,0.4262,0.0000,0.6173,0.0000
+Participant Count,Human Reviews,6768,0.9656,0.0000,0.5792,0.0000
+Participant Count,Approved,6768,0.7378,0.0000,0.8231,0.0000
+Participant Count,Changes Requested,6768,0.3175,0.0000,0.1289,0.0000
+Participant Count,Commented,6768,0.5251,0.0000,0.2587,0.0000
