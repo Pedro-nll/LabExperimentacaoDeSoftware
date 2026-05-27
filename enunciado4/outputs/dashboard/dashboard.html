@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Lab04 - Politicas de IA em Repositorios Open Source</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #647084;
+      --line: #d8dee8;
+      --panel: #ffffff;
+      --surface: #f6f8fb;
+      --panel-soft: #fbfcfe;
+      --table-head: #edf2f7;
+      --callout-bg: #edf8f6;
+      --callout-text: #24443f;
+      --tab-active: #2f5f78;
+      --blue: #4c78a8;
+      --green: #2a9d8f;
+      --purple: #6f6a9e;
+      --amber: #e9c46a;
+      --shadow: 0 10px 30px rgba(23, 32, 42, 0.08);
+    }
+    body.dark-theme {
+      --ink: #e7edf5;
+      --muted: #a9b6c8;
+      --line: #314052;
+      --panel: #182231;
+      --surface: #101722;
+      --panel-soft: #141e2b;
+      --table-head: #223044;
+      --callout-bg: #14312f;
+      --callout-text: #c4f0e8;
+      --tab-active: #2a9d8f;
+      --shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--surface);
+      font: 15px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .app-shell {
+      width: min(1280px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 22px 0 34px;
+    }
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: end;
+      padding: 8px 0 18px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 3vw, 42px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+    h3 {
+      margin: 0 0 12px;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+    p { margin: 0; }
+    .lead {
+      max-width: 880px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+    .badge {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: var(--panel);
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .header-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+    }
+    .theme-toggle {
+      min-height: 38px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: var(--panel);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+    .theme-toggle:hover {
+      border-color: var(--tab-active);
+    }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      margin: 0 -16px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--surface) 94%, transparent);
+      backdrop-filter: blur(8px);
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+    }
+    .tab-button {
+      flex: 0 0 auto;
+      min-height: 38px;
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: var(--panel);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+    .tab-button[aria-selected="true"] {
+      color: #fff;
+      border-color: var(--tab-active);
+      background: var(--tab-active);
+      box-shadow: var(--shadow);
+    }
+    .hero-panel {
+      margin-top: 18px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .metric-card {
+      min-height: 104px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .metric-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .metric-card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 28px;
+      line-height: 1;
+    }
+    .metric-card small {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+    }
+    .tab-panel {
+      display: none;
+      margin-top: 16px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .tab-panel.active { display: block; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: start;
+      margin-bottom: 18px;
+    }
+    .section-copy {
+      max-width: 820px;
+      margin-top: 8px;
+      color: var(--muted);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+      align-items: start;
+      margin-top: 18px;
+    }
+    .viz {
+      margin: 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 4px 14px rgba(23, 32, 42, 0.04);
+    }
+    .image-open {
+      display: block;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: zoom-in;
+    }
+    .image-open:focus-visible {
+      outline: 3px solid var(--tab-active);
+      outline-offset: 4px;
+      border-radius: 6px;
+    }
+    .viz img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    figcaption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .callout {
+      max-width: 980px;
+      margin: 16px 0 0;
+      padding: 14px 16px;
+      border-left: 4px solid var(--green);
+      border-radius: 0 8px 8px 0;
+      background: var(--callout-bg);
+      color: var(--callout-text);
+    }
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .mini-stat {
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-soft);
+    }
+    .mini-stat b {
+      display: block;
+      font-size: 20px;
+      line-height: 1.1;
+    }
+    .mini-stat span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .data-table th, .data-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 13px;
+    }
+    .data-table th { background: var(--table-head); }
+    footer {
+      padding-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .image-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      padding: 24px;
+      background: rgba(5, 9, 14, 0.82);
+    }
+    .image-modal.open {
+      display: grid;
+      place-items: center;
+    }
+    .modal-content {
+      position: relative;
+      width: min(96vw, 1320px);
+      max-height: 92vh;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.42);
+    }
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: var(--panel);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .modal-image {
+      display: block;
+      width: 100%;
+      max-height: calc(92vh - 90px);
+      object-fit: contain;
+      padding-top: 28px;
+    }
+    .modal-caption {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    @media (max-width: 760px) {
+      .app-shell { width: min(100% - 20px, 1280px); }
+      header, .section-head { grid-template-columns: 1fr; }
+      .badge { justify-self: start; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero-panel, .tab-panel { padding: 14px; }
+      .grid { grid-template-columns: 1fr; }
+      .image-modal { padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <div>
+      <h1>Politicas de uso de IA em repositorios open source populares</h1>
+      <p class="lead">Dashboard do Laboratorio 04 para caracterizar a amostra e responder as questoes de pesquisa sobre politicas de IA, engajamento e colaboracao no GitHub.</p>
+      </div>
+      <div class="header-actions">
+        <button class="theme-toggle" type="button" aria-pressed="false">Modo escuro</button>
+        <div class="badge">Lab04 - BI</div>
+      </div>
+    </header>
+
+    <div class="hero-panel">
+      <div class="metrics">
+    <div class="metric-card">
+      <span>Repositorios analisados</span>
+      <strong>1000</strong>
+      <small>amostra do GitHub</small>
+    </div>
+    
+
+    <div class="metric-card">
+      <span>Com politica de IA</span>
+      <strong>125</strong>
+      <small>12,5% da amostra</small>
+    </div>
+    
+
+    <div class="metric-card">
+      <span>Mediana de estrelas</span>
+      <strong>39.674</strong>
+      <small>popularidade tipica</small>
+    </div>
+    
+
+    <div class="metric-card">
+      <span>Idade mediana</span>
+      <strong>7,5 anos</strong>
+      <small>maturidade tipica</small>
+    </div>
+    </div>
+      <div class="stat-strip">
+        <div class="mini-stat"><b>125</b><span>repositorios com politica identificada</span></div>
+        <div class="mini-stat"><b>3</b><span>clusters/tipos de politica</span></div>
+        <div class="mini-stat"><b>43.330</b><span>mediana de estrelas com politica</span></div>
+        <div class="mini-stat"><b>39.057</b><span>mediana de estrelas sem politica</span></div>
+      </div>
+      <div class="grid">
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/dataset_age_distribution.png" data-caption="Distribuicao da idade dos repositorios em anos." aria-label="Abrir grafico: Distribuicao da idade dos repositorios em anos.">
+        <img src="../figures/dataset_age_distribution.png" alt="Distribuicao da idade dos repositorios em anos.">
+      </button>
+      <figcaption>Distribuicao da idade dos repositorios em anos.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/dataset_stars_distribution.png" data-caption="Distribuicao de estrelas dos repositorios em escala logaritmica." aria-label="Abrir grafico: Distribuicao de estrelas dos repositorios em escala logaritmica.">
+        <img src="../figures/dataset_stars_distribution.png" alt="Distribuicao de estrelas dos repositorios em escala logaritmica.">
+      </button>
+      <figcaption>Distribuicao de estrelas dos repositorios em escala logaritmica.</figcaption>
+    </figure>
+    
+      </div>
+    </div>
+
+    <div class="toolbar" role="tablist" aria-label="Secoes do dashboard">
+      <div class="tabs">
+        <button class="tab-button" type="button" role="tab" aria-selected="true" aria-controls="rq1" data-tab="rq1">RQ1: Adocao</button>
+        <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="rq2" data-tab="rq2">RQ2: Engajamento</button>
+        <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="rq3" data-tab="rq3">RQ3: Colaboracao</button>
+        <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="complementar" data-tab="complementar">Complementar</button>
+        <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="sintese" data-tab="sintese">Sintese</button>
+      </div>
+    </div>
+
+    <section id="rq1" class="tab-panel active" role="tabpanel">
+      <div class="section-head">
+        <div>
+          <h2>RQ1 - Adocao e tipos de politica</h2>
+          <p class="section-copy"><strong>Pergunta:</strong> Qual e o nivel de adocao de politicas de uso de IA em repositorios open source populares e quais padroes ou tipos de politicas emergem?</p>
+        </div>
+      </div>
+      <div class="grid">
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq1_policy_adoption.png" data-caption="Comparacao entre repositorios com e sem politica de IA." aria-label="Abrir grafico: Comparacao entre repositorios com e sem politica de IA.">
+        <img src="../figures/rq1_policy_adoption.png" alt="Comparacao entre repositorios com e sem politica de IA.">
+      </button>
+      <figcaption>Comparacao entre repositorios com e sem politica de IA.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq1_cluster_distribution.png" data-caption="Quantidade de repositorios por tipo de politica identificado." aria-label="Abrir grafico: Quantidade de repositorios por tipo de politica identificado.">
+        <img src="../figures/rq1_cluster_distribution.png" alt="Quantidade de repositorios por tipo de politica identificado.">
+      </button>
+      <figcaption>Quantidade de repositorios por tipo de politica identificado.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq1_cluster_percentages.png" data-caption="Participacao percentual de cada cluster entre os repositorios com politica." aria-label="Abrir grafico: Participacao percentual de cada cluster entre os repositorios com politica.">
+        <img src="../figures/rq1_cluster_percentages.png" alt="Participacao percentual de cada cluster entre os repositorios com politica.">
+      </button>
+      <figcaption>Participacao percentual de cada cluster entre os repositorios com politica.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq1_policy_text_size_by_cluster.png" data-caption="Comparacao entre media e mediana do tamanho dos textos de politica." aria-label="Abrir grafico: Comparacao entre media e mediana do tamanho dos textos de politica.">
+        <img src="../figures/rq1_policy_text_size_by_cluster.png" alt="Comparacao entre media e mediana do tamanho dos textos de politica.">
+      </button>
+      <figcaption>Comparacao entre media e mediana do tamanho dos textos de politica.</figcaption>
+    </figure>
+    
+      </div>
+      <div class="callout">Apenas 12,5% da amostra possui politica identificada. Entre esses casos, o cluster mais frequente e "Governança ampla do uso de IA", com 94 repositorios.</div>
+      <h3>Resumo dos clusters</h3>
+      <table class="dataframe data-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>cluster</th>
+      <th>cluster_label</th>
+      <th>unique_repositories</th>
+      <th>percentage_of_policy_repositories</th>
+      <th>median_policy_words</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>Governança ampla do uso de IA</td>
+      <td>94</td>
+      <td>75.2</td>
+      <td>92</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Responsabilidade humana sobre contribuições assistidas por IA</td>
+      <td>15</td>
+      <td>12.0</td>
+      <td>48</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Declaração obrigatória do uso de IA</td>
+      <td>16</td>
+      <td>12.8</td>
+      <td>72</td>
+    </tr>
+  </tbody>
+</table>
+    </section>
+
+    <section id="rq2" class="tab-panel" role="tabpanel">
+      <div class="section-head">
+        <div>
+          <h2>RQ2 - Engajamento</h2>
+          <p class="section-copy"><strong>Pergunta:</strong> Como a presenca e o tipo de politica de IA se relacionam com o volume de contribuicoes e o nivel de engajamento em projetos open source?</p>
+        </div>
+      </div>
+      <div class="grid">
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq2_prs_total_by_policy_presence.png" data-caption="Volume tipico de PRs por presenca de politica." aria-label="Abrir grafico: Volume tipico de PRs por presenca de politica.">
+        <img src="../figures/rq2_prs_total_by_policy_presence.png" alt="Volume tipico de PRs por presenca de politica.">
+      </button>
+      <figcaption>Volume tipico de PRs por presenca de politica.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq2_prs_merged_by_policy_presence.png" data-caption="Volume tipico de PRs mergeadas por presenca de politica." aria-label="Abrir grafico: Volume tipico de PRs mergeadas por presenca de politica.">
+        <img src="../figures/rq2_prs_merged_by_policy_presence.png" alt="Volume tipico de PRs mergeadas por presenca de politica.">
+      </button>
+      <figcaption>Volume tipico de PRs mergeadas por presenca de politica.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq2_issues_total_by_policy_presence.png" data-caption="Volume tipico de issues por presenca de politica." aria-label="Abrir grafico: Volume tipico de issues por presenca de politica.">
+        <img src="../figures/rq2_issues_total_by_policy_presence.png" alt="Volume tipico de issues por presenca de politica.">
+      </button>
+      <figcaption>Volume tipico de issues por presenca de politica.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq2_unique_collaborators_by_policy_presence.png" data-caption="Comunidade colaboradora tipica por grupo." aria-label="Abrir grafico: Comunidade colaboradora tipica por grupo.">
+        <img src="../figures/rq2_unique_collaborators_by_policy_presence.png" alt="Comunidade colaboradora tipica por grupo.">
+      </button>
+      <figcaption>Comunidade colaboradora tipica por grupo.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq2_comments_reviews_by_policy_presence.png" data-caption="Comentarios e reviews como indicadores de interacao." aria-label="Abrir grafico: Comentarios e reviews como indicadores de interacao.">
+        <img src="../figures/rq2_comments_reviews_by_policy_presence.png" alt="Comentarios e reviews como indicadores de interacao.">
+      </button>
+      <figcaption>Comentarios e reviews como indicadores de interacao.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq2_engagement_heatmap.png" data-caption="Comparacao normalizada das principais metricas de engajamento." aria-label="Abrir grafico: Comparacao normalizada das principais metricas de engajamento.">
+        <img src="../figures/rq2_engagement_heatmap.png" alt="Comparacao normalizada das principais metricas de engajamento.">
+      </button>
+      <figcaption>Comparacao normalizada das principais metricas de engajamento.</figcaption>
+    </figure>
+    
+      </div>
+      <div class="callout">Os repositorios com politica apresentam medianas maiores em PRs, issues, comentarios e reviews. A leitura recomendada e associativa: projetos maiores ou mais maduros podem ser mais propensos a documentar politicas.</div>
+    </section>
+
+    <section id="rq3" class="tab-panel" role="tabpanel">
+      <div class="section-head">
+        <div>
+          <h2>RQ3 - Colaboracao, responsividade e eficiencia</h2>
+          <p class="section-copy"><strong>Pergunta:</strong> Como a presenca e o tipo de politica de IA se relacionam com a responsividade e a eficiencia do fluxo de contribuicao nos projetos?</p>
+        </div>
+      </div>
+      <div class="grid">
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq3_merge_rate_by_policy_presence.png" data-caption="Taxa mediana de merge de PRs por grupo." aria-label="Abrir grafico: Taxa mediana de merge de PRs por grupo.">
+        <img src="../figures/rq3_merge_rate_by_policy_presence.png" alt="Taxa mediana de merge de PRs por grupo.">
+      </button>
+      <figcaption>Taxa mediana de merge de PRs por grupo.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq3_closed_no_merge_rate_by_policy_presence.png" data-caption="Taxa mediana de PRs fechadas sem merge." aria-label="Abrir grafico: Taxa mediana de PRs fechadas sem merge.">
+        <img src="../figures/rq3_closed_no_merge_rate_by_policy_presence.png" alt="Taxa mediana de PRs fechadas sem merge.">
+      </button>
+      <figcaption>Taxa mediana de PRs fechadas sem merge.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq3_pr_cycle_time_by_policy_presence.png" data-caption="Tempo de ciclo de PR convertido para dias." aria-label="Abrir grafico: Tempo de ciclo de PR convertido para dias.">
+        <img src="../figures/rq3_pr_cycle_time_by_policy_presence.png" alt="Tempo de ciclo de PR convertido para dias.">
+      </button>
+      <figcaption>Tempo de ciclo de PR convertido para dias.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq3_first_response_time_by_policy_presence.png" data-caption="Tempo ate primeira resposta em issues e PRs." aria-label="Abrir grafico: Tempo ate primeira resposta em issues e PRs.">
+        <img src="../figures/rq3_first_response_time_by_policy_presence.png" alt="Tempo ate primeira resposta em issues e PRs.">
+      </button>
+      <figcaption>Tempo ate primeira resposta em issues e PRs.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq3_first_review_time_by_policy_presence.png" data-caption="Tempo ate primeira revisao de PR." aria-label="Abrir grafico: Tempo ate primeira revisao de PR.">
+        <img src="../figures/rq3_first_review_time_by_policy_presence.png" alt="Tempo ate primeira revisao de PR.">
+      </button>
+      <figcaption>Tempo ate primeira revisao de PR.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq3_process_stability_by_policy_presence.png" data-caption="Commits, reviews e reviews ate aprovacao." aria-label="Abrir grafico: Commits, reviews e reviews ate aprovacao.">
+        <img src="../figures/rq3_process_stability_by_policy_presence.png" alt="Commits, reviews e reviews ate aprovacao.">
+      </button>
+      <figcaption>Commits, reviews e reviews ate aprovacao.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/rq3_collaboration_heatmap.png" data-caption="Comparacao normalizada das principais metricas de colaboracao." aria-label="Abrir grafico: Comparacao normalizada das principais metricas de colaboracao.">
+        <img src="../figures/rq3_collaboration_heatmap.png" alt="Comparacao normalizada das principais metricas de colaboracao.">
+      </button>
+      <figcaption>Comparacao normalizada das principais metricas de colaboracao.</figcaption>
+    </figure>
+    
+      </div>
+      <div class="callout">Na amostra, projetos com politica apresentam maior taxa de merge, menor taxa de fechamento sem merge e menor tempo ate primeira revisao. Esses resultados indicam associacao, nao causalidade.</div>
+    </section>
+
+    <section id="complementar" class="tab-panel" role="tabpanel">
+      <div class="section-head">
+        <div>
+          <h2>Analise complementar - popularidade, idade e politicas</h2>
+          <p class="section-copy">Esta etapa contextualiza RQ2 e RQ3 ao investigar se repositorios com politica de IA tambem tendem a ser mais populares ou mais antigos.</p>
+        </div>
+      </div>
+      <div class="grid">
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/complementary_stars_by_policy_presence.png" data-caption="Distribuicao de estrelas por presenca de politica." aria-label="Abrir grafico: Distribuicao de estrelas por presenca de politica.">
+        <img src="../figures/complementary_stars_by_policy_presence.png" alt="Distribuicao de estrelas por presenca de politica.">
+      </button>
+      <figcaption>Distribuicao de estrelas por presenca de politica.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/complementary_age_by_policy_presence.png" data-caption="Distribuicao de idade por presenca de politica." aria-label="Abrir grafico: Distribuicao de idade por presenca de politica.">
+        <img src="../figures/complementary_age_by_policy_presence.png" alt="Distribuicao de idade por presenca de politica.">
+      </button>
+      <figcaption>Distribuicao de idade por presenca de politica.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/complementary_policy_adoption_by_stars_group.png" data-caption="Taxa de adocao por quartil de estrelas." aria-label="Abrir grafico: Taxa de adocao por quartil de estrelas.">
+        <img src="../figures/complementary_policy_adoption_by_stars_group.png" alt="Taxa de adocao por quartil de estrelas.">
+      </button>
+      <figcaption>Taxa de adocao por quartil de estrelas.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/complementary_policy_adoption_by_age_group.png" data-caption="Taxa de adocao por quartil de idade." aria-label="Abrir grafico: Taxa de adocao por quartil de idade.">
+        <img src="../figures/complementary_policy_adoption_by_age_group.png" alt="Taxa de adocao por quartil de idade.">
+      </button>
+      <figcaption>Taxa de adocao por quartil de idade.</figcaption>
+    </figure>
+    
+        
+    <figure class="viz">
+      <button class="image-open" type="button" data-full="../figures/complementary_age_vs_stars_by_policy_presence.png" data-caption="Dispersao idade vs. estrelas colorida por presenca de politica." aria-label="Abrir grafico: Dispersao idade vs. estrelas colorida por presenca de politica.">
+        <img src="../figures/complementary_age_vs_stars_by_policy_presence.png" alt="Dispersao idade vs. estrelas colorida por presenca de politica.">
+      </button>
+      <figcaption>Dispersao idade vs. estrelas colorida por presenca de politica.</figcaption>
+    </figure>
+    
+      </div>
+      <div class="callout">Mediana de estrelas com politica: 43.330,0. Sem politica: 39.057,0. Essa diferenca deve ser tratada como possivel fator de contexto para as comparacoes.</div>
+      <h3>Resumo por perfil</h3>
+      <table class="dataframe data-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>has_ai_policy_label</th>
+      <th>n_repositories</th>
+      <th>median_stars</th>
+      <th>mean_stars</th>
+      <th>median_age_days</th>
+      <th>mean_age_days</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Com politica de IA</td>
+      <td>125</td>
+      <td>43330.0</td>
+      <td>58166.800000</td>
+      <td>2479.0</td>
+      <td>2528.152000</td>
+    </tr>
+    <tr>
+      <td>Sem politica de IA</td>
+      <td>875</td>
+      <td>39057.0</td>
+      <td>51523.114286</td>
+      <td>2841.0</td>
+      <td>2819.894857</td>
+    </tr>
+  </tbody>
+</table>
+    </section>
+
+    <section id="sintese" class="tab-panel" role="tabpanel">
+      <h2>Sintese dos achados</h2>
+      <ul>
+        <li>A adocao explicita de politicas de IA e baixa na amostra geral.</li>
+        <li>Entre os repositorios com politica, predomina o cluster de governanca ampla do uso de IA.</li>
+        <li>Repositorios com politica apresentam maiores medianas de PRs, issues, comentarios e reviews.</li>
+        <li>Repositorios com politica tambem apresentam sinais de fluxo colaborativo mais responsivo e estruturado.</li>
+        <li>A analise complementar deve ser usada para discutir possiveis fatores de confusao, como popularidade e maturidade dos projetos.</li>
+        <li>Nenhuma visualizacao deve ser interpretada como evidencia causal direta.</li>
+      </ul>
+    </section>
+
+  <footer>
+    Dashboard gerado automaticamente a partir dos CSVs em <code>enunciado4/data</code>. Figuras e tabelas foram salvas em <code>enunciado4/outputs</code>.
+  </footer>
+  </div>
+  <div class="image-modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-label="Visualizacao ampliada do grafico">
+      <button class="modal-close" type="button" aria-label="Fechar imagem ampliada">&times;</button>
+      <img class="modal-image" src="" alt="">
+      <div class="modal-caption"></div>
+    </div>
+  </div>
+  <script>
+    const buttons = [...document.querySelectorAll(".tab-button")];
+    const panels = [...document.querySelectorAll(".tab-panel")];
+    const themeToggle = document.querySelector(".theme-toggle");
+    const imageButtons = [...document.querySelectorAll(".image-open")];
+    const imageModal = document.querySelector(".image-modal");
+    const modalImage = document.querySelector(".modal-image");
+    const modalCaption = document.querySelector(".modal-caption");
+    const modalClose = document.querySelector(".modal-close");
+
+    function activateTab(tabId) {
+      buttons.forEach((button) => {
+        button.setAttribute("aria-selected", String(button.dataset.tab === tabId));
+      });
+      panels.forEach((panel) => {
+        panel.classList.toggle("active", panel.id === tabId);
+      });
+    }
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => activateTab(button.dataset.tab));
+    });
+
+    function applyTheme(theme) {
+      const isDark = theme === "dark";
+      document.body.classList.toggle("dark-theme", isDark);
+      themeToggle.setAttribute("aria-pressed", String(isDark));
+      themeToggle.textContent = isDark ? "Modo claro" : "Modo escuro";
+    }
+
+    const savedTheme = localStorage.getItem("dashboard-theme") || "light";
+    applyTheme(savedTheme);
+
+    themeToggle.addEventListener("click", () => {
+      const nextTheme = document.body.classList.contains("dark-theme") ? "light" : "dark";
+      localStorage.setItem("dashboard-theme", nextTheme);
+      applyTheme(nextTheme);
+    });
+
+    function openImageModal(src, caption) {
+      modalImage.src = src;
+      modalImage.alt = caption;
+      modalCaption.textContent = caption;
+      imageModal.classList.add("open");
+      imageModal.setAttribute("aria-hidden", "false");
+      modalClose.focus();
+    }
+
+    function closeImageModal() {
+      imageModal.classList.remove("open");
+      imageModal.setAttribute("aria-hidden", "true");
+      modalImage.src = "";
+    }
+
+    imageButtons.forEach((button) => {
+      button.addEventListener("click", () => openImageModal(button.dataset.full, button.dataset.caption));
+    });
+
+    modalClose.addEventListener("click", closeImageModal);
+    imageModal.addEventListener("click", (event) => {
+      if (event.target === imageModal) {
+        closeImageModal();
+      }
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && imageModal.classList.contains("open")) {
+        closeImageModal();
+      }
+    });
+  </script>
+</body>
+</html>
