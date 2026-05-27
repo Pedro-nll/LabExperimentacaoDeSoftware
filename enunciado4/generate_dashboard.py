@@ -21,6 +21,8 @@ os.environ.setdefault("MPLCONFIGDIR", str(MPL_CACHE_DIR))
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 import seaborn as sns
 
 
@@ -536,6 +538,352 @@ def image_card(filename: str, caption: str) -> str:
     """
 
 
+def plotly_card(title: str, chart_html: str, caption: str, wide: bool = False) -> str:
+    card_class = "viz chart-card chart-card-wide" if wide else "viz chart-card"
+    return f"""
+    <figure class="{card_class}">
+      <h3>{html.escape(title)}</h3>
+      <div class="chart-frame">{chart_html}</div>
+      <figcaption>{html.escape(caption)}</figcaption>
+    </figure>
+    """
+
+
+def plotly_fragment(fig: go.Figure, include_plotlyjs: bool = False, height: int = 430) -> str:
+    fig.update_layout(
+        template="plotly_white",
+        title=None,
+        height=height,
+        margin=dict(l=64, r=24, t=18, b=72),
+        paper_bgcolor="#ffffff",
+        plot_bgcolor="#ffffff",
+        font=dict(family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", size=12, color="#17202a"),
+        hoverlabel=dict(bgcolor="#17202a", font_color="#ffffff"),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
+    )
+    fig.update_xaxes(automargin=True)
+    fig.update_yaxes(automargin=True)
+    return fig.to_html(
+        full_html=False,
+        include_plotlyjs=include_plotlyjs,
+        config={"displaylogo": False, "responsive": True},
+        default_width="100%",
+        default_height=f"{height}px",
+    )
+
+
+def heatmap_figure(data: pd.DataFrame, title: str) -> go.Figure:
+    normalized = (data - data.min()) / (data.max() - data.min())
+    normalized = normalized.fillna(0)
+    fig = go.Figure(
+        data=go.Heatmap(
+            z=normalized.values,
+            x=list(normalized.columns),
+            y=list(normalized.index),
+            text=data.round(2).astype(str).values,
+            texttemplate="%{text}",
+            colorscale="YlGnBu",
+            colorbar=dict(title="Normalizado"),
+            hovertemplate="Grupo: %{y}<br>Metrica: %{x}<br>Valor normalizado: %{z:.2f}<br>Valor real: %{text}<extra></extra>",
+        )
+    )
+    fig.update_layout(title=title)
+    return fig
+
+
+def build_interactive_charts(
+    top_repos: pd.DataFrame,
+    enriched: pd.DataFrame,
+    adoption_metrics: dict[str, float],
+    clusters: pd.DataFrame,
+    rq2_policy: pd.DataFrame,
+    rq3_policy: pd.DataFrame,
+) -> dict[str, str]:
+    charts: dict[str, str] = {}
+    include_js = True
+
+    def add(name: str, fig: go.Figure, height: int = 430) -> None:
+        nonlocal include_js
+        charts[name] = plotly_fragment(fig, include_plotlyjs=include_js, height=height)
+        include_js = False
+
+    fig = px.histogram(
+        top_repos.assign(age_years=top_repos["age_days"] / 365),
+        x="age_years",
+        nbins=30,
+        title="Distribuicao da idade dos repositorios",
+        labels={"age_years": "Idade do repositorio (anos)", "count": "Quantidade"},
+        color_discrete_sequence=["#2A9D8F"],
+    )
+    fig.update_traces(hovertemplate="Idade: %{x:.1f} anos<br>Repositorios: %{y}<extra></extra>")
+    add("dataset_age_distribution", fig, height=400)
+
+    star_bins = np.logspace(
+        np.log10(top_repos["stars"].min()),
+        np.log10(top_repos["stars"].max()),
+        26,
+    )
+    star_distribution = (
+        pd.cut(top_repos["stars"], bins=star_bins, include_lowest=True)
+        .value_counts()
+        .sort_index()
+        .reset_index()
+    )
+    star_distribution.columns = ["Faixa", "Repositorios"]
+    star_distribution["Inicio"] = star_distribution["Faixa"].apply(lambda interval: interval.left)
+    star_distribution["Fim"] = star_distribution["Faixa"].apply(lambda interval: interval.right)
+    star_distribution["Faixa"] = star_distribution.apply(
+        lambda row: f"{row['Inicio'] / 1000:.0f}k-{row['Fim'] / 1000:.0f}k",
+        axis=1,
+    )
+    fig = px.bar(
+        star_distribution,
+        x="Faixa",
+        y="Repositorios",
+        title="Distribuicao de estrelas por faixas",
+        labels={"Faixa": "Faixa de estrelas", "Repositorios": "Quantidade"},
+        color_discrete_sequence=["#4C78A8"],
+        custom_data=["Inicio", "Fim"],
+    )
+    fig.update_traces(
+        hovertemplate="Estrelas: %{customdata[0]:,.0f} - %{customdata[1]:,.0f}<br>Repositorios: %{y}<extra></extra>"
+    )
+    fig.update_xaxes(tickangle=-35)
+    add("dataset_stars_distribution", fig, height=400)
+
+    adoption_plot = pd.DataFrame(
+        {
+            "Grupo": ["Com politica de IA", "Sem politica de IA"],
+            "Repositorios": [
+                float(adoption_metrics["repositories_with_policy"]),
+                float(adoption_metrics["repositories_without_policy"]),
+            ],
+        }
+    )
+    fig = px.bar(
+        adoption_plot,
+        x="Grupo",
+        y="Repositorios",
+        color="Grupo",
+        color_discrete_map=POLICY_COLORS,
+        text="Repositorios",
+        title="Adocao de politicas de IA",
+        labels={"Repositorios": "Quantidade de repositorios"},
+    )
+    fig.update_traces(hovertemplate="Grupo: %{x}<br>Repositorios: %{y}<extra></extra>")
+    add("rq1_policy_adoption", fig)
+
+    cluster_sorted = clusters.sort_values("unique_repositories")
+    fig = px.bar(
+        cluster_sorted,
+        y="cluster_label",
+        x="unique_repositories",
+        orientation="h",
+        title="Distribuicao dos tipos de politica",
+        labels={"cluster_label": "", "unique_repositories": "Repositorios unicos"},
+        color_discrete_sequence=[CLUSTER_COLOR],
+        text="unique_repositories",
+    )
+    fig.update_traces(hovertemplate="Cluster: %{y}<br>Repositorios: %{x}<extra></extra>")
+    add("rq1_cluster_distribution", fig, height=460)
+
+    fig = px.bar(
+        cluster_sorted,
+        y="cluster_label",
+        x="percentage_of_policy_repositories",
+        orientation="h",
+        title="Percentual dos clusters entre repositorios com politica",
+        labels={"cluster_label": "", "percentage_of_policy_repositories": "Percentual dos repositorios com politica"},
+        color_discrete_sequence=["#2A9D8F"],
+        text="percentage_of_policy_repositories",
+    )
+    fig.update_traces(texttemplate="%{text:.1f}%", hovertemplate="Cluster: %{y}<br>Percentual: %{x:.1f}%<extra></extra>")
+    add("rq1_cluster_percentages", fig, height=460)
+
+    text_size = clusters.melt(
+        id_vars=["cluster_label"],
+        value_vars=["median_policy_words", "mean_policy_words"],
+        var_name="Metrica",
+        value_name="Palavras",
+    )
+    text_size["Metrica"] = text_size["Metrica"].map({"median_policy_words": "Mediana", "mean_policy_words": "Media"})
+    fig = px.bar(
+        text_size,
+        x="Palavras",
+        y="cluster_label",
+        color="Metrica",
+        orientation="h",
+        barmode="group",
+        title="Tamanho dos textos de politica por cluster",
+        labels={"cluster_label": "", "Palavras": "Quantidade de palavras"},
+        color_discrete_sequence=[CLUSTER_COLOR, SECONDARY_COLOR],
+    )
+    fig.update_traces(hovertemplate="Cluster: %{y}<br>Palavras: %{x:.1f}<extra></extra>")
+    add("rq1_policy_text_size_by_cluster", fig, height=480)
+
+    rq2 = rq2_policy.copy()
+    rq2["Grupo"] = rq2["has_ai_policy"].map(policy_label)
+    rq2["order"] = rq2["has_ai_policy"].map({value: idx for idx, value in enumerate(POLICY_ORDER)})
+    rq2 = rq2.sort_values("order")
+    for name, metric, title, label in [
+        ("rq2_prs_total", "prs_total_median", "Mediana de PRs totais por presenca de politica de IA", "PRs totais (mediana)"),
+        ("rq2_prs_merged", "prs_merged_median", "Mediana de PRs mergeadas por presenca de politica de IA", "PRs mergeadas (mediana)"),
+        ("rq2_issues_total", "issues_total_median", "Mediana de issues totais por presenca de politica de IA", "Issues totais (mediana)"),
+        ("rq2_unique_collaborators", "unique_collaborators_median", "Mediana de colaboradores unicos por presenca de politica de IA", "Colaboradores unicos (mediana)"),
+    ]:
+        fig = px.bar(rq2, x="Grupo", y=metric, color="Grupo", color_discrete_map=POLICY_COLORS, text=metric, title=title, labels={metric: label})
+        fig.update_traces(hovertemplate="Grupo: %{x}<br>Valor: %{y:,.1f}<extra></extra>")
+        add(name, fig)
+
+    comments = rq2.melt(
+        id_vars=["Grupo"],
+        value_vars=["avg_pr_comments_median", "avg_issue_comments_median", "avg_pr_reviews_median"],
+        var_name="Metrica",
+        value_name="Valor",
+    )
+    comments["Metrica"] = comments["Metrica"].map(
+        {
+            "avg_pr_comments_median": "Comentarios por PR",
+            "avg_issue_comments_median": "Comentarios por issue",
+            "avg_pr_reviews_median": "Reviews por PR",
+        }
+    )
+    fig = px.bar(comments, x="Metrica", y="Valor", color="Grupo", barmode="group", color_discrete_map=POLICY_COLORS, title="Comentarios e reviews por presenca de politica")
+    fig.update_traces(hovertemplate="Metrica: %{x}<br>Valor mediano: %{y:.2f}<extra></extra>")
+    add("rq2_comments_reviews", fig)
+
+    heat_cols = [
+        "prs_total_median",
+        "prs_merged_median",
+        "issues_total_median",
+        "unique_collaborators_median",
+        "avg_pr_comments_median",
+        "avg_issue_comments_median",
+        "avg_pr_reviews_median",
+    ]
+    heat = rq2.set_index("Grupo")[heat_cols]
+    heat.columns = ["PRs totais", "PRs mergeadas", "Issues totais", "Colaboradores", "Com. PR", "Com. issue", "Reviews PR"]
+    add("rq2_engagement_heatmap", heatmap_figure(heat, "Heatmap de engajamento por presenca de politica"), height=430)
+
+    rq3 = rq3_policy.copy()
+    rq3["Grupo"] = rq3["has_ai_policy"].map(policy_label)
+    rq3["order"] = rq3["has_ai_policy"].map({value: idx for idx, value in enumerate(POLICY_ORDER)})
+    rq3 = rq3.sort_values("order")
+    for name, metric, title, label in [
+        ("rq3_merge_rate", "prs_merge_rate_median", "Taxa mediana de merge por presenca de politica de IA", "Taxa de merge (%)"),
+        ("rq3_closed_no_merge_rate", "prs_closed_no_merge_rate_median", "Taxa mediana de fechamento sem merge", "Taxa de fechamento sem merge (%)"),
+    ]:
+        fig = px.bar(rq3, x="Grupo", y=metric, color="Grupo", color_discrete_map=POLICY_COLORS, text=metric, title=title, labels={metric: label})
+        fig.update_traces(texttemplate="%{text:.1f}%", hovertemplate="Grupo: %{x}<br>Valor: %{y:.1f}%<extra></extra>")
+        add(name, fig)
+
+    cycle = rq3[["Grupo", "median_pr_cycle_hours_median", "mean_pr_cycle_hours_median"]].copy()
+    cycle["Ciclo mediano do PR"] = cycle["median_pr_cycle_hours_median"] / 24
+    cycle["Tempo medio de ciclo do PR"] = cycle["mean_pr_cycle_hours_median"] / 24
+    cycle_long = cycle.melt(id_vars=["Grupo"], value_vars=["Ciclo mediano do PR", "Tempo medio de ciclo do PR"], var_name="Metrica", value_name="Dias")
+    fig = px.bar(cycle_long, y="Metrica", x="Dias", color="Grupo", barmode="group", orientation="h", color_discrete_map=POLICY_COLORS, title="Tempo de ciclo de PR por presenca de politica")
+    fig.update_traces(hovertemplate="Metrica: %{y}<br>Dias: %{x:.1f}<extra></extra>")
+    add("rq3_pr_cycle_time", fig, height=400)
+
+    response = rq3.melt(
+        id_vars=["Grupo"],
+        value_vars=["median_issue_first_response_hours_median", "median_pr_first_response_hours_median"],
+        var_name="Metrica",
+        value_name="Horas",
+    )
+    response["Metrica"] = response["Metrica"].map(
+        {
+            "median_issue_first_response_hours_median": "Primeira resposta em issue",
+            "median_pr_first_response_hours_median": "Primeira resposta em PR",
+        }
+    )
+    fig = px.bar(response, y="Metrica", x="Horas", color="Grupo", barmode="group", orientation="h", color_discrete_map=POLICY_COLORS, title="Tempo ate primeira resposta")
+    fig.update_traces(hovertemplate="Metrica: %{y}<br>Horas: %{x:.1f}<extra></extra>")
+    add("rq3_first_response_time", fig, height=400)
+
+    fig = px.bar(rq3, x="Grupo", y="median_pr_first_review_hours_median", color="Grupo", color_discrete_map=POLICY_COLORS, text="median_pr_first_review_hours_median", title="Tempo ate primeira revisao em PR", labels={"median_pr_first_review_hours_median": "Horas"})
+    fig.update_traces(hovertemplate="Grupo: %{x}<br>Horas: %{y:.1f}<extra></extra>")
+    add("rq3_first_review_time", fig)
+
+    stability = rq3.melt(
+        id_vars=["Grupo"],
+        value_vars=["avg_pr_commits_median", "avg_pr_reviews_median", "avg_reviews_until_approval_median"],
+        var_name="Metrica",
+        value_name="Valor",
+    )
+    stability["Metrica"] = stability["Metrica"].map(
+        {
+            "avg_pr_commits_median": "Commits por PR",
+            "avg_pr_reviews_median": "Reviews por PR",
+            "avg_reviews_until_approval_median": "Reviews ate aprovacao",
+        }
+    )
+    fig = px.bar(stability, y="Metrica", x="Valor", color="Grupo", barmode="group", orientation="h", color_discrete_map=POLICY_COLORS, title="Estabilidade do processo colaborativo")
+    fig.update_traces(hovertemplate="Metrica: %{y}<br>Valor: %{x:.2f}<extra></extra>")
+    add("rq3_process_stability", fig, height=430)
+
+    heat_cols = [
+        "prs_merge_rate_median",
+        "prs_closed_no_merge_rate_median",
+        "median_pr_cycle_hours_median",
+        "median_issue_first_response_hours_median",
+        "median_pr_first_response_hours_median",
+        "median_pr_first_review_hours_median",
+        "avg_pr_commits_median",
+        "avg_pr_reviews_median",
+        "avg_reviews_until_approval_median",
+    ]
+    heat = rq3.set_index("Grupo")[heat_cols]
+    heat.columns = ["Merge", "Sem merge", "Ciclo PR", "Resp. issue", "Resp. PR", "Review PR", "Commits", "Reviews", "Aprovacao"]
+    add("rq3_collaboration_heatmap", heatmap_figure(heat, "Heatmap de colaboracao por presenca de politica"), height=450)
+
+    order = ["Sem politica de IA", "Com politica de IA"]
+    fig = px.box(enriched, x="has_ai_policy_label", y="stars", color="has_ai_policy_label", category_orders={"has_ai_policy_label": order}, color_discrete_map=POLICY_COLORS, log_y=True, title="Distribuicao de estrelas por presenca de politica", labels={"has_ai_policy_label": "", "stars": "Estrelas (escala logaritmica)"})
+    fig.update_traces(hovertemplate="Grupo: %{x}<br>Estrelas: %{y:,.0f}<extra></extra>")
+    add("complementary_stars", fig)
+
+    fig = px.box(enriched, x="has_ai_policy_label", y="age_years", color="has_ai_policy_label", category_orders={"has_ai_policy_label": order}, color_discrete_map=POLICY_COLORS, title="Distribuicao de idade por presenca de politica", labels={"has_ai_policy_label": "", "age_years": "Idade do repositorio (anos)"})
+    fig.update_traces(hovertemplate="Grupo: %{x}<br>Idade: %{y:.1f} anos<extra></extra>")
+    add("complementary_age", fig)
+
+    stars_groups = pd.qcut(enriched["stars"], q=4, labels=["Q1 - Menos estrelas", "Q2", "Q3", "Q4 - Mais estrelas"], duplicates="drop")
+    stars_adoption = (
+        enriched.assign(stars_group=stars_groups)
+        .groupby("stars_group", observed=True)
+        .agg(policy_rate=("has_ai_policy", lambda values: (values == "With AI Policy").mean() * 100), n=("repo_name", "count"))
+        .reset_index()
+    )
+    fig = px.bar(stars_adoption, x="stars_group", y="policy_rate", text="policy_rate", title="Taxa de adocao por faixa de estrelas", labels={"stars_group": "Faixa de estrelas", "policy_rate": "Repositorios com politica (%)"}, color_discrete_sequence=["#2A9D8F"])
+    fig.update_traces(texttemplate="%{text:.1f}%", hovertemplate="Faixa: %{x}<br>Taxa: %{y:.1f}%<extra></extra>")
+    add("complementary_policy_adoption_stars", fig)
+
+    age_groups = pd.qcut(enriched["age_days"], q=4, labels=["Q1 - Mais recentes", "Q2", "Q3", "Q4 - Mais antigos"], duplicates="drop")
+    age_adoption = (
+        enriched.assign(age_group=age_groups)
+        .groupby("age_group", observed=True)
+        .agg(policy_rate=("has_ai_policy", lambda values: (values == "With AI Policy").mean() * 100), n=("repo_name", "count"))
+        .reset_index()
+    )
+    fig = px.bar(age_adoption, x="age_group", y="policy_rate", text="policy_rate", title="Taxa de adocao por faixa de idade", labels={"age_group": "Faixa de idade", "policy_rate": "Repositorios com politica (%)"}, color_discrete_sequence=[CLUSTER_COLOR])
+    fig.update_traces(texttemplate="%{text:.1f}%", hovertemplate="Faixa: %{x}<br>Taxa: %{y:.1f}%<extra></extra>")
+    add("complementary_policy_adoption_age", fig)
+
+    fig = px.scatter(
+        enriched,
+        x="age_days",
+        y="stars",
+        color="has_ai_policy_label",
+        color_discrete_map=POLICY_COLORS,
+        log_y=True,
+        hover_data={"repo_name": True, "age_days": ":,.0f", "stars": ":,.0f", "has_ai_policy_label": False},
+        title="Idade vs. estrelas por presenca de politica de IA",
+        labels={"age_days": "Idade do repositorio (dias)", "stars": "Estrelas (escala logaritmica)", "has_ai_policy_label": ""},
+    )
+    add("complementary_age_vs_stars", fig, height=560)
+
+    return charts
+
+
 def metric_card(label: str, value: str, note: str = "") -> str:
     return f"""
     <div class="metric-card">
@@ -570,6 +918,7 @@ def build_dashboard(
             metric_card("Idade mediana", f"{median_age_years} anos", "maturidade tipica"),
         ]
     )
+    charts = build_interactive_charts(top_repos, enriched, adoption_metrics, clusters, rq2_policy, rq3_policy)
 
     html_text = f"""<!doctype html>
 <html lang="pt-BR">
@@ -585,6 +934,7 @@ def build_dashboard(
       --panel: #ffffff;
       --surface: #f6f8fb;
       --panel-soft: #fbfcfe;
+      --chart-bg: #ffffff;
       --table-head: #edf2f7;
       --callout-bg: #edf8f6;
       --callout-text: #24443f;
@@ -602,6 +952,7 @@ def build_dashboard(
       --panel: #182231;
       --surface: #101722;
       --panel-soft: #141e2b;
+      --chart-bg: #182231;
       --table-head: #223044;
       --callout-bg: #14312f;
       --callout-text: #c4f0e8;
@@ -777,14 +1128,15 @@ def build_dashboard(
     }}
     .grid {{
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 16px;
       align-items: start;
       margin-top: 18px;
     }}
     .viz {{
+      grid-column: span 6;
       margin: 0;
-      padding: 12px;
+      padding: 14px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--panel);
@@ -807,6 +1159,19 @@ def build_dashboard(
       display: block;
       width: 100%;
       height: auto;
+    }}
+    .chart-card h3 {{
+      min-height: 24px;
+      margin-bottom: 10px;
+      color: var(--ink);
+      font-size: 16px;
+    }}
+    .chart-card-wide {{ grid-column: 1 / -1; }}
+    .chart-frame {{
+      min-height: 430px;
+      overflow: hidden;
+      border-radius: 6px;
+      background: var(--chart-bg);
     }}
     figcaption {{
       margin-top: 8px;
@@ -918,6 +1283,7 @@ def build_dashboard(
       .metrics {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
       .hero-panel, .tab-panel {{ padding: 14px; }}
       .grid {{ grid-template-columns: 1fr; }}
+      .viz, .chart-card-wide {{ grid-column: 1; }}
       .image-modal {{ padding: 10px; }}
     }}
   </style>
@@ -944,8 +1310,8 @@ def build_dashboard(
         <div class="mini-stat"><b>{format_float(float(without_policy_profile['median_stars']), 0)}</b><span>mediana de estrelas sem politica</span></div>
       </div>
       <div class="grid">
-        {image_card("dataset_age_distribution.png", "Distribuicao da idade dos repositorios em anos.")}
-        {image_card("dataset_stars_distribution.png", "Distribuicao de estrelas dos repositorios em escala logaritmica.")}
+        {plotly_card("Distribuicao da idade", charts["dataset_age_distribution"], "Passe o mouse nas barras para ver a quantidade de repositorios por faixa de idade.")}
+        {plotly_card("Distribuicao de estrelas", charts["dataset_stars_distribution"], "As faixas do eixo X foram calculadas em intervalos logaritmicos para reduzir a distorcao causada por repositorios extremamente populares.")}
       </div>
     </div>
 
@@ -967,10 +1333,10 @@ def build_dashboard(
         </div>
       </div>
       <div class="grid">
-        {image_card("rq1_policy_adoption.png", "Comparacao entre repositorios com e sem politica de IA.")}
-        {image_card("rq1_cluster_distribution.png", "Quantidade de repositorios por tipo de politica identificado.")}
-        {image_card("rq1_cluster_percentages.png", "Participacao percentual de cada cluster entre os repositorios com politica.")}
-        {image_card("rq1_policy_text_size_by_cluster.png", "Comparacao entre media e mediana do tamanho dos textos de politica.")}
+        {plotly_card("Adocao de politicas de IA", charts["rq1_policy_adoption"], "Comparacao interativa entre repositorios com e sem politica de IA.")}
+        {plotly_card("Distribuicao dos tipos de politica", charts["rq1_cluster_distribution"], "Quantidade de repositorios por tipo de politica identificado.", wide=True)}
+        {plotly_card("Percentual dos clusters", charts["rq1_cluster_percentages"], "Participacao percentual de cada cluster entre os repositorios com politica.", wide=True)}
+        {plotly_card("Tamanho dos textos de politica", charts["rq1_policy_text_size_by_cluster"], "Comparacao entre media e mediana do tamanho dos textos de politica.", wide=True)}
       </div>
       <div class="callout">Apenas {format_float(float(adoption_metrics['policy_adoption_percentage']), 1)}% da amostra possui politica identificada. Entre esses casos, o cluster mais frequente e "{html.escape(str(cluster_top['cluster_label']))}", com {int(cluster_top['unique_repositories'])} repositorios.</div>
       <h3>Resumo dos clusters</h3>
@@ -985,12 +1351,12 @@ def build_dashboard(
         </div>
       </div>
       <div class="grid">
-        {image_card("rq2_prs_total_by_policy_presence.png", "Volume tipico de PRs por presenca de politica.")}
-        {image_card("rq2_prs_merged_by_policy_presence.png", "Volume tipico de PRs mergeadas por presenca de politica.")}
-        {image_card("rq2_issues_total_by_policy_presence.png", "Volume tipico de issues por presenca de politica.")}
-        {image_card("rq2_unique_collaborators_by_policy_presence.png", "Comunidade colaboradora tipica por grupo.")}
-        {image_card("rq2_comments_reviews_by_policy_presence.png", "Comentarios e reviews como indicadores de interacao.")}
-        {image_card("rq2_engagement_heatmap.png", "Comparacao normalizada das principais metricas de engajamento.")}
+        {plotly_card("PRs totais", charts["rq2_prs_total"], "Volume tipico de PRs por presenca de politica.")}
+        {plotly_card("PRs mergeadas", charts["rq2_prs_merged"], "Volume tipico de PRs mergeadas por presenca de politica.")}
+        {plotly_card("Issues totais", charts["rq2_issues_total"], "Volume tipico de issues por presenca de politica.")}
+        {plotly_card("Colaboradores unicos", charts["rq2_unique_collaborators"], "Comunidade colaboradora tipica por grupo.")}
+        {plotly_card("Comentarios e reviews", charts["rq2_comments_reviews"], "Comentarios e reviews como indicadores de interacao.")}
+        {plotly_card("Heatmap de engajamento", charts["rq2_engagement_heatmap"], "Comparacao normalizada das principais metricas de engajamento.", wide=True)}
       </div>
       <div class="callout">Os repositorios com politica apresentam medianas maiores em PRs, issues, comentarios e reviews. A leitura recomendada e associativa: projetos maiores ou mais maduros podem ser mais propensos a documentar politicas.</div>
     </section>
@@ -1003,13 +1369,13 @@ def build_dashboard(
         </div>
       </div>
       <div class="grid">
-        {image_card("rq3_merge_rate_by_policy_presence.png", "Taxa mediana de merge de PRs por grupo.")}
-        {image_card("rq3_closed_no_merge_rate_by_policy_presence.png", "Taxa mediana de PRs fechadas sem merge.")}
-        {image_card("rq3_pr_cycle_time_by_policy_presence.png", "Tempo de ciclo de PR convertido para dias.")}
-        {image_card("rq3_first_response_time_by_policy_presence.png", "Tempo ate primeira resposta em issues e PRs.")}
-        {image_card("rq3_first_review_time_by_policy_presence.png", "Tempo ate primeira revisao de PR.")}
-        {image_card("rq3_process_stability_by_policy_presence.png", "Commits, reviews e reviews ate aprovacao.")}
-        {image_card("rq3_collaboration_heatmap.png", "Comparacao normalizada das principais metricas de colaboracao.")}
+        {plotly_card("Taxa de merge", charts["rq3_merge_rate"], "Taxa mediana de merge de PRs por grupo.")}
+        {plotly_card("Fechamento sem merge", charts["rq3_closed_no_merge_rate"], "Taxa mediana de PRs fechadas sem merge.")}
+        {plotly_card("Tempo de ciclo de PR", charts["rq3_pr_cycle_time"], "Tempo de ciclo de PR convertido para dias.", wide=True)}
+        {plotly_card("Tempo ate primeira resposta", charts["rq3_first_response_time"], "Tempo ate primeira resposta em issues e PRs.", wide=True)}
+        {plotly_card("Tempo ate primeira revisao", charts["rq3_first_review_time"], "Tempo ate primeira revisao de PR.")}
+        {plotly_card("Estabilidade do processo", charts["rq3_process_stability"], "Commits, reviews e reviews ate aprovacao.", wide=True)}
+        {plotly_card("Heatmap de colaboracao", charts["rq3_collaboration_heatmap"], "Comparacao normalizada das principais metricas de colaboracao.", wide=True)}
       </div>
       <div class="callout">Na amostra, projetos com politica apresentam maior taxa de merge, menor taxa de fechamento sem merge e menor tempo ate primeira revisao. Esses resultados indicam associacao, nao causalidade.</div>
     </section>
@@ -1022,11 +1388,11 @@ def build_dashboard(
         </div>
       </div>
       <div class="grid">
-        {image_card("complementary_stars_by_policy_presence.png", "Distribuicao de estrelas por presenca de politica.")}
-        {image_card("complementary_age_by_policy_presence.png", "Distribuicao de idade por presenca de politica.")}
-        {image_card("complementary_policy_adoption_by_stars_group.png", "Taxa de adocao por quartil de estrelas.")}
-        {image_card("complementary_policy_adoption_by_age_group.png", "Taxa de adocao por quartil de idade.")}
-        {image_card("complementary_age_vs_stars_by_policy_presence.png", "Dispersao idade vs. estrelas colorida por presenca de politica.")}
+        {plotly_card("Estrelas por presenca de politica", charts["complementary_stars"], "Distribuicao de estrelas por presenca de politica.")}
+        {plotly_card("Idade por presenca de politica", charts["complementary_age"], "Distribuicao de idade por presenca de politica.")}
+        {plotly_card("Adocao por faixa de estrelas", charts["complementary_policy_adoption_stars"], "Taxa de adocao por quartil de estrelas.")}
+        {plotly_card("Adocao por faixa de idade", charts["complementary_policy_adoption_age"], "Taxa de adocao por quartil de idade.")}
+        {plotly_card("Idade vs. estrelas", charts["complementary_age_vs_stars"], "Dispersao idade vs. estrelas colorida por presenca de politica.", wide=True)}
       </div>
       <div class="callout">Mediana de estrelas com politica: {format_float(float(with_policy_profile['median_stars']), 1)}. Sem politica: {format_float(float(without_policy_profile['median_stars']), 1)}. Essa diferenca deve ser tratada como possivel fator de contexto para as comparacoes.</div>
       <h3>Resumo por perfil</h3>
@@ -1073,6 +1439,9 @@ def build_dashboard(
       panels.forEach((panel) => {{
         panel.classList.toggle("active", panel.id === tabId);
       }});
+      setTimeout(() => {{
+        document.querySelectorAll(`#${{tabId}} .js-plotly-plot`).forEach((chart) => Plotly.Plots.resize(chart));
+      }}, 50);
     }}
 
     buttons.forEach((button) => {{
@@ -1084,6 +1453,45 @@ def build_dashboard(
       document.body.classList.toggle("dark-theme", isDark);
       themeToggle.setAttribute("aria-pressed", String(isDark));
       themeToggle.textContent = isDark ? "Modo claro" : "Modo escuro";
+      updatePlotlyTheme(isDark);
+    }}
+
+    function updatePlotlyTheme(isDark) {{
+      if (!window.Plotly) return;
+      const colors = isDark
+        ? {{
+            bg: "#182231",
+            ink: "#e7edf5",
+            muted: "#a9b6c8",
+            grid: "#314052",
+            hoverBg: "#e7edf5",
+            hoverInk: "#101722",
+          }}
+        : {{
+            bg: "#ffffff",
+            ink: "#17202a",
+            muted: "#647084",
+            grid: "#e7edf3",
+            hoverBg: "#17202a",
+            hoverInk: "#ffffff",
+          }};
+
+      document.querySelectorAll(".js-plotly-plot").forEach((chart) => {{
+        Plotly.relayout(chart, {{
+          paper_bgcolor: colors.bg,
+          plot_bgcolor: colors.bg,
+          "font.color": colors.ink,
+          "xaxis.color": colors.muted,
+          "xaxis.gridcolor": colors.grid,
+          "xaxis.zerolinecolor": colors.grid,
+          "yaxis.color": colors.muted,
+          "yaxis.gridcolor": colors.grid,
+          "yaxis.zerolinecolor": colors.grid,
+          "legend.font.color": colors.ink,
+          "hoverlabel.bgcolor": colors.hoverBg,
+          "hoverlabel.font.color": colors.hoverInk,
+        }});
+      }});
     }}
 
     const savedTheme = localStorage.getItem("dashboard-theme") || "light";
