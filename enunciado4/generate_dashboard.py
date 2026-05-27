@@ -549,6 +549,30 @@ def plotly_card(title: str, chart_html: str, caption: str, wide: bool = False) -
     """
 
 
+def subtab_group(group_id: str, items: list[tuple[str, str]]) -> str:
+    buttons = []
+    panels = []
+    for index, (label, content) in enumerate(items):
+        panel_id = f"{group_id}-{index}"
+        selected = "true" if index == 0 else "false"
+        active = " active" if index == 0 else ""
+        buttons.append(
+            f'<button class="subtab-button" type="button" role="tab" aria-selected="{selected}" '
+            f'aria-controls="{panel_id}" data-subtab="{panel_id}">{html.escape(label)}</button>'
+        )
+        panels.append(
+            f'<div id="{panel_id}" class="subtab-panel{active}" role="tabpanel">{content}</div>'
+        )
+    return f"""
+    <div class="subtab-group" data-subtab-group="{html.escape(group_id)}">
+      <div class="subtabs" role="tablist" aria-label="Visualizacoes da secao">
+        {"".join(buttons)}
+      </div>
+      {"".join(panels)}
+    </div>
+    """
+
+
 def plotly_fragment(fig: go.Figure, include_plotlyjs: bool = False, height: int = 430) -> str:
     fig.update_layout(
         template="plotly_white",
@@ -919,6 +943,72 @@ def build_dashboard(
         ]
     )
     charts = build_interactive_charts(top_repos, enriched, adoption_metrics, clusters, rq2_policy, rq3_policy)
+    rq1_subtabs = subtab_group(
+        "rq1",
+        [
+            ("Adocao", plotly_card("Adocao de politicas de IA", charts["rq1_policy_adoption"], "Comparacao interativa entre repositorios com e sem politica de IA.")),
+            ("Tipos", plotly_card("Distribuicao dos tipos de politica", charts["rq1_cluster_distribution"], "Quantidade de repositorios por tipo de politica identificado.", wide=True)),
+            ("Percentuais", plotly_card("Percentual dos clusters", charts["rq1_cluster_percentages"], "Participacao percentual de cada cluster entre os repositorios com politica.", wide=True)),
+            ("Tamanho do texto", plotly_card("Tamanho dos textos de politica", charts["rq1_policy_text_size_by_cluster"], "Comparacao entre media e mediana do tamanho dos textos de politica.", wide=True)),
+            (
+                "Resumo",
+                f"""
+                <div class="callout">Apenas {format_float(float(adoption_metrics['policy_adoption_percentage']), 1)}% da amostra possui politica identificada. Entre esses casos, o cluster mais frequente e "{html.escape(str(cluster_top['cluster_label']))}", com {int(cluster_top['unique_repositories'])} repositorios.</div>
+                <h3>Resumo dos clusters</h3>
+                {table_html(clusters, ["cluster", "cluster_label", "unique_repositories", "percentage_of_policy_repositories", "median_policy_words"])}
+                """,
+            ),
+        ],
+    )
+    rq2_subtabs = subtab_group(
+        "rq2",
+        [
+            ("PRs totais", plotly_card("PRs totais", charts["rq2_prs_total"], "Volume tipico de PRs por presenca de politica.")),
+            ("PRs mergeadas", plotly_card("PRs mergeadas", charts["rq2_prs_merged"], "Volume tipico de PRs mergeadas por presenca de politica.")),
+            ("Issues", plotly_card("Issues totais", charts["rq2_issues_total"], "Volume tipico de issues por presenca de politica.")),
+            ("Colaboradores", plotly_card("Colaboradores unicos", charts["rq2_unique_collaborators"], "Comunidade colaboradora tipica por grupo.")),
+            ("Comentarios", plotly_card("Comentarios e reviews", charts["rq2_comments_reviews"], "Comentarios e reviews como indicadores de interacao.")),
+            ("Heatmap", plotly_card("Heatmap de engajamento", charts["rq2_engagement_heatmap"], "Comparacao normalizada das principais metricas de engajamento.", wide=True)),
+            (
+                "Leitura",
+                '<div class="callout">Os repositorios com politica apresentam medianas maiores em PRs, issues, comentarios e reviews. A leitura recomendada e associativa: projetos maiores ou mais maduros podem ser mais propensos a documentar politicas.</div>',
+            ),
+        ],
+    )
+    rq3_subtabs = subtab_group(
+        "rq3",
+        [
+            ("Merge", plotly_card("Taxa de merge", charts["rq3_merge_rate"], "Taxa mediana de merge de PRs por grupo.")),
+            ("Sem merge", plotly_card("Fechamento sem merge", charts["rq3_closed_no_merge_rate"], "Taxa mediana de PRs fechadas sem merge.")),
+            ("Ciclo de PR", plotly_card("Tempo de ciclo de PR", charts["rq3_pr_cycle_time"], "Tempo de ciclo de PR convertido para dias.", wide=True)),
+            ("Resposta", plotly_card("Tempo ate primeira resposta", charts["rq3_first_response_time"], "Tempo ate primeira resposta em issues e PRs.", wide=True)),
+            ("Revisao", plotly_card("Tempo ate primeira revisao", charts["rq3_first_review_time"], "Tempo ate primeira revisao de PR.")),
+            ("Estabilidade", plotly_card("Estabilidade do processo", charts["rq3_process_stability"], "Commits, reviews e reviews ate aprovacao.", wide=True)),
+            ("Heatmap", plotly_card("Heatmap de colaboracao", charts["rq3_collaboration_heatmap"], "Comparacao normalizada das principais metricas de colaboracao.", wide=True)),
+            (
+                "Leitura",
+                '<div class="callout">Na amostra, projetos com politica apresentam maior taxa de merge, menor taxa de fechamento sem merge e menor tempo ate primeira revisao. Esses resultados indicam associacao, nao causalidade.</div>',
+            ),
+        ],
+    )
+    complementary_subtabs = subtab_group(
+        "complementar",
+        [
+            ("Estrelas", plotly_card("Estrelas por presenca de politica", charts["complementary_stars"], "Distribuicao de estrelas por presenca de politica.")),
+            ("Idade", plotly_card("Idade por presenca de politica", charts["complementary_age"], "Distribuicao de idade por presenca de politica.")),
+            ("Adocao/estrelas", plotly_card("Adocao por faixa de estrelas", charts["complementary_policy_adoption_stars"], "Taxa de adocao por quartil de estrelas.")),
+            ("Adocao/idade", plotly_card("Adocao por faixa de idade", charts["complementary_policy_adoption_age"], "Taxa de adocao por quartil de idade.")),
+            ("Dispersao", plotly_card("Idade vs. estrelas", charts["complementary_age_vs_stars"], "Dispersao idade vs. estrelas colorida por presenca de politica.", wide=True)),
+            (
+                "Resumo",
+                f"""
+                <div class="callout">Mediana de estrelas com politica: {format_float(float(with_policy_profile['median_stars']), 1)}. Sem politica: {format_float(float(without_policy_profile['median_stars']), 1)}. Essa diferenca deve ser tratada como possivel fator de contexto para as comparacoes.</div>
+                <h3>Resumo por perfil</h3>
+                {table_html(profile)}
+                """,
+            ),
+        ],
+    )
 
     html_text = f"""<!doctype html>
 <html lang="pt-BR">
@@ -1065,6 +1155,52 @@ def build_dashboard(
       border-color: var(--tab-active);
       background: var(--tab-active);
       box-shadow: var(--shadow);
+    }}
+    .subtab-group {{
+      margin-top: 18px;
+    }}
+    .subtabs {{
+      display: flex;
+      gap: 8px;
+      padding: 6px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-soft);
+    }}
+    .subtab-button {{
+      flex: 0 0 auto;
+      min-height: 34px;
+      padding: 7px 11px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      color: var(--muted);
+      background: transparent;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 750;
+      cursor: pointer;
+    }}
+    .subtab-button[aria-selected="true"] {{
+      color: var(--ink);
+      border-color: var(--line);
+      background: var(--panel);
+      box-shadow: 0 4px 12px rgba(23, 32, 42, 0.06);
+    }}
+    .subtab-panel {{
+      display: none;
+      margin-top: 14px;
+    }}
+    .subtab-panel.active {{
+      display: block;
+    }}
+    .subtab-panel .viz {{
+      grid-column: auto;
+      width: 100%;
+    }}
+    .subtab-panel .callout {{
+      max-width: none;
+      margin-top: 0;
     }}
     .hero-panel {{
       margin-top: 18px;
@@ -1332,15 +1468,7 @@ def build_dashboard(
           <p class="section-copy"><strong>Pergunta:</strong> Qual e o nivel de adocao de politicas de uso de IA em repositorios open source populares e quais padroes ou tipos de politicas emergem?</p>
         </div>
       </div>
-      <div class="grid">
-        {plotly_card("Adocao de politicas de IA", charts["rq1_policy_adoption"], "Comparacao interativa entre repositorios com e sem politica de IA.")}
-        {plotly_card("Distribuicao dos tipos de politica", charts["rq1_cluster_distribution"], "Quantidade de repositorios por tipo de politica identificado.", wide=True)}
-        {plotly_card("Percentual dos clusters", charts["rq1_cluster_percentages"], "Participacao percentual de cada cluster entre os repositorios com politica.", wide=True)}
-        {plotly_card("Tamanho dos textos de politica", charts["rq1_policy_text_size_by_cluster"], "Comparacao entre media e mediana do tamanho dos textos de politica.", wide=True)}
-      </div>
-      <div class="callout">Apenas {format_float(float(adoption_metrics['policy_adoption_percentage']), 1)}% da amostra possui politica identificada. Entre esses casos, o cluster mais frequente e "{html.escape(str(cluster_top['cluster_label']))}", com {int(cluster_top['unique_repositories'])} repositorios.</div>
-      <h3>Resumo dos clusters</h3>
-      {table_html(clusters, ["cluster", "cluster_label", "unique_repositories", "percentage_of_policy_repositories", "median_policy_words"])}
+      {rq1_subtabs}
     </section>
 
     <section id="rq2" class="tab-panel" role="tabpanel">
@@ -1350,15 +1478,7 @@ def build_dashboard(
           <p class="section-copy"><strong>Pergunta:</strong> Como a presenca e o tipo de politica de IA se relacionam com o volume de contribuicoes e o nivel de engajamento em projetos open source?</p>
         </div>
       </div>
-      <div class="grid">
-        {plotly_card("PRs totais", charts["rq2_prs_total"], "Volume tipico de PRs por presenca de politica.")}
-        {plotly_card("PRs mergeadas", charts["rq2_prs_merged"], "Volume tipico de PRs mergeadas por presenca de politica.")}
-        {plotly_card("Issues totais", charts["rq2_issues_total"], "Volume tipico de issues por presenca de politica.")}
-        {plotly_card("Colaboradores unicos", charts["rq2_unique_collaborators"], "Comunidade colaboradora tipica por grupo.")}
-        {plotly_card("Comentarios e reviews", charts["rq2_comments_reviews"], "Comentarios e reviews como indicadores de interacao.")}
-        {plotly_card("Heatmap de engajamento", charts["rq2_engagement_heatmap"], "Comparacao normalizada das principais metricas de engajamento.", wide=True)}
-      </div>
-      <div class="callout">Os repositorios com politica apresentam medianas maiores em PRs, issues, comentarios e reviews. A leitura recomendada e associativa: projetos maiores ou mais maduros podem ser mais propensos a documentar politicas.</div>
+      {rq2_subtabs}
     </section>
 
     <section id="rq3" class="tab-panel" role="tabpanel">
@@ -1368,16 +1488,7 @@ def build_dashboard(
           <p class="section-copy"><strong>Pergunta:</strong> Como a presenca e o tipo de politica de IA se relacionam com a responsividade e a eficiencia do fluxo de contribuicao nos projetos?</p>
         </div>
       </div>
-      <div class="grid">
-        {plotly_card("Taxa de merge", charts["rq3_merge_rate"], "Taxa mediana de merge de PRs por grupo.")}
-        {plotly_card("Fechamento sem merge", charts["rq3_closed_no_merge_rate"], "Taxa mediana de PRs fechadas sem merge.")}
-        {plotly_card("Tempo de ciclo de PR", charts["rq3_pr_cycle_time"], "Tempo de ciclo de PR convertido para dias.", wide=True)}
-        {plotly_card("Tempo ate primeira resposta", charts["rq3_first_response_time"], "Tempo ate primeira resposta em issues e PRs.", wide=True)}
-        {plotly_card("Tempo ate primeira revisao", charts["rq3_first_review_time"], "Tempo ate primeira revisao de PR.")}
-        {plotly_card("Estabilidade do processo", charts["rq3_process_stability"], "Commits, reviews e reviews ate aprovacao.", wide=True)}
-        {plotly_card("Heatmap de colaboracao", charts["rq3_collaboration_heatmap"], "Comparacao normalizada das principais metricas de colaboracao.", wide=True)}
-      </div>
-      <div class="callout">Na amostra, projetos com politica apresentam maior taxa de merge, menor taxa de fechamento sem merge e menor tempo ate primeira revisao. Esses resultados indicam associacao, nao causalidade.</div>
+      {rq3_subtabs}
     </section>
 
     <section id="complementar" class="tab-panel" role="tabpanel">
@@ -1387,16 +1498,7 @@ def build_dashboard(
           <p class="section-copy">Esta etapa contextualiza RQ2 e RQ3 ao investigar se repositorios com politica de IA tambem tendem a ser mais populares ou mais antigos.</p>
         </div>
       </div>
-      <div class="grid">
-        {plotly_card("Estrelas por presenca de politica", charts["complementary_stars"], "Distribuicao de estrelas por presenca de politica.")}
-        {plotly_card("Idade por presenca de politica", charts["complementary_age"], "Distribuicao de idade por presenca de politica.")}
-        {plotly_card("Adocao por faixa de estrelas", charts["complementary_policy_adoption_stars"], "Taxa de adocao por quartil de estrelas.")}
-        {plotly_card("Adocao por faixa de idade", charts["complementary_policy_adoption_age"], "Taxa de adocao por quartil de idade.")}
-        {plotly_card("Idade vs. estrelas", charts["complementary_age_vs_stars"], "Dispersao idade vs. estrelas colorida por presenca de politica.", wide=True)}
-      </div>
-      <div class="callout">Mediana de estrelas com politica: {format_float(float(with_policy_profile['median_stars']), 1)}. Sem politica: {format_float(float(without_policy_profile['median_stars']), 1)}. Essa diferenca deve ser tratada como possivel fator de contexto para as comparacoes.</div>
-      <h3>Resumo por perfil</h3>
-      {table_html(profile)}
+      {complementary_subtabs}
     </section>
 
     <section id="sintese" class="tab-panel" role="tabpanel">
@@ -1446,6 +1548,27 @@ def build_dashboard(
 
     buttons.forEach((button) => {{
       button.addEventListener("click", () => activateTab(button.dataset.tab));
+    }});
+
+    document.querySelectorAll(".subtab-group").forEach((group) => {{
+      const subButtons = [...group.querySelectorAll(".subtab-button")];
+      const subPanels = [...group.querySelectorAll(".subtab-panel")];
+
+      function activateSubtab(panelId) {{
+        subButtons.forEach((button) => {{
+          button.setAttribute("aria-selected", String(button.dataset.subtab === panelId));
+        }});
+        subPanels.forEach((panel) => {{
+          panel.classList.toggle("active", panel.id === panelId);
+        }});
+        setTimeout(() => {{
+          document.querySelectorAll(`#${{panelId}} .js-plotly-plot`).forEach((chart) => Plotly.Plots.resize(chart));
+        }}, 50);
+      }}
+
+      subButtons.forEach((button) => {{
+        button.addEventListener("click", () => activateSubtab(button.dataset.subtab));
+      }});
     }});
 
     function applyTheme(theme) {{
