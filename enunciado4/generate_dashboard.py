@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import html
 import os
+import re
 from pathlib import Path
 
 os.environ.setdefault("MPLBACKEND", "Agg")
@@ -99,6 +100,41 @@ def build_enriched_top_repos(top_repos: pd.DataFrame, policy_repos: pd.DataFrame
     enriched["has_ai_policy_label"] = enriched["has_ai_policy"].map(policy_label)
     enriched["age_years"] = enriched["age_days"] / 365
     return enriched
+
+
+def add_language_data(enriched: pd.DataFrame) -> pd.DataFrame:
+    candidates = [
+        (BASE_DIR / "data" / "repo_languages.csv", "repo_name", "language", "enunciado4/data/repo_languages.csv"),
+        (BASE_DIR / "data" / "top_repos_with_languages.csv", "repo_name", "language", "enunciado4/data/top_repos_with_languages.csv"),
+        (BASE_DIR.parent / "enunciado1" / "repos_data.csv", "repo", "language", "enunciado1/repos_data.csv"),
+    ]
+    result = enriched.copy()
+    result["language"] = "Linguagem desconhecida"
+    result.attrs["language_source"] = "sem arquivo de linguagem local"
+
+    for path, repo_col, language_col, source_label in candidates:
+        if not path.exists():
+            continue
+        language_data = read_csv(path)
+        if repo_col not in language_data.columns or language_col not in language_data.columns:
+            continue
+
+        lookup = (
+            language_data[[repo_col, language_col]]
+            .dropna(subset=[repo_col])
+            .drop_duplicates(subset=[repo_col])
+            .rename(columns={language_col: "__language"})
+        )
+        merged = result.merge(lookup, left_on="repo_name", right_on=repo_col, how="left")
+        result["language"] = (
+            merged["__language"]
+            .replace("", np.nan)
+            .fillna("Linguagem desconhecida")
+        )
+        result.attrs["language_source"] = source_label
+        return result
+
+    return result
 
 
 def save_clean_tables(
@@ -615,11 +651,28 @@ def heatmap_figure(data: pd.DataFrame, title: str) -> go.Figure:
     return fig
 
 
+def empty_figure(message: str) -> go.Figure:
+    fig = go.Figure()
+    fig.add_annotation(
+        text=message,
+        x=0.5,
+        y=0.5,
+        xref="paper",
+        yref="paper",
+        showarrow=False,
+        font=dict(size=14),
+    )
+    fig.update_xaxes(visible=False)
+    fig.update_yaxes(visible=False)
+    return fig
+
+
 def build_interactive_charts(
     top_repos: pd.DataFrame,
     enriched: pd.DataFrame,
     adoption_metrics: dict[str, float],
     clusters: pd.DataFrame,
+    policy_repos: pd.DataFrame,
     rq2_policy: pd.DataFrame,
     rq3_policy: pd.DataFrame,
 ) -> dict[str, str]:
@@ -806,6 +859,149 @@ def build_interactive_charts(
     fig.update_traces(hovertemplate="Cluster: %{y}<br>Palavras: %{x:.1f}<extra></extra>")
     add("rq1_policy_text_size_by_cluster", fig, height=480)
 
+    known_language = enriched[enriched["language"] != "Linguagem desconhecida"].copy()
+    if known_language.empty:
+        language_message = "Nao ha dados de linguagem disponiveis para esta amostra."
+        add("rq1_language_adoption", empty_figure(language_message), height=420)
+        add("rq1_language_policy_rate", empty_figure(language_message), height=420)
+        add("rq1_language_clusters", empty_figure(language_message), height=460)
+    else:
+        top_languages = known_language["language"].value_counts().head(12).index
+        language_plot = known_language.assign(
+            Linguagem=np.where(known_language["language"].isin(top_languages), known_language["language"], "Outras"),
+            Grupo=known_language["has_ai_policy_label"],
+        )
+        language_totals = language_plot.groupby("Linguagem").size()
+        language_rates = (
+            language_plot.groupby("Linguagem")["has_ai_policy"]
+            .apply(lambda values: (values == "With AI Policy").mean() * 100)
+            .rename("Taxa de adocao")
+        )
+        language_counts = (
+            language_plot.groupby(["Linguagem", "Grupo"])
+            .size()
+            .reset_index(name="Repositorios")
+        )
+        language_counts["Total na linguagem"] = language_counts["Linguagem"].map(language_totals)
+        language_counts["Taxa de adocao"] = language_counts["Linguagem"].map(language_rates)
+        language_order = language_totals.sort_values().index.tolist()
+
+        fig = px.bar(
+            language_counts,
+            y="Linguagem",
+            x="Repositorios",
+            color="Grupo",
+            orientation="h",
+            barmode="stack",
+            title="Adocao de politicas por linguagem",
+            labels={"Repositorios": "Repositorios", "Linguagem": ""},
+            category_orders={"Linguagem": language_order, "Grupo": ["Sem politica de IA", "Com politica de IA"]},
+            color_discrete_map=POLICY_COLORS,
+            custom_data=["Grupo", "Total na linguagem", "Taxa de adocao"],
+        )
+        fig.update_traces(
+            hovertemplate=(
+                "Linguagem: %{y}<br>"
+                "Grupo: %{customdata[0]}<br>"
+                "Repositorios: %{x:,.0f}<br>"
+                "Total na linguagem: %{customdata[1]:,.0f}<br>"
+                "Taxa com politica: %{customdata[2]:.1f}%<extra></extra>"
+            )
+        )
+        add("rq1_language_adoption", fig, height=520)
+
+        language_rate = (
+            language_plot.groupby("Linguagem")
+            .agg(
+                total=("repo_name", "count"),
+                with_policy=("has_ai_policy", lambda values: (values == "With AI Policy").sum()),
+            )
+            .reset_index()
+        )
+        language_rate["policy_rate"] = language_rate["with_policy"] / language_rate["total"] * 100
+        language_rate["Rotulo"] = language_rate.apply(
+            lambda row: f"{row['policy_rate']:.1f}% ({int(row['with_policy'])}/{int(row['total'])})",
+            axis=1,
+        )
+        language_rate = language_rate.sort_values("policy_rate")
+        fig = px.bar(
+            language_rate,
+            y="Linguagem",
+            x="policy_rate",
+            orientation="h",
+            text="Rotulo",
+            title="Taxa de adocao por linguagem",
+            labels={"policy_rate": "Repositorios com politica (%)", "Linguagem": ""},
+            color_discrete_sequence=["#2A9D8F"],
+            custom_data=["with_policy", "total"],
+        )
+        fig.update_traces(
+            textposition="outside",
+            cliponaxis=False,
+            hovertemplate=(
+                "Linguagem: %{y}<br>"
+                "Taxa com politica: %{x:.1f}%<br>"
+                "Com politica: %{customdata[0]:,.0f}<br>"
+                "Total: %{customdata[1]:,.0f}<extra></extra>"
+            ),
+        )
+        fig.update_xaxes(range=[0, max(25, float(language_rate["policy_rate"].max()) * 1.25)])
+        add("rq1_language_policy_rate", fig, height=520)
+
+        policy_language = policy_repos.merge(
+            known_language[["repo_name", "language"]],
+            left_on="repo",
+            right_on="repo_name",
+            how="inner",
+        )
+        cluster_rows = []
+        for _, row in policy_language.dropna(subset=["cluster_labels"]).iterrows():
+            labels = [
+                label.strip()
+                for label in re.split(r"\s*(?:\||;)\s*", str(row["cluster_labels"]))
+                if label.strip()
+            ]
+            for label in labels:
+                cluster_rows.append({"Linguagem": row["language"], "Cluster": label})
+
+        if not cluster_rows:
+            add("rq1_language_clusters", empty_figure("Nao ha clusters com dados de linguagem disponiveis."), height=460)
+        else:
+            cluster_language = pd.DataFrame(cluster_rows)
+            top_policy_languages = cluster_language["Linguagem"].value_counts().head(10).index
+            cluster_language["Linguagem"] = np.where(
+                cluster_language["Linguagem"].isin(top_policy_languages),
+                cluster_language["Linguagem"],
+                "Outras",
+            )
+            cluster_counts = (
+                cluster_language.groupby(["Linguagem", "Cluster"])
+                .size()
+                .reset_index(name="Repositorios")
+            )
+            cluster_order = cluster_counts.groupby("Linguagem")["Repositorios"].sum().sort_values().index.tolist()
+            fig = px.bar(
+                cluster_counts,
+                y="Linguagem",
+                x="Repositorios",
+                color="Cluster",
+                orientation="h",
+                barmode="stack",
+                title="Clusters de politica por linguagem",
+                labels={"Repositorios": "Repositorios com politica", "Linguagem": ""},
+                category_orders={"Linguagem": cluster_order},
+                color_discrete_sequence=[CLUSTER_COLOR, "#2A9D8F", SECONDARY_COLOR, "#4C78A8", "#E76F51"],
+                custom_data=["Cluster"],
+            )
+            fig.update_traces(
+                hovertemplate=(
+                    "Linguagem: %{y}<br>"
+                    "Cluster: %{customdata[0]}<br>"
+                    "Repositorios: %{x:,.0f}<extra></extra>"
+                )
+            )
+            add("rq1_language_clusters", fig, height=500)
+
     rq2 = rq2_policy.copy()
     rq2["Grupo"] = rq2["has_ai_policy"].map(policy_label)
     rq2["order"] = rq2["has_ai_policy"].map({value: idx for idx, value in enumerate(POLICY_ORDER)})
@@ -922,15 +1118,6 @@ def build_interactive_charts(
     heat.columns = ["Merge", "Sem merge", "Ciclo PR", "Resp. issue", "Resp. PR", "Review PR", "Commits", "Reviews", "Aprovacao"]
     add("rq3_collaboration_heatmap", heatmap_figure(heat, "Heatmap de colaboracao por presenca de politica"), height=450)
 
-    order = ["Sem politica de IA", "Com politica de IA"]
-    fig = px.box(enriched, x="has_ai_policy_label", y="stars", color="has_ai_policy_label", category_orders={"has_ai_policy_label": order}, color_discrete_map=POLICY_COLORS, log_y=True, title="Distribuicao de estrelas por presenca de politica", labels={"has_ai_policy_label": "", "stars": "Estrelas (escala logaritmica)"})
-    fig.update_traces(hovertemplate="Grupo: %{x}<br>Estrelas: %{y:,.0f}<extra></extra>")
-    add("complementary_stars", fig)
-
-    fig = px.box(enriched, x="has_ai_policy_label", y="age_years", color="has_ai_policy_label", category_orders={"has_ai_policy_label": order}, color_discrete_map=POLICY_COLORS, title="Distribuicao de idade por presenca de politica", labels={"has_ai_policy_label": "", "age_years": "Idade do repositorio (anos)"})
-    fig.update_traces(hovertemplate="Grupo: %{x}<br>Idade: %{y:.1f} anos<extra></extra>")
-    add("complementary_age", fig)
-
     stars_groups = pd.qcut(enriched["stars"], q=4, labels=["Q1 - Menos estrelas", "Q2", "Q3", "Q4 - Mais estrelas"], duplicates="drop")
     stars_adoption = (
         enriched.assign(stars_group=stars_groups)
@@ -953,19 +1140,6 @@ def build_interactive_charts(
     fig.update_traces(texttemplate="%{text:.1f}%", hovertemplate="Faixa: %{x}<br>Taxa: %{y:.1f}%<extra></extra>")
     add("complementary_policy_adoption_age", fig)
 
-    fig = px.scatter(
-        enriched,
-        x="age_days",
-        y="stars",
-        color="has_ai_policy_label",
-        color_discrete_map=POLICY_COLORS,
-        log_y=True,
-        hover_data={"repo_name": True, "age_days": ":,.0f", "stars": ":,.0f", "has_ai_policy_label": False},
-        title="Idade vs. estrelas por presenca de politica de IA",
-        labels={"age_days": "Idade do repositorio (dias)", "stars": "Estrelas (escala logaritmica)", "has_ai_policy_label": ""},
-    )
-    add("complementary_age_vs_stars", fig, height=560)
-
     return charts
 
 
@@ -984,6 +1158,7 @@ def build_dashboard(
     enriched: pd.DataFrame,
     adoption_metrics: dict[str, float],
     clusters: pd.DataFrame,
+    policy_repos: pd.DataFrame,
     rq2_policy: pd.DataFrame,
     rq3_policy: pd.DataFrame,
     profile: pd.DataFrame,
@@ -994,6 +1169,12 @@ def build_dashboard(
     without_policy_profile = profile[profile["has_ai_policy_label"] == "Sem politica de IA"].iloc[0]
     median_stars = format_float(float(top_repos["stars"].median()), 0)
     median_age_years = format_float(float((top_repos["age_days"] / 365).median()), 1)
+    language_known = int((enriched["language"] != "Linguagem desconhecida").sum())
+    language_source = enriched.attrs.get("language_source", "dados locais")
+    rq2_with = rq2_policy[rq2_policy["has_ai_policy"] == "With AI Policy"].iloc[0]
+    rq2_without = rq2_policy[rq2_policy["has_ai_policy"] == "Without AI Policy"].iloc[0]
+    rq3_with = rq3_policy[rq3_policy["has_ai_policy"] == "With AI Policy"].iloc[0]
+    rq3_without = rq3_policy[rq3_policy["has_ai_policy"] == "Without AI Policy"].iloc[0]
 
     cards = "\n".join(
         [
@@ -1003,19 +1184,60 @@ def build_dashboard(
             metric_card("Idade mediana", f"{median_age_years} anos", "maturidade tipica"),
         ]
     )
-    charts = build_interactive_charts(top_repos, enriched, adoption_metrics, clusters, rq2_policy, rq3_policy)
+    charts = build_interactive_charts(top_repos, enriched, adoption_metrics, clusters, policy_repos, rq2_policy, rq3_policy)
     rq1_subtabs = subtab_group(
         "rq1",
         [
             ("Adocao", plotly_card("Adocao de politicas de IA", charts["rq1_policy_adoption"], "Comparacao entre repositorios com e sem politica de IA.")),
             ("Percentuais", plotly_card("Percentual dos clusters", charts["rq1_cluster_percentages"], "Participacao percentual de cada cluster entre os repositorios com politica.", wide=True)),
+            (
+                "Adocao por perfil",
+                f"""
+                <div class="grid">
+                  {plotly_card("Adocao por faixa de estrelas", charts["complementary_policy_adoption_stars"], "Taxa de adocao por quartil de estrelas.")}
+                  {plotly_card("Adocao por faixa de idade", charts["complementary_policy_adoption_age"], "Taxa de adocao por quartil de idade.")}
+                </div>
+                """,
+            ),
+            (
+                "Linguagens",
+                f"""
+                <div class="callout">Analise baseada em {language_known} de {len(enriched)} repositorios com linguagem identificada. Fonte local: {html.escape(language_source)}.</div>
+                <div class="grid">
+                  {plotly_card("Adocao por linguagem", charts["rq1_language_adoption"], "Distribuicao absoluta de repositorios com e sem politica entre as principais linguagens.", wide=True)}
+                  {plotly_card("Taxa de adocao por linguagem", charts["rq1_language_policy_rate"], "Percentual e contagem absoluta de repositorios com politica em cada linguagem.", wide=True)}
+                  {plotly_card("Clusters por linguagem", charts["rq1_language_clusters"], "Distribuicao dos clusters de politica entre as linguagens dos repositorios com politica.", wide=True)}
+                </div>
+                """,
+            ),
             ("Tamanho do texto", plotly_card("Tamanho dos textos de politica", charts["rq1_policy_text_size_by_cluster"], "Comparacao entre media e mediana do tamanho dos textos de politica.", wide=True)),
             (
                 "Resumo",
                 f"""
-                <div class="callout">Apenas {format_float(float(adoption_metrics['policy_adoption_percentage']), 1)}% da amostra possui politica identificada. Entre esses casos, o cluster mais frequente e "{html.escape(str(cluster_top['cluster_label']))}", com {int(cluster_top['unique_repositories'])} repositorios.</div>
-                <h3>Resumo dos clusters</h3>
-                {table_html(clusters, ["cluster", "cluster_label", "unique_repositories", "percentage_of_policy_repositories", "median_policy_words"])}
+                <div class="context-panel">
+                  <div class="context-grid">
+                    <div class="context-block">
+                      <h3>Hipóteses</h3>
+                      <ul>
+                        <li>A adoção explícita de políticas de IA ainda seria minoritária entre repositórios open-source populares.</li>
+                        <li>Tipos esperados: proibição total, uso assistivo permitido, exigência de disclosure e ausência de política.</li>
+                        <li>A presença de política poderia estar associada a características do projeto, como popularidade, maturidade ou linguagem.</li>
+                      </ul>
+                    </div>
+                    <div class="context-block">
+                      <h3>Conclusão</h3>
+                      <p>A hipótese de baixa adoção é sustentada pela amostra: apenas {format_float(float(adoption_metrics['policy_adoption_percentage']), 1)}% dos repositórios analisados possuem política de IA identificada. A ausência de política é o padrão dominante, enquanto os repositórios com regras explícitas se distribuem em {len(clusters)} tipos observados. Entre eles, o cluster mais frequente é "{html.escape(str(cluster_top['cluster_label']))}", com {int(cluster_top['unique_repositories'])} repositórios.</p>
+                    </div>
+                    <div class="context-block">
+                      <h3>Discussão</h3>
+                      <p>Os tipos observados aproximam-se das categorias esperadas, mas a evidência mais forte está na ausência de política. Nos casos em que há política, aparecem respostas ligadas à transparência, ao controle humano e à governança ampla do uso de IA, indicando que os projetos ainda estão experimentando formas diferentes de regular contribuições assistidas por IA.</p>
+                    </div>
+                    <div class="context-block">
+                      <h3>Leitura crítica</h3>
+                      <p>As relações com estrelas, idade e linguagem devem ser interpretadas como associações exploratórias, não como causalidade. Projetos maiores, mais maduros ou com comunidades mais estruturadas podem ser naturalmente mais propensos a formalizar políticas.</p>
+                    </div>
+                  </div>
+                </div>
                 """,
             ),
         ],
@@ -1028,10 +1250,34 @@ def build_dashboard(
             ("Issues", plotly_card("Issues totais", charts["rq2_issues_total"], "Volume tipico de issues por presenca de politica.")),
             ("Colaboradores", plotly_card("Colaboradores unicos", charts["rq2_unique_collaborators"], "Comunidade colaboradora tipica por grupo.")),
             ("Comentarios", plotly_card("Comentarios e reviews", charts["rq2_comments_reviews"], "Comentarios e reviews como indicadores de interacao.")),
-            ("Heatmap", plotly_card("Heatmap de engajamento", charts["rq2_engagement_heatmap"], "Comparacao normalizada das principais metricas de engajamento.", wide=True)),
             (
-                "Leitura",
-                '<div class="callout">Os repositorios com politica apresentam medianas maiores em PRs, issues, comentarios e reviews. A leitura recomendada e associativa: projetos maiores ou mais maduros podem ser mais propensos a documentar politicas.</div>',
+                "Resumo",
+                f"""
+                <div class="context-panel">
+                  <div class="context-grid">
+                    <div class="context-block">
+                      <h3>Hipóteses</h3>
+                      <ul>
+                        <li>Repositórios com política de IA tenderiam a apresentar maior volume de contribuições.</li>
+                        <li>A presença de política poderia estar associada a comunidades mais ativas e estruturadas.</li>
+                        <li>Comentários e reviews poderiam ser maiores em projetos com política, refletindo maior coordenação no processo colaborativo.</li>
+                      </ul>
+                    </div>
+                    <div class="context-block">
+                      <h3>Conclusão</h3>
+                      <p>Os repositórios com política apresentam medianas maiores nas principais métricas de engajamento: {format_float(float(rq2_with['prs_total_median']), 1)} PRs totais contra {format_float(float(rq2_without['prs_total_median']), 1)} sem política, {format_float(float(rq2_with['issues_total_median']), 1)} issues contra {format_float(float(rq2_without['issues_total_median']), 1)} e {format_float(float(rq2_with['unique_collaborators_median']), 1)} colaboradores únicos contra {format_float(float(rq2_without['unique_collaborators_median']), 1)}.</p>
+                    </div>
+                    <div class="context-block">
+                      <h3>Discussão</h3>
+                      <p>Os resultados sustentam a hipótese de associação entre política de IA e maior engajamento. Projetos com política também têm medianas superiores de comentários por PR, comentários por issue e reviews por PR, sugerindo ambientes com mais interação e revisão.</p>
+                    </div>
+                    <div class="context-block">
+                      <h3>Leitura crítica</h3>
+                      <p>Essa relação não deve ser interpretada como causal. É plausível que projetos maiores, mais populares ou mais maduros tenham mais engajamento e, ao mesmo tempo, maior necessidade de formalizar regras sobre uso de IA.</p>
+                    </div>
+                  </div>
+                </div>
+                """,
             ),
         ],
     )
@@ -1044,30 +1290,105 @@ def build_dashboard(
             ("Resposta", plotly_card("Tempo ate primeira resposta", charts["rq3_first_response_time"], "Tempo ate primeira resposta em issues e PRs.", wide=True)),
             ("Revisao", plotly_card("Tempo ate primeira revisao", charts["rq3_first_review_time"], "Tempo ate primeira revisao de PR.")),
             ("Estabilidade", plotly_card("Estabilidade do processo", charts["rq3_process_stability"], "Commits, reviews e reviews ate aprovacao.", wide=True)),
-            ("Heatmap", plotly_card("Heatmap de colaboracao", charts["rq3_collaboration_heatmap"], "Comparacao normalizada das principais metricas de colaboracao.", wide=True)),
-            (
-                "Leitura",
-                '<div class="callout">Na amostra, projetos com politica apresentam maior taxa de merge, menor taxa de fechamento sem merge e menor tempo ate primeira revisao. Esses resultados indicam associacao, nao causalidade.</div>',
-            ),
-        ],
-    )
-    complementary_subtabs = subtab_group(
-        "complementar",
-        [
-            ("Adocao/estrelas", plotly_card("Adocao por faixa de estrelas", charts["complementary_policy_adoption_stars"], "Taxa de adocao por quartil de estrelas.")),
-            ("Adocao/idade", plotly_card("Adocao por faixa de idade", charts["complementary_policy_adoption_age"], "Taxa de adocao por quartil de idade.")),
-            ("Dispersao", plotly_card("Idade vs. estrelas", charts["complementary_age_vs_stars"], "Dispersao idade vs. estrelas colorida por presenca de politica.", wide=True)),
             (
                 "Resumo",
                 f"""
-                <div class="callout">Mediana de estrelas com politica: {format_float(float(with_policy_profile['median_stars']), 1)}. Sem politica: {format_float(float(without_policy_profile['median_stars']), 1)}. Essa diferenca deve ser tratada como possivel fator de contexto para as comparacoes.</div>
-                <h3>Resumo por perfil</h3>
-                {table_html(profile)}
+                <div class="context-panel">
+                  <div class="context-grid">
+                    <div class="context-block">
+                      <h3>Hipóteses</h3>
+                      <ul>
+                        <li>Repositórios com política de IA tenderiam a ter fluxos de contribuição mais responsivos.</li>
+                        <li>A presença de política poderia estar associada a maior eficiência na revisão e integração de PRs.</li>
+                        <li>Projetos com política poderiam apresentar maior taxa de merge e menor fechamento sem merge.</li>
+                      </ul>
+                    </div>
+                    <div class="context-block">
+                      <h3>Conclusão</h3>
+                      <p>Na amostra, repositórios com política apresentam maior taxa mediana de merge ({format_float(float(rq3_with['prs_merge_rate_median']), 1)}% contra {format_float(float(rq3_without['prs_merge_rate_median']), 1)}%) e menor taxa de fechamento sem merge ({format_float(float(rq3_with['prs_closed_no_merge_rate_median']), 1)}% contra {format_float(float(rq3_without['prs_closed_no_merge_rate_median']), 1)}%). Também apresentam menor tempo mediano até a primeira revisão de PR: {format_float(float(rq3_with['median_pr_first_review_hours_median']), 1)} h contra {format_float(float(rq3_without['median_pr_first_review_hours_median']), 1)} h.</p>
+                    </div>
+                    <div class="context-block">
+                      <h3>Discussão</h3>
+                      <p>Os resultados sustentam uma associação entre políticas de IA e fluxos colaborativos mais estruturados. Além da maior taxa de merge, os repositórios com política têm menores medianas de primeira resposta em issues e PRs, sugerindo maior responsividade no tratamento das contribuições.</p>
+                    </div>
+                    <div class="context-block">
+                      <h3>Leitura crítica</h3>
+                      <p>Essas diferenças não provam que a política melhora o processo. A política pode ser consequência de projetos mais maduros, com manutenção mais ativa, maior volume de contribuições e práticas de revisão já consolidadas.</p>
+                    </div>
+                  </div>
+                </div>
                 """,
             ),
         ],
     )
-
+    hero_subtabs = subtab_group(
+        "intro",
+        [
+            (
+                "Contextualização",
+                """
+                <div class="context-panel">
+                  <div>
+                    <h2>Contexto & motivação</h2>
+                    <p class="context-kicker">O uso de IA generativa no desenvolvimento de software é crescente e irreversível. Contribuidores usam LLMs para gerar código, sugerir correções, escrever testes e documentação.</p>
+                  </div>
+                  <div class="context-grid">
+                    <div class="context-block">
+                      <h3>Cenário</h3>
+                      <p>Usuários têm perfis de uso individual dessas ferramentas, e suas experiências e características influenciam o uso. Projetos open-source estão reagindo de formas distintas: alguns incentivam, outros exigem transparência e outros proíbem.</p>
+                    </div>
+                    <div class="context-block">
+                      <h3>Lacuna</h3>
+                      <p>Ainda há pouca evidência empírica sobre como essas políticas surgem, o que as caracteriza e o que impactam.</p>
+                    </div>
+                    <div class="context-block">
+                      <h3>Problema</h3>
+                      <p>Há pouca evidência sobre a prevalência e os tipos de políticas sobre uso de IA em projetos open-source populares.</p>
+                    </div>
+                    <div class="context-block">
+                      <h3>Objetivo</h3>
+                      <p>Analisar repositórios open-source populares no GitHub para mapear políticas de uso de IA, classificá-las e investigar sua relação com características dos projetos e métricas de colaboração.</p>
+                    </div>
+                    <div class="context-block">
+                      <h3>Público-alvo</h3>
+                      <ul>
+                        <li>Maintainers de projetos open-source, para apoiar decisões de governança.</li>
+                        <li>Pesquisadores em Engenharia de Software, governança e colaboração em OSS.</li>
+                        <li>Comunidade de desenvolvimento, para compreender tendências emergentes.</li>
+                      </ul>
+                    </div>
+                    <div class="context-block">
+                      <h3>Universo da amostra</h3>
+                      <p>Os 1.000 repositórios mais estrelados do GitHub que satisfazem os critérios de seleção.</p>
+                      <ul>
+                        <li>Repositórios públicos com linguagem de programação identificada.</li>
+                        <li>Atividade recente, com alteração nos últimos 12 meses.</li>
+                        <li>Pelo menos 1 issue ou pull request.</li>
+                        <li>O número de estrelas é usado como proxy de relevância e impacto.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                """,
+            ),
+            (
+                "Indicadores",
+                f"""
+                <div class="metrics">{cards}</div>
+                <div class="stat-strip">
+                  <div class="mini-stat"><b>{str(int(adoption_metrics["repositories_with_policy"]))}</b><span>repositorios com politica identificada</span></div>
+                  <div class="mini-stat"><b>{str(len(clusters))}</b><span>clusters/tipos de politica</span></div>
+                  <div class="mini-stat"><b>{format_float(float(with_policy_profile['median_stars']), 0)}</b><span>mediana de estrelas com politica</span></div>
+                  <div class="mini-stat"><b>{format_float(float(without_policy_profile['median_stars']), 0)}</b><span>mediana de estrelas sem politica</span></div>
+                </div>
+                <div class="grid">
+                  {plotly_card("Distribuicao da idade", charts["dataset_age_distribution"], "Passe o mouse nas barras para ver a quantidade de repositorios por faixa de idade.")}
+                  {plotly_card("Distribuicao de estrelas", charts["dataset_stars_distribution"], "As faixas do eixo X foram calculadas em intervalos logaritmicos para reduzir a distorcao causada por repositorios extremamente populares.")}
+                </div>
+                """,
+            ),
+        ],
+    )
     html_text = f"""<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -1252,7 +1573,7 @@ def build_dashboard(
     .subtab-panel.active {{
       display: block;
     }}
-    .subtab-panel .viz {{
+    .subtab-panel > .viz {{
       grid-column: auto;
       width: 100%;
     }}
@@ -1381,6 +1702,35 @@ def build_dashboard(
       background: var(--callout-bg);
       color: var(--callout-text);
     }}
+    .context-panel {{
+      display: grid;
+      gap: 16px;
+    }}
+    .context-kicker {{
+      max-width: 980px;
+      color: var(--muted);
+      font-size: 16px;
+    }}
+    .context-grid {{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }}
+    .context-block {{
+      padding: 14px 16px;
+      border-left: 4px solid var(--tab-active);
+      background: var(--panel-soft);
+    }}
+    .context-block h3 {{
+      margin-bottom: 8px;
+    }}
+    .context-block ul {{
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }}
+    .context-block li {{
+      margin: 4px 0;
+    }}
     .stat-strip {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -1477,6 +1827,7 @@ def build_dashboard(
       .metrics {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
       .hero-panel, .tab-panel {{ padding: 14px; }}
       .grid {{ grid-template-columns: 1fr; }}
+      .context-grid {{ grid-template-columns: 1fr; }}
       .viz, .chart-card-wide {{ grid-column: 1; }}
       .image-modal {{ padding: 10px; }}
     }}
@@ -1496,17 +1847,7 @@ def build_dashboard(
     </header>
 
     <div class="hero-panel">
-      <div class="metrics">{cards}</div>
-      <div class="stat-strip">
-        <div class="mini-stat"><b>{str(int(adoption_metrics["repositories_with_policy"]))}</b><span>repositorios com politica identificada</span></div>
-        <div class="mini-stat"><b>{str(len(clusters))}</b><span>clusters/tipos de politica</span></div>
-        <div class="mini-stat"><b>{format_float(float(with_policy_profile['median_stars']), 0)}</b><span>mediana de estrelas com politica</span></div>
-        <div class="mini-stat"><b>{format_float(float(without_policy_profile['median_stars']), 0)}</b><span>mediana de estrelas sem politica</span></div>
-      </div>
-      <div class="grid">
-        {plotly_card("Distribuicao da idade", charts["dataset_age_distribution"], "Passe o mouse nas barras para ver a quantidade de repositorios por faixa de idade.")}
-        {plotly_card("Distribuicao de estrelas", charts["dataset_stars_distribution"], "As faixas do eixo X foram calculadas em intervalos logaritmicos para reduzir a distorcao causada por repositorios extremamente populares.")}
-      </div>
+      {hero_subtabs}
     </div>
 
     <div class="toolbar" role="tablist" aria-label="Secoes do dashboard">
@@ -1514,7 +1855,6 @@ def build_dashboard(
         <button class="tab-button" type="button" role="tab" aria-selected="true" aria-controls="rq1" data-tab="rq1">RQ1: Adocao</button>
         <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="rq2" data-tab="rq2">RQ2: Engajamento</button>
         <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="rq3" data-tab="rq3">RQ3: Colaboracao</button>
-        <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="complementar" data-tab="complementar">Complementar</button>
         <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="sintese" data-tab="sintese">Sintese</button>
       </div>
     </div>
@@ -1533,7 +1873,7 @@ def build_dashboard(
       <div class="section-head">
         <div>
           <h2>RQ2 - Engajamento</h2>
-          <p class="section-copy"><strong>Pergunta:</strong> Como a presenca e o tipo de politica de IA se relacionam com o volume de contribuicoes e o nivel de engajamento em projetos open source?</p>
+          <p class="section-copy"><strong>Pergunta:</strong> Como a presenca de politica de IA se relaciona com o volume de contribuicoes e o nivel de engajamento em projetos open source?</p>
         </div>
       </div>
       {rq2_subtabs}
@@ -1543,32 +1883,42 @@ def build_dashboard(
       <div class="section-head">
         <div>
           <h2>RQ3 - Colaboracao, responsividade e eficiencia</h2>
-          <p class="section-copy"><strong>Pergunta:</strong> Como a presenca e o tipo de politica de IA se relacionam com a responsividade e a eficiencia do fluxo de contribuicao nos projetos?</p>
+          <p class="section-copy"><strong>Pergunta:</strong> Como a presenca de politica de IA se relaciona com a responsividade e a eficiencia do fluxo de contribuicao nos projetos?</p>
         </div>
       </div>
       {rq3_subtabs}
     </section>
 
-    <section id="complementar" class="tab-panel" role="tabpanel">
-      <div class="section-head">
-        <div>
-          <h2>Analise complementar - popularidade, idade e politicas</h2>
-          <p class="section-copy">Esta etapa contextualiza RQ2 e RQ3 ao investigar se repositorios com politica de IA tambem tendem a ser mais populares ou mais antigos.</p>
-        </div>
-      </div>
-      {complementary_subtabs}
-    </section>
-
     <section id="sintese" class="tab-panel" role="tabpanel">
       <h2>Sintese dos achados</h2>
-      <ul>
-        <li>A adocao explicita de politicas de IA e baixa na amostra geral.</li>
-        <li>Entre os repositorios com politica, predomina o cluster de governanca ampla do uso de IA.</li>
-        <li>Repositorios com politica apresentam maiores medianas de PRs, issues, comentarios e reviews.</li>
-        <li>Repositorios com politica tambem apresentam sinais de fluxo colaborativo mais responsivo e estruturado.</li>
-        <li>A analise complementar deve ser usada para discutir possiveis fatores de confusao, como popularidade e maturidade dos projetos.</li>
-        <li>Nenhuma visualizacao deve ser interpretada como evidencia causal direta.</li>
-      </ul>
+      <div class="context-panel">
+        <div class="context-grid">
+          <div class="context-block">
+            <h3>RQ1 - Adoção e tipos</h3>
+            <p>A adoção explícita de políticas de IA ainda é baixa: {format_float(float(adoption_metrics['policy_adoption_percentage']), 1)}% da amostra possui política identificada. A ausência de política é o padrão dominante, e os repositórios com regras explícitas se distribuem em {len(clusters)} tipos observados, com predominância de "{html.escape(str(cluster_top['cluster_label']))}".</p>
+          </div>
+          <div class="context-block">
+            <h3>RQ2 - Engajamento</h3>
+            <p>Repositórios com política apresentam medianas maiores de engajamento: {format_float(float(rq2_with['prs_total_median']), 1)} PRs totais contra {format_float(float(rq2_without['prs_total_median']), 1)}, {format_float(float(rq2_with['issues_total_median']), 1)} issues contra {format_float(float(rq2_without['issues_total_median']), 1)} e maior intensidade de comentários e reviews.</p>
+          </div>
+          <div class="context-block">
+            <h3>RQ3 - Colaboração</h3>
+            <p>Projetos com política também apresentam sinais de fluxo colaborativo mais responsivo: maior taxa mediana de merge ({format_float(float(rq3_with['prs_merge_rate_median']), 1)}% contra {format_float(float(rq3_without['prs_merge_rate_median']), 1)}%), menor fechamento sem merge e menor tempo até a primeira revisão de PR.</p>
+          </div>
+          <div class="context-block">
+            <h3>Interpretação final</h3>
+            <p>Os resultados sugerem que políticas de IA aparecem mais em projetos com maior escala, atividade e estrutura de colaboração. A leitura mais adequada é associativa: popularidade, maturidade, linguagem e organização da comunidade podem explicar parte das diferenças observadas.</p>
+          </div>
+          <div class="context-block">
+            <h3>Contribuição do estudo</h3>
+            <p>O dashboard mapeia a prevalência, os tipos e os possíveis efeitos associados às políticas de IA em repositórios open-source populares, oferecendo evidência inicial para discussões sobre governança de IA em OSS.</p>
+          </div>
+          <div class="context-block">
+            <h3>Limite principal</h3>
+            <p>Nenhuma visualização deve ser interpretada como evidência causal direta. Os achados indicam padrões e hipóteses futuras, não prova de que a política cause maior engajamento ou melhor colaboração.</p>
+          </div>
+        </div>
+      </div>
     </section>
 
   <footer>
@@ -1733,6 +2083,7 @@ def main() -> None:
     rq3_policy = read_csv(tables_dir / "rq3_collaboration_by_policy_presence.csv")
 
     enriched = build_enriched_top_repos(top_repos, policy_repos)
+    enriched = add_language_data(enriched)
     profile = save_clean_tables(top_repos, enriched, adoption, clusters, rq2_policy, rq3_policy)
 
     plot_dataset_figures(top_repos, enriched)
@@ -1741,7 +2092,7 @@ def main() -> None:
     plot_rq3_figures(rq3_policy)
     plot_complementary_figures(enriched)
 
-    build_dashboard(top_repos, enriched, adoption_metrics, clusters, rq2_policy, rq3_policy, profile)
+    build_dashboard(top_repos, enriched, adoption_metrics, clusters, policy_repos, rq2_policy, rq3_policy, profile)
     print(f"Dashboard gerado em: {DASHBOARD_DIR / 'dashboard.html'}")
     print(f"Figuras geradas em: {FIGURES_DIR}")
     print(f"Tabelas limpas geradas em: {TABLES_DIR}")
