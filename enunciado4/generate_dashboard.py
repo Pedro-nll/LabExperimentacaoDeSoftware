@@ -697,6 +697,63 @@ def build_interactive_charts(
     fig.update_traces(hovertemplate="Grupo: %{x}<br>Repositorios: %{y}<extra></extra>")
     add("rq1_policy_adoption", fig)
 
+    rq1_overview = pd.concat(
+        [
+            pd.DataFrame(
+                {
+                    "Categoria": ["Sem politica de IA"],
+                    "Repositorios": [float(adoption_metrics["repositories_without_policy"])],
+                    "Percentual da amostra": [float(adoption_metrics["no_policy_percentage"])],
+                    "Percentual entre politicas": [np.nan],
+                    "Grupo": ["Sem politica"],
+                }
+            ),
+            clusters.assign(
+                Categoria=clusters["cluster_label"],
+                Repositorios=clusters["unique_repositories"].astype(float),
+                **{
+                    "Percentual da amostra": clusters["unique_repositories"].astype(float)
+                    / float(adoption_metrics["total_repositories"])
+                    * 100,
+                    "Percentual entre politicas": clusters["percentage_of_policy_repositories"].astype(float),
+                    "Grupo": "Tipo de politica",
+                },
+            )[["Categoria", "Repositorios", "Percentual da amostra", "Percentual entre politicas", "Grupo"]],
+        ],
+        ignore_index=True,
+    ).sort_values("Repositorios")
+    rq1_overview["Rotulo"] = rq1_overview.apply(
+        lambda row: f"{int(row['Repositorios'])} ({row['Percentual da amostra']:.1f}%)",
+        axis=1,
+    )
+    rq1_overview["Percentual entre politicas texto"] = rq1_overview["Percentual entre politicas"].apply(
+        lambda value: "nao se aplica" if pd.isna(value) else f"{value:.1f}%"
+    )
+    fig = px.bar(
+        rq1_overview,
+        y="Categoria",
+        x="Repositorios",
+        color="Grupo",
+        orientation="h",
+        text="Rotulo",
+        title="Adocao e tipos de politica de IA",
+        labels={"Categoria": "", "Repositorios": "Repositorios"},
+        color_discrete_map={"Sem politica": "#4C78A8", "Tipo de politica": "#2A9D8F"},
+        custom_data=["Percentual da amostra", "Percentual entre politicas texto"],
+    )
+    fig.update_traces(
+        textposition="outside",
+        cliponaxis=False,
+        hovertemplate=(
+            "Categoria: %{y}<br>"
+            "Repositorios: %{x:,.0f}<br>"
+            "Percentual da amostra: %{customdata[0]:.1f}%<br>"
+            "Percentual entre politicas: %{customdata[1]}<extra></extra>"
+        ),
+    )
+    fig.update_layout(showlegend=False)
+    add("rq1_policy_overview", fig, height=470)
+
     cluster_sorted = clusters.sort_values("unique_repositories")
     fig = px.bar(
         cluster_sorted,
@@ -720,8 +777,12 @@ def build_interactive_charts(
         labels={"cluster_label": "", "percentage_of_policy_repositories": "Percentual dos repositorios com politica"},
         color_discrete_sequence=["#2A9D8F"],
         text="percentage_of_policy_repositories",
+        custom_data=["unique_repositories"],
     )
-    fig.update_traces(texttemplate="%{text:.1f}%", hovertemplate="Cluster: %{y}<br>Percentual: %{x:.1f}%<extra></extra>")
+    fig.update_traces(
+        texttemplate="%{text:.1f}%",
+        hovertemplate="Cluster: %{y}<br>Percentual: %{x:.1f}%<br>Repositorios: %{customdata[0]:,.0f}<extra></extra>",
+    )
     add("rq1_cluster_percentages", fig, height=460)
 
     text_size = clusters.melt(
@@ -946,8 +1007,7 @@ def build_dashboard(
     rq1_subtabs = subtab_group(
         "rq1",
         [
-            ("Adocao", plotly_card("Adocao de politicas de IA", charts["rq1_policy_adoption"], "Comparacao interativa entre repositorios com e sem politica de IA.")),
-            ("Tipos", plotly_card("Distribuicao dos tipos de politica", charts["rq1_cluster_distribution"], "Quantidade de repositorios por tipo de politica identificado.", wide=True)),
+            ("Adocao", plotly_card("Adocao de politicas de IA", charts["rq1_policy_adoption"], "Comparacao entre repositorios com e sem politica de IA.")),
             ("Percentuais", plotly_card("Percentual dos clusters", charts["rq1_cluster_percentages"], "Participacao percentual de cada cluster entre os repositorios com politica.", wide=True)),
             ("Tamanho do texto", plotly_card("Tamanho dos textos de politica", charts["rq1_policy_text_size_by_cluster"], "Comparacao entre media e mediana do tamanho dos textos de politica.", wide=True)),
             (
@@ -994,8 +1054,6 @@ def build_dashboard(
     complementary_subtabs = subtab_group(
         "complementar",
         [
-            ("Estrelas", plotly_card("Estrelas por presenca de politica", charts["complementary_stars"], "Distribuicao de estrelas por presenca de politica.")),
-            ("Idade", plotly_card("Idade por presenca de politica", charts["complementary_age"], "Distribuicao de idade por presenca de politica.")),
             ("Adocao/estrelas", plotly_card("Adocao por faixa de estrelas", charts["complementary_policy_adoption_stars"], "Taxa de adocao por quartil de estrelas.")),
             ("Adocao/idade", plotly_card("Adocao por faixa de idade", charts["complementary_policy_adoption_age"], "Taxa de adocao por quartil de idade.")),
             ("Dispersao", plotly_card("Idade vs. estrelas", charts["complementary_age_vs_stars"], "Dispersao idade vs. estrelas colorida por presenca de politica.", wide=True)),
