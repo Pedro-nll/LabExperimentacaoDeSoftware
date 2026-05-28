@@ -1,0 +1,4 @@
+cluster,cluster_label,unique_repositories,policy_mentions,percentage_of_policy_repositories,median_policy_words,mean_policy_words
+0,Governança ampla do uso de IA,94,94,75.20,92,133.7
+1,Responsabilidade humana sobre contribuições assistidas por IA,15,15,12.00,48,45.5
+2,Declaração obrigatória do uso de IA,16,16,12.80,72,101.5

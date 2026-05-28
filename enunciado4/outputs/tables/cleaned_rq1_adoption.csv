@@ -1,0 +1,7 @@
+metric,value
+total_repositories,1000.0
+repositories_with_policy,125.0
+repositories_without_policy,875.0
+policy_adoption_percentage,12.5
+no_policy_percentage,87.5
+total_policy_mentions,125.0

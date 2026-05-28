@@ -1,0 +1,4 @@
+cluster,cluster_label,n_repositories,prs_merge_rate_mean,prs_merge_rate_median,prs_closed_no_merge_rate_mean,prs_closed_no_merge_rate_median,median_pr_cycle_hours_mean,median_pr_cycle_hours_median,median_pr_first_response_hours_mean,median_pr_first_response_hours_median,median_pr_first_review_hours_mean,median_pr_first_review_hours_median,avg_pr_commits_mean,avg_pr_commits_median,avg_pr_reviews_mean,avg_pr_reviews_median,avg_reviews_until_approval_mean,avg_reviews_until_approval_median
+C0,Governança ampla do uso de IA,94,68.25,73.486,26.542,22.205,47.557,15.757,123.15,2.36,282.791,7.614,8.17,4.067,1.647,1.244,2.318,2.0
+C1,Responsabilidade humana sobre contribuições assistidas por IA,14,67.966,76.499,29.401,22.323,95.582,14.058,17.01,3.092,69.899,3.231,3.653,3.54,1.412,1.288,1.778,1.111
+C2,Declaração obrigatória do uso de IA,16,73.536,80.587,23.056,17.665,46.587,34.742,11.968,2.23,15.264,5.048,6.069,3.977,2.407,2.216,2.562,1.778
