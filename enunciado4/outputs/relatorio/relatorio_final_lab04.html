@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Relatório Final - Dashboard Lab04</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 2.2cm 2cm 2.1cm;
+      @bottom-center {
+        content: "Página " counter(page);
+        font: 10pt Arial, sans-serif;
+        color: #5f6b7a;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #17202a;
+      font: 11.5pt/1.45 Arial, Helvetica, sans-serif;
+    }
+    h1, h2, h3 {
+      color: #111827;
+      line-height: 1.18;
+    }
+    h1 {
+      margin: 0 0 18pt;
+      font-size: 23pt;
+    }
+    h2 {
+      margin: 0 0 10pt;
+      font-size: 16pt;
+      border-bottom: 1px solid #cfd7e3;
+      padding-bottom: 5pt;
+    }
+    h3 {
+      margin: 13pt 0 6pt;
+      font-size: 12.5pt;
+    }
+    p {
+      margin: 0 0 9pt;
+      text-align: justify;
+    }
+    ul, ol {
+      margin: 4pt 0 10pt 18pt;
+      padding: 0;
+    }
+    li { margin: 3pt 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8pt 0 12pt;
+      font-size: 10pt;
+    }
+    th, td {
+      border: 1px solid #cfd7e3;
+      padding: 6pt;
+      vertical-align: top;
+      text-align: left;
+    }
+    th {
+      background: #edf2f7;
+      font-weight: 700;
+    }
+    code {
+      font-family: "Courier New", monospace;
+      font-size: 10pt;
+    }
+    .cover {
+      min-height: 24cm;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      page-break-after: always;
+    }
+    .cover p { text-align: center; }
+    .subtitle {
+      font-size: 14pt;
+      color: #4b5563;
+      margin-bottom: 28pt;
+    }
+    .meta {
+      color: #374151;
+      margin-top: 20pt;
+    }
+    .page-break { page-break-before: always; }
+    .toc {
+      page-break-after: always;
+    }
+    .toc h2 {
+      margin-bottom: 14pt;
+    }
+    .toc-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8pt;
+      margin: 5pt 0;
+      align-items: baseline;
+    }
+    .toc-dots {
+      border-bottom: 1px dotted #9ca3af;
+      transform: translateY(-2pt);
+    }
+    .note {
+      border-left: 4px solid #2a9d8f;
+      background: #edf8f6;
+      padding: 9pt 10pt;
+      margin: 8pt 0 12pt;
+      color: #24443f;
+    }
+    .compact td, .compact th {
+      padding: 5pt;
+    }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <h1>Relatório Final do Lab04</h1>
+    <p class="subtitle">Construção de dashboard analítico sobre políticas de uso de IA em repositórios open source populares</p>
+    <p><strong>Pedro Negri Leão Lambert</strong></p>
+    <p>27/05/2026</p>
+    <p class="meta">Repositório/dados:<br>
+      <code>LabExperimentacaoDeSoftware/enunciado4</code>
+    </p>
+  </section>
+
+  <section class="toc">
+    <h2>Índice</h2>
+    <div class="toc-row"><span>1 - Introdução</span><span class="toc-dots"></span><span>3</span></div>
+    <div class="toc-row"><span>2 - Objetivo</span><span class="toc-dots"></span><span>4</span></div>
+    <div class="toc-row"><span>3 - Metodologia de construção do dashboard</span><span class="toc-dots"></span><span>5</span></div>
+    <div class="toc-row"><span>4 - Arquitetura e implementação</span><span class="toc-dots"></span><span>7</span></div>
+    <div class="toc-row"><span>5 - Visualizações e análises implementadas</span><span class="toc-dots"></span><span>8</span></div>
+    <div class="toc-row"><span>6 - Discussão do dashboard</span><span class="toc-dots"></span><span>9</span></div>
+    <div class="toc-row"><span>7 - Conclusão</span><span class="toc-dots"></span><span>10</span></div>
+    <div class="toc-row"><span>8 - Reprodutibilidade</span><span class="toc-dots"></span><span>11</span></div>
+  </section>
+
+  <section>
+    <h2>1 - Introdução</h2>
+    <h3>1.1 - Contextualização</h3>
+    <p>Este relatório descreve o processo de construção do dashboard final do Laboratório 04. O foco não está na coleta original dos dados dos repositórios, mas no uso dos dados já disponíveis no laboratório para produzir uma visualização analítica, interativa e organizada em torno das questões de pesquisa.</p>
+    <p>O tema do laboratório é a presença de políticas de uso de IA em repositórios open source populares. A partir dos CSVs já coletados e consolidados, o trabalho consistiu em transformar tabelas e métricas em um painel navegável, capaz de apoiar a interpretação dos resultados sobre adoção de políticas, engajamento e colaboração.</p>
+    <p>Durante o desenvolvimento, o dashboard evoluiu de uma versão baseada em gráficos estáticos para uma versão com gráficos interativos em Plotly, sub-abas por assunto, modo claro/escuro, sínteses textuais por questão de pesquisa e uma contextualização inicial para orientar a leitura.</p>
+
+    <h3>1.2 - Problema foco do relatório</h3>
+    <p>O problema tratado neste relatório é como construir, a partir dos dados já fornecidos ao laboratório, um dashboard capaz de comunicar os resultados de forma clara, profissional e reprodutível. Assim, a ênfase está nas decisões de organização da informação, na escolha das visualizações e na forma como os resultados foram sintetizados.</p>
+
+    <h3>1.3 - Questões orientadoras do dashboard</h3>
+    <table class="compact">
+      <tr><th>RQ</th><th>Pergunta representada no dashboard</th></tr>
+      <tr><td>RQ1</td><td>Qual é o nível de adoção de políticas de uso de IA em repositórios open source populares e quais padrões ou tipos de políticas emergem?</td></tr>
+      <tr><td>RQ2</td><td>Como a presença de política de IA se relaciona com o volume de contribuições e o nível de engajamento em projetos open source?</td></tr>
+      <tr><td>RQ3</td><td>Como a presença de política de IA se relaciona com a responsividade e a eficiência do fluxo de contribuição nos projetos?</td></tr>
+    </table>
+  </section>
+
+  <section class="page-break">
+    <h2>2 - Objetivo</h2>
+    <h3>2.1 - Objetivo principal</h3>
+    <p>Construir um dashboard analítico e interativo para apresentar, a partir dos dados coletados no Lab04, os achados sobre políticas de uso de IA em repositórios open source populares.</p>
+
+    <h3>2.2 - Objetivos específicos</h3>
+    <ul>
+      <li>Organizar os dados consolidados em indicadores, gráficos e sínteses interpretativas.</li>
+      <li>Substituir visualizações estáticas por gráficos interativos com tooltips e melhor exploração dos valores.</li>
+      <li>Estruturar o dashboard em abas e sub-abas para reduzir sobrecarga visual.</li>
+      <li>Apresentar uma contextualização inicial com motivação, problema, objetivo, público-alvo e universo da amostra.</li>
+      <li>Criar resumos por RQ no formato de hipóteses, conclusão, discussão e leitura crítica.</li>
+      <li>Garantir que o relatório e o dashboard sejam reprodutíveis a partir do script <code>generate_dashboard.py</code>.</li>
+    </ul>
+  </section>
+
+  <section class="page-break">
+    <h2>3 - Metodologia de construção do dashboard</h2>
+    <p>A metodologia deste laboratório parte dos dados já coletados e trazidos para a pasta <code>enunciado4/data</code>. Portanto, não foi desenvolvida aqui uma nova metodologia de mineração dos repositórios. O processo documentado neste relatório corresponde à transformação desses dados em um painel analítico.</p>
+
+    <h3>3.1 - Passo a passo</h3>
+    <table>
+      <tr><th>Etapa</th><th>Descrição</th></tr>
+      <tr><td>1</td><td>Leitura dos CSVs de repositórios, adoção de políticas, clusters, engajamento e colaboração.</td></tr>
+      <tr><td>2</td><td>Enriquecimento da base principal com a presença de política de IA por repositório.</td></tr>
+      <tr><td>3</td><td>Geração de tabelas limpas em <code>outputs/tables</code> para rastrear os dados usados no painel.</td></tr>
+      <tr><td>4</td><td>Construção de gráficos exploratórios inicialmente em Matplotlib/Seaborn e, depois, em Plotly para interação.</td></tr>
+      <tr><td>5</td><td>Montagem do HTML final com layout responsivo, abas, sub-abas, cards de métricas e modo claro/escuro.</td></tr>
+      <tr><td>6</td><td>Revisão iterativa da arquitetura da informação a partir da legibilidade dos gráficos e da clareza das conclusões.</td></tr>
+      <tr><td>7</td><td>Regeneração do dashboard final em <code>outputs/dashboard/dashboard.html</code>.</td></tr>
+    </table>
+
+    <h3>3.2 - Decisões tomadas</h3>
+    <p>A primeira decisão importante foi mover o dashboard de imagens estáticas para gráficos interativos. Isso permitiu que barras, histogramas e comparações exibissem valores detalhados ao passar o mouse, reduzindo a necessidade de rótulos excessivos nos gráficos.</p>
+    <p>A segunda decisão foi organizar o dashboard em abas principais e sub-abas. Em vez de empilhar todos os gráficos verticalmente, cada RQ passou a conter visualizações específicas e um resumo interpretativo. Essa organização torna a navegação mais parecida com uma apresentação guiada dos achados.</p>
+    <p>Outra decisão foi remover visualizações redundantes. A aba complementar foi eliminada e suas análises mais relevantes foram movidas para RQ1. Da mesma forma, os heatmaps de RQ2 e RQ3 foram removidos para priorizar gráficos mais diretos e resumos textuais.</p>
+
+    <h3>3.3 - Materiais utilizados</h3>
+    <ul>
+      <li>Linguagem Python.</li>
+      <li>Bibliotecas Pandas, NumPy, Matplotlib, Seaborn e Plotly.</li>
+      <li>Arquivos CSV disponíveis em <code>enunciado4/data</code>.</li>
+      <li>Arquivo auxiliar de linguagem de <code>enunciado1/repos_data.csv</code>, usado para enriquecer parcialmente a análise de linguagens.</li>
+      <li>HTML, CSS e JavaScript gerados pelo script <code>generate_dashboard.py</code>.</li>
+    </ul>
+  </section>
+
+  <section class="page-break">
+    <h2>4 - Arquitetura e implementação</h2>
+    <h3>4.1 - Estrutura dos artefatos</h3>
+    <p>O principal artefato de implementação é o script <code>enunciado4/generate_dashboard.py</code>. Ele centraliza a leitura dos dados, a preparação das tabelas, a geração dos gráficos e a escrita do arquivo HTML final.</p>
+    <table>
+      <tr><th>Artefato</th><th>Papel no processo</th></tr>
+      <tr><td><code>data/top_repos_filtered.csv</code></td><td>Base dos 1.000 repositórios analisados, com estrelas e idade.</td></tr>
+      <tr><td><code>data/tables/rq1_*.csv</code></td><td>Dados de adoção, clusters e repositórios com política.</td></tr>
+      <tr><td><code>data/tables/rq2_*.csv</code></td><td>Métricas agregadas de engajamento por presença de política.</td></tr>
+      <tr><td><code>data/tables/rq3_*.csv</code></td><td>Métricas agregadas de colaboração por presença de política.</td></tr>
+      <tr><td><code>outputs/tables</code></td><td>Tabelas limpas geradas para auditoria e reuso.</td></tr>
+      <tr><td><code>outputs/dashboard/dashboard.html</code></td><td>Dashboard final interativo.</td></tr>
+    </table>
+
+    <h3>4.2 - Componentes do dashboard</h3>
+    <p>O dashboard foi estruturado em um primeiro painel de contextualização e indicadores gerais, seguido por abas para RQ1, RQ2, RQ3 e síntese final. O primeiro painel contém uma sub-aba de contextualização e outra de indicadores. As RQs possuem sub-abas internas para gráficos específicos e uma sub-aba de resumo.</p>
+    <p>Além disso, foi implementado um modo escuro/claro com persistência no navegador. Os gráficos Plotly são redimensionados ao trocar de aba para evitar que fiquem quebrados ou com escalas incorretas quando renderizados em painéis inicialmente ocultos.</p>
+
+    <h3>4.3 - Tratamento visual</h3>
+    <p>As visualizações foram ajustadas para evitar rótulos quebrados, barras espremidas e excesso de informação simultânea. Para isso, foram priorizados gráficos horizontais quando havia categorias longas, sub-abas por gráfico e tooltips com valores absolutos e percentuais.</p>
+  </section>
+
+  <section class="page-break">
+    <h2>5 - Visualizações e análises implementadas</h2>
+    <h3>5.1 - Painel inicial</h3>
+    <p>O painel inicial apresenta primeiro a contextualização do estudo: motivação, lacuna, problema, objetivo, público-alvo e universo da amostra. Em seguida, a sub-aba de indicadores resume a amostra com cards de repositórios analisados, repositórios com política de IA, mediana de estrelas e idade mediana.</p>
+    <p>Também foram incluídas distribuições interativas de idade e estrelas. A distribuição de estrelas foi apresentada por faixas logarítmicas para reduzir a distorção causada por repositórios extremamente populares.</p>
+
+    <h3>5.2 - RQ1: adoção e tipos de política</h3>
+    <p>A RQ1 concentra a análise de presença de política e tipos observados. O dashboard mostra a comparação entre repositórios com e sem política, os percentuais dos clusters, o tamanho dos textos de política e análises por perfil.</p>
+    <p>A análise por perfil inclui adoção por faixas de estrelas e idade. Posteriormente, foi adicionada uma sub-aba de linguagens para explorar se a adoção e os clusters se concentram em determinadas linguagens. Essa análise usa cobertura parcial de 768 dos 1.000 repositórios, pois depende da disponibilidade local de linguagem.</p>
+
+    <h3>5.3 - RQ2: engajamento</h3>
+    <p>A RQ2 compara métricas de engajamento entre repositórios com e sem política de IA. Foram implementados gráficos para PRs totais, PRs mergeadas, issues, colaboradores únicos, comentários e reviews. O heatmap inicialmente disponível foi removido para deixar a leitura mais direta.</p>
+
+    <h3>5.4 - RQ3: colaboração</h3>
+    <p>A RQ3 apresenta métricas de colaboração e eficiência do fluxo de contribuição. As visualizações incluem taxa de merge, fechamento sem merge, ciclo de PR, tempo até primeira resposta, tempo até primeira revisão e estabilidade do processo colaborativo.</p>
+
+    <h3>5.5 - Resumos interpretativos</h3>
+    <p>As três RQs possuem resumos no formato de hipóteses, conclusão, discussão e leitura crítica. Esse formato foi adotado para deixar claro o vínculo entre expectativa inicial, resultado observado e limite de interpretação. A síntese final consolida os achados por RQ e reforça que as relações observadas são associativas, não causais.</p>
+  </section>
+
+  <section class="page-break">
+    <h2>6 - Discussão do dashboard</h2>
+    <p>O processo de construção do dashboard mostrou que a principal dificuldade não era apenas gerar gráficos, mas organizar os achados em uma narrativa clara. A primeira versão, baseada em imagens estáticas, permitia visualizar resultados, mas dificultava a exploração detalhada de valores. A migração para Plotly melhorou a interação e reduziu a dependência de rótulos visuais densos.</p>
+    <p>A criação de sub-abas também foi uma melhoria importante. Como o dashboard possui muitas métricas, empilhar todos os gráficos em uma página deixava a leitura cansativa e pouco profissional. Ao separar cada assunto em sub-abas, o usuário pode navegar por uma pergunta de pesquisa sem perder o contexto.</p>
+    <p>Outra decisão relevante foi reduzir redundâncias. Gráficos semelhantes foram combinados, a aba complementar foi removida e análises úteis foram integradas à RQ1. Em RQ2 e RQ3, os heatmaps foram substituídos por resumos argumentativos, mais adequados para explicar o que os números sugerem.</p>
+    <p>Por fim, o dashboard foi refinado para funcionar como um relatório visual: ele não apenas mostra gráficos, mas também apresenta contexto, hipóteses, conclusões parciais, discussão e limitações. Essa abordagem torna o painel mais útil para comunicar resultados a maintainers, pesquisadores e comunidade de desenvolvimento.</p>
+  </section>
+
+  <section class="page-break">
+    <h2>7 - Conclusão</h2>
+    <p>O Laboratório 04 resultou em um dashboard interativo, organizado e reprodutível para analisar políticas de uso de IA em repositórios open source populares. A partir de dados já coletados, o processo concentrou-se em transformar tabelas em visualizações úteis e em estruturar uma narrativa de análise.</p>
+    <p>O produto final apresenta um painel inicial com contextualização e indicadores, abas por questão de pesquisa, sub-abas por gráfico, resumos interpretativos e uma síntese final. O dashboard permite observar que a adoção explícita de políticas de IA ainda é minoritária, que há padrões de governança entre os repositórios com política e que a presença de política aparece associada a maiores níveis de engajamento e sinais de colaboração mais estruturada.</p>
+    <p>Como limitação, parte da análise de linguagem depende de um arquivo auxiliar com cobertura parcial. Além disso, os achados são exploratórios e não devem ser interpretados como evidência causal. Ainda assim, o dashboard fornece uma base consistente para comunicar e discutir os resultados do laboratório.</p>
+  </section>
+
+  <section class="page-break">
+    <h2>8 - Reprodutibilidade</h2>
+    <p>A reprodução do dashboard é feita a partir do script principal do laboratório:</p>
+    <p><code>python enunciado4/generate_dashboard.py</code></p>
+    <p>Esse comando lê os arquivos em <code>enunciado4/data</code>, gera tabelas limpas em <code>enunciado4/outputs/tables</code>, produz figuras auxiliares em <code>enunciado4/outputs/figures</code> e escreve o dashboard final em <code>enunciado4/outputs/dashboard/dashboard.html</code>.</p>
+    <p>Para visualizar localmente, pode-se servir a pasta de saída com:</p>
+    <p><code>python -m http.server 8502 --bind 127.0.0.1</code></p>
+    <p>Executado a partir de <code>enunciado4/outputs</code>, o dashboard fica disponível em:</p>
+    <p><code>http://127.0.0.1:8502/dashboard/dashboard.html</code></p>
+    <div class="note">O relatório final foi produzido a partir da versão final do dashboard e documenta especificamente o processo de construção, organização e análise visual do painel, não a metodologia original de coleta dos repositórios.</div>
+  </section>
+</body>
+</html>
