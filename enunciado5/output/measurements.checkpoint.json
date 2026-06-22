@@ -1,5 +1,5 @@
 {
-  "completed_count": 10745,
+  "completed_count": 24000,
   "config": {
     "item_limit": 10,
     "repos_csv": "enunciado5/data/top_python_repos.csv",
@@ -11,6 +11,6 @@
       "C4"
     ]
   },
-  "last_measurement_id": "yt-dlp/yt-dlp:C1:run014:REST",
-  "updated_at": "2026-06-22T02:58:12.955767Z"
+  "last_measurement_id": "jingyaogong/minimind:C4:run030:REST",
+  "updated_at": "2026-06-22T13:09:36.648962Z"
 }
