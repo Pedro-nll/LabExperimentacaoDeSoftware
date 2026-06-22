@@ -1,0 +1,16 @@
+{
+  "completed_count": 5412,
+  "config": {
+    "item_limit": 10,
+    "repos_csv": "enunciado5/data/top_python_repos.csv",
+    "runs": 30,
+    "scenarios": [
+      "C1",
+      "C2",
+      "C3",
+      "C4"
+    ]
+  },
+  "last_measurement_id": "pytorch/pytorch:C4:run007:GraphQL",
+  "updated_at": "2026-06-22T01:43:23.112704Z"
+}

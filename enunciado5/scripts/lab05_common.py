@@ -19,6 +19,7 @@ from urllib.request import Request, urlopen
 API_VERSION = "2022-11-28"
 GITHUB_API = "https://api.github.com"
 GITHUB_GRAPHQL = "https://api.github.com/graphql"
+_DOTENV_LOADED = False
 
 
 @dataclass
@@ -35,7 +36,32 @@ def utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
+def load_dotenv(path: Optional[Path] = None) -> None:
+    """Load simple KEY=VALUE pairs from .env without overriding shell env vars."""
+    global _DOTENV_LOADED
+    if _DOTENV_LOADED:
+        return
+
+    env_path = path or Path(__file__).resolve().parents[2] / ".env"
+    if not env_path.exists():
+        _DOTENV_LOADED = True
+        return
+
+    with env_path.open("r", encoding="utf-8") as f:
+        for raw_line in f:
+            line = raw_line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if key and key not in os.environ:
+                os.environ[key] = value
+    _DOTENV_LOADED = True
+
+
 def github_token(kind: str) -> Optional[str]:
+    load_dotenv()
     if kind == "rest":
         token = os.getenv("GITHUB_REST_TOKEN", "").strip()
     elif kind == "graphql":
@@ -46,6 +72,7 @@ def github_token(kind: str) -> Optional[str]:
 
 
 def token_label(kind: str) -> str:
+    load_dotenv()
     specific = "GITHUB_REST_TOKEN" if kind == "rest" else "GITHUB_GRAPHQL_TOKEN"
     if os.getenv(specific, "").strip():
         return specific

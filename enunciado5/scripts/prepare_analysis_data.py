@@ -46,6 +46,18 @@ SUMMARY_COLUMNS = [
 ]
 
 FAILURE_COLUMNS = ["api_type", "scenario_id", "http_status", "error", "count"]
+TEST_COLUMNS = [
+    "scenario_id",
+    "scenario_name",
+    "metric",
+    "n_pairs",
+    "wilcoxon_statistic",
+    "p_value",
+    "rest_median",
+    "graphql_median",
+    "median_delta",
+    "median_delta_pct",
+]
 
 
 def parse_args() -> argparse.Namespace:
@@ -186,6 +198,53 @@ def build_failure_rows(rows: List[Dict[str, str]]) -> List[Dict[str, Any]]:
     ]
 
 
+def build_test_rows(paired_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    try:
+        from scipy.stats import wilcoxon
+    except ImportError:
+        print("[analysis] scipy not available; skipping Wilcoxon tests")
+        return []
+
+    by_scenario: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+    for row in paired_rows:
+        by_scenario[row["scenario_id"]].append(row)
+
+    test_rows: List[Dict[str, Any]] = []
+    metric_specs = [
+        ("elapsed_ms", "rest_elapsed_ms", "graphql_elapsed_ms", "delta_elapsed_ms", "delta_elapsed_pct"),
+        ("response_bytes", "rest_response_bytes", "graphql_response_bytes", "delta_response_bytes", "delta_response_pct"),
+    ]
+    for scenario_id, rows in sorted(by_scenario.items()):
+        scenario_name = rows[0].get("scenario_name", "")
+        for metric, rest_col, graphql_col, delta_col, delta_pct_col in metric_specs:
+            rest_values = [as_float(row[rest_col]) for row in rows]
+            graphql_values = [as_float(row[graphql_col]) for row in rows]
+            delta_values = [as_float(row[delta_col]) for row in rows]
+            delta_pct_values = [as_float(row[delta_pct_col]) for row in rows]
+            try:
+                result = wilcoxon(graphql_values, rest_values, zero_method="wilcox", alternative="two-sided")
+                statistic = float(result.statistic)
+                p_value = float(result.pvalue)
+            except ValueError:
+                statistic = 0.0
+                p_value = 1.0
+            test_rows.append(
+                {
+                    "scenario_id": scenario_id,
+                    "scenario_name": scenario_name,
+                    "metric": metric,
+                    "n_pairs": len(rows),
+                    "wilcoxon_statistic": f"{statistic:.6f}",
+                    "p_value": f"{p_value:.8f}",
+                    "rest_median": f"{median(rest_values):.3f}",
+                    "graphql_median": f"{median(graphql_values):.3f}",
+                    "median_delta": f"{median(delta_values):.3f}",
+                    "median_delta_pct": f"{median(delta_pct_values):.3f}",
+                }
+            )
+    return test_rows
+
+
 def main() -> int:
     args = parse_args()
     rows = read_csv_rows(Path(args.measurements))
@@ -199,10 +258,13 @@ def main() -> int:
     paired_rows = build_paired_rows(rows)
     summary_rows = build_summary_rows(paired_rows)
     failure_rows = build_failure_rows(rows)
+    test_rows = build_test_rows(paired_rows)
 
     write_csv_rows(output_dir / "paired_measurements.csv", paired_rows, PAIRED_COLUMNS)
     write_csv_rows(output_dir / "scenario_summary.csv", summary_rows, SUMMARY_COLUMNS)
     write_csv_rows(output_dir / "failure_summary.csv", failure_rows, FAILURE_COLUMNS)
+    if test_rows:
+        write_csv_rows(output_dir / "wilcoxon_summary.csv", test_rows, TEST_COLUMNS)
 
     total = len(rows)
     successful = sum(1 for row in rows if row.get("success") == "1")
@@ -210,6 +272,8 @@ def main() -> int:
     print(f"[analysis] wrote {output_dir / 'paired_measurements.csv'}")
     print(f"[analysis] wrote {output_dir / 'scenario_summary.csv'}")
     print(f"[analysis] wrote {output_dir / 'failure_summary.csv'}")
+    if test_rows:
+        print(f"[analysis] wrote {output_dir / 'wilcoxon_summary.csv'}")
     return 0
 
 

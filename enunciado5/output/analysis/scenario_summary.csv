@@ -1,0 +1,9 @@
+scenario_id,scenario_name,metric,n_pairs,rest_mean,graphql_mean,rest_median,graphql_median,median_delta,median_delta_pct
+C1,repository_metadata,elapsed_ms,124,462.931,500.248,411.452,409.990,-2.032,-0.456
+C1,repository_metadata,response_bytes,124,6706.032,491.250,6825.000,489.000,-6378.000,-93.372
+C2,recent_pull_requests,elapsed_ms,105,861.501,710.818,836.155,634.985,-184.347,-21.052
+C2,recent_pull_requests,response_bytes,105,180099.324,2674.848,177110.000,2685.000,-174426.000,-98.498
+C3,recent_issues,elapsed_ms,95,767.739,504.261,655.940,489.904,-180.604,-27.434
+C3,recent_issues,response_bytes,95,40072.832,2226.758,31805.000,2223.000,-29582.000,-93.053
+C4,combined_repository_prs_issues,elapsed_ms,95,2232.078,871.690,1961.426,805.217,-1103.527,-58.803
+C4,combined_repository_prs_issues,response_bytes,95,227182.853,5330.989,227066.000,5316.000,-221750.000,-97.659

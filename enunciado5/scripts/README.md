@@ -26,6 +26,12 @@ python enunciado5/scripts/run_experiment.py --runs 30 --scenarios C1,C2,C3,C4
 python enunciado5/scripts/prepare_analysis_data.py
 ```
 
+5. Gerar figuras:
+
+```bash
+python enunciado5/scripts/generate_figures.py
+```
+
 ## Tokens
 
 Os scripts usam `GITHUB_REST_TOKEN` para REST e `GITHUB_GRAPHQL_TOKEN` para GraphQL. Se essas variaveis nao existirem, usam `GITHUB_TOKEN` como fallback.
@@ -39,5 +45,9 @@ Os scripts usam `GITHUB_REST_TOKEN` para REST e `GITHUB_GRAPHQL_TOKEN` para Grap
 - `enunciado5/output/analysis/paired_measurements.csv`: pares REST/GraphQL validos.
 - `enunciado5/output/analysis/scenario_summary.csv`: resumo por cenario e metrica.
 - `enunciado5/output/analysis/failure_summary.csv`: falhas descartadas da analise principal.
+- `enunciado5/output/analysis/wilcoxon_summary.csv`: teste pareado de Wilcoxon por cenario e metrica.
+- `enunciado5/output/analysis/figures/`: graficos usados na analise e no dashboard.
 
 O CSV de medicoes ja inclui `pair_id`, `api_type`, `scenario_id`, `elapsed_ms`, `response_bytes`, `success`, `error` e `request_count`, para facilitar a analise pareada REST vs GraphQL no relatorio e no dashboard.
+
+O executor percorre primeiro as rodadas e depois os repositorios/cenarios. Assim, caso a execucao seja interrompida cedo, a amostra parcial tende a cobrir mais repositorios em vez de concentrar muitas repeticoes nos primeiros itens da lista.

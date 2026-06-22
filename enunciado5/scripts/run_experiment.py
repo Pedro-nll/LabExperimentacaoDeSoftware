@@ -310,15 +310,15 @@ def main() -> int:
     )
     print(f"[experiment] REST token={token_label('rest')} GraphQL token={token_label('graphql')}")
 
-    for repo_index, repo_row in enumerate(repos, start=1):
-        owner = repo_row.get("owner", "")
-        repo = repo_row.get("repo", "")
-        repository = repo_row.get("full_name", f"{owner}/{repo}")
-        if not owner or not repo:
-            continue
+    for run_number in range(1, args.runs + 1):
+        for repo_index, repo_row in enumerate(repos, start=1):
+            owner = repo_row.get("owner", "")
+            repo = repo_row.get("repo", "")
+            repository = repo_row.get("full_name", f"{owner}/{repo}")
+            if not owner or not repo:
+                continue
 
-        for scenario_id in scenario_ids:
-            for run_number in range(1, args.runs + 1):
+            for scenario_id in scenario_ids:
                 pair_id = f"{repository}:{scenario_id}:run{run_number:03d}"
                 for order_index, api_type in enumerate(deterministic_api_order(repository, scenario_id, run_number), start=1):
                     measurement_id = f"{pair_id}:{api_type}"
