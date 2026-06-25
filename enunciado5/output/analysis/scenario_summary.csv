@@ -1,9 +1,9 @@
 scenario_id,scenario_name,metric,n_pairs,rest_mean,graphql_mean,rest_median,graphql_median,median_delta,median_delta_pct
-C1,repository_metadata,elapsed_ms,124,462.931,500.248,411.452,409.990,-2.032,-0.456
-C1,repository_metadata,response_bytes,124,6706.032,491.250,6825.000,489.000,-6378.000,-93.372
-C2,recent_pull_requests,elapsed_ms,105,861.501,710.818,836.155,634.985,-184.347,-21.052
-C2,recent_pull_requests,response_bytes,105,180099.324,2674.848,177110.000,2685.000,-174426.000,-98.498
-C3,recent_issues,elapsed_ms,95,767.739,504.261,655.940,489.904,-180.604,-27.434
-C3,recent_issues,response_bytes,95,40072.832,2226.758,31805.000,2223.000,-29582.000,-93.053
-C4,combined_repository_prs_issues,elapsed_ms,95,2232.078,871.690,1961.426,805.217,-1103.527,-58.803
-C4,combined_repository_prs_issues,response_bytes,95,227182.853,5330.989,227066.000,5316.000,-221750.000,-97.659
+C1,repository_metadata,elapsed_ms,2999,486.830,496.041,454.852,459.910,7.715,1.700
+C1,repository_metadata,response_bytes,2999,6471.822,640.946,6403.000,486.000,-5823.000,-92.326
+C2,recent_pull_requests,elapsed_ms,3000,818.353,773.404,777.238,698.718,-69.667,-9.413
+C2,recent_pull_requests,response_bytes,3000,182222.442,2770.867,176911.000,2754.000,-174121.000,-98.448
+C3,recent_issues,elapsed_ms,2999,741.993,532.357,697.606,499.460,-186.001,-27.437
+C3,recent_issues,response_bytes,2999,52504.154,2259.064,44728.000,2382.000,-42262.000,-94.661
+C4,combined_repository_prs_issues,elapsed_ms,3000,2042.505,940.163,1936.408,874.555,-1043.854,-55.136
+C4,combined_repository_prs_issues,response_bytes,3000,241202.220,5632.777,228036.000,5608.500,-222567.000,-97.599
