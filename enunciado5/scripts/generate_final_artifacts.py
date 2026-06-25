@@ -81,6 +81,75 @@ def stats(data: Dict[str, pd.DataFrame]) -> Dict[str, int]:
     }
 
 
+def dashboard_grouped_bar_svg(title: str, labels: List[str], rest_values: List[float], gql_values: List[float], unit: str) -> str:
+    width, height = 560, 260
+    left, top = 94, 42
+    bar_h, gap, pair_gap = 10, 5, 24
+    plot_w = width - left - 82
+    max_value = max(rest_values + gql_values) or 1
+    rows = []
+    for i, label in enumerate(labels):
+        y = top + i * (bar_h * 2 + gap + pair_gap)
+        rv = rest_values[i]
+        gv = gql_values[i]
+        rw = max(1, rv / max_value * plot_w)
+        gw = max(1, gv / max_value * plot_w)
+        rows.append(f'<text x="12" y="{y + 15}" class="axis">{label}</text>')
+        rows.append(f'<rect x="{left}" y="{y}" width="{rw:.2f}" height="{bar_h}" fill="#33464d"></rect>')
+        rows.append(f'<rect x="{left}" y="{y + bar_h + gap}" width="{gw:.2f}" height="{bar_h}" fill="#10b8aa"></rect>')
+        rows.append(f'<text x="{left + rw + 6:.2f}" y="{y + 9}" class="value">{fmt_num(rv, 1)}{unit}</text>')
+        rows.append(f'<text x="{left + gw + 6:.2f}" y="{y + bar_h + gap + 9}" class="value">{fmt_num(gv, 1)}{unit}</text>')
+    return f"""
+    <svg class="svg-chart" viewBox="0 0 {width} {height}" role="img" aria-label="{title}">
+      <style>.axis{{font:12px system-ui;fill:#516068}}.value{{font:10px system-ui;fill:#516068}}.title{{font:700 14px system-ui;fill:#17202a}}.legend{{font:11px system-ui;fill:#516068}}</style>
+      <text x="12" y="22" class="title">{title}</text>
+      <rect x="365" y="12" width="10" height="10" fill="#33464d"></rect><text x="380" y="21" class="legend">REST</text>
+      <rect x="435" y="12" width="10" height="10" fill="#10b8aa"></rect><text x="450" y="21" class="legend">GraphQL</text>
+      {''.join(rows)}
+    </svg>
+    """
+
+
+def dashboard_single_bar_svg(title: str, labels: List[str], values: List[float], suffix: str, color: str = "#10b8aa") -> str:
+    width, height = 420, 228
+    left, top = 58, 42
+    bar_h, gap = 20, 18
+    plot_w = width - left - 86
+    max_value = max(abs(v) for v in values) or 1
+    rows = []
+    for i, label in enumerate(labels):
+        y = top + i * (bar_h + gap)
+        value = values[i]
+        bw = max(1, abs(value) / max_value * plot_w)
+        x = left if value >= 0 else left + plot_w - bw
+        fill = color if value >= 0 else "#ff5a5f"
+        rows.append(f'<text x="12" y="{y + 14}" class="axis">{label}</text>')
+        rows.append(f'<rect x="{left}" y="{y}" width="{plot_w}" height="{bar_h}" fill="#eef3f5"></rect>')
+        rows.append(f'<rect x="{x:.2f}" y="{y}" width="{bw:.2f}" height="{bar_h}" fill="{fill}"></rect>')
+        rows.append(f'<text x="{left + plot_w + 8}" y="{y + 14}" class="value">{fmt_num(value, 1)}{suffix}</text>')
+    return f"""
+    <svg class="svg-chart" viewBox="0 0 {width} {height}" role="img" aria-label="{title}">
+      <style>.axis{{font:12px system-ui;fill:#516068}}.value{{font:11px system-ui;fill:#17202a}}.title{{font:700 14px system-ui;fill:#17202a}}</style>
+      <text x="12" y="22" class="title">{title}</text>
+      {''.join(rows)}
+    </svg>
+    """
+
+
+def dashboard_donut_svg(title: str, value: float, subtitle: str) -> str:
+    # Stroke-dasharray uses a 100-unit path length for easy percentage rendering.
+    return f"""
+    <svg class="donut" viewBox="0 0 180 160" role="img" aria-label="{title}">
+      <style>.dt{{font:700 13px system-ui;fill:#17202a}}.dv{{font:700 28px system-ui;fill:#17202a}}.ds{{font:11px system-ui;fill:#516068}}</style>
+      <text x="12" y="18" class="dt">{title}</text>
+      <circle cx="90" cy="82" r="44" fill="none" stroke="#e8eef2" stroke-width="18"></circle>
+      <circle cx="90" cy="82" r="44" fill="none" stroke="#10b8aa" stroke-width="18" pathLength="100" stroke-dasharray="{value:.1f} 100" stroke-linecap="round" transform="rotate(-90 90 82)"></circle>
+      <text x="90" y="88" text-anchor="middle" class="dv">{fmt_num(value, 1)}%</text>
+      <text x="90" y="112" text-anchor="middle" class="ds">{subtitle}</text>
+    </svg>
+    """
+
+
 def build_report_html(data: Dict[str, pd.DataFrame]) -> str:
     st = stats(data)
     wilcoxon = data["wilcoxon"]
@@ -319,49 +388,97 @@ python enunciado5/scripts/generate_final_artifacts.py</pre>
 def build_dashboard_html(data: Dict[str, pd.DataFrame]) -> str:
     st = stats(data)
     wilcoxon = data["wilcoxon"]
-    summary = data["summary"]
-    rq1 = wilcoxon[wilcoxon["metric"] == "elapsed_ms"].sort_values("scenario_id")
-    rq2 = wilcoxon[wilcoxon["metric"] == "response_bytes"].sort_values("scenario_id")
+    paired = data["paired"]
+    repos = data["repos"].copy()
+    time_rows = wilcoxon[wilcoxon["metric"] == "elapsed_ms"].sort_values("scenario_id")
+    size_rows = wilcoxon[wilcoxon["metric"] == "response_bytes"].sort_values("scenario_id")
+    labels = [str(v) for v in time_rows["scenario_id"].tolist()]
 
-    cards = [
-        ("Medicoes brutas", fmt_int(st["measurements"])),
-        ("Pares validos", fmt_int(st["valid_pairs"])),
-        ("Repositorios", fmt_int(st["repos"])),
-        ("Falhas", fmt_int(st["failures"])),
-    ]
-    card_html = "".join(f'<article class="metric"><span>{label}</span><strong>{value}</strong></article>' for label, value in cards)
+    rest_time = [float(v) for v in time_rows["rest_median"].tolist()]
+    gql_time = [float(v) for v in time_rows["graphql_median"].tolist()]
+    rest_size_kb = [float(v) / 1000.0 for v in size_rows["rest_median"].tolist()]
+    gql_size_kb = [float(v) / 1000.0 for v in size_rows["graphql_median"].tolist()]
+    time_delta = [float(v) for v in time_rows["median_delta_pct"].tolist()]
+    size_delta = [float(v) for v in size_rows["median_delta_pct"].tolist()]
 
-    rq1_rows = scenario_rows(wilcoxon, "elapsed_ms")
-    rq2_rows = scenario_rows(wilcoxon, "response_bytes")
-    rq1_table = table_html(["Cenario", "Pares", "REST mediana", "GraphQL mediana", "Delta", "Delta %", "p-valor"], rq1_rows)
-    rq2_table = table_html(["Cenario", "Pares", "REST mediana", "GraphQL mediana", "Delta", "Delta %", "p-valor"], rq2_rows)
+    gql_time_wins = (paired["graphql_elapsed_ms"] < paired["rest_elapsed_ms"]).mean() * 100.0
+    gql_size_wins = (paired["graphql_response_bytes"] < paired["rest_response_bytes"]).mean() * 100.0
+    c4_gain = abs(float(time_rows[time_rows["scenario_id"] == "C4"]["median_delta_pct"].iloc[0]))
+    size_gain = abs(float(size_rows["median_delta_pct"].median()))
+    rest_requests = paired["rest_request_count"].mean()
+    gql_requests = paired["graphql_request_count"].mean()
+
+    time_chart = dashboard_grouped_bar_svg("Tempo mediano por cenario", labels, rest_time, gql_time, " ms")
+    size_chart = dashboard_grouped_bar_svg("Tamanho mediano por cenario", labels, rest_size_kb, gql_size_kb, " KB")
+    time_delta_chart = dashboard_single_bar_svg("Delta de tempo GraphQL vs REST", labels, time_delta, "%", color="#10b8aa")
+    size_delta_chart = dashboard_single_bar_svg("Reducao de tamanho GraphQL", labels, size_delta, "%", color="#10b8aa")
+    donut_time = dashboard_donut_svg("GraphQL mais rapido", gql_time_wins, "dos pares")
+    donut_size = dashboard_donut_svg("GraphQL menor", gql_size_wins, "dos pares")
+
+    repos["short_name"] = repos["full_name"].astype(str).str.replace("EbookFoundation/", "Ebook/", regex=False)
+    top_repo_rows = []
+    for _, row in repos.sort_values("stargazers_count", ascending=False).head(5).iterrows():
+        top_repo_rows.append(
+            [
+                str(row["rank"]),
+                str(row["short_name"])[:28],
+                fmt_int(float(row["stargazers_count"])),
+            ]
+        )
+    dataset_table = table_html(["#", "Repositorio", "Stars"], top_repo_rows, "compact-table")
+    stars_median = float(repos["stargazers_count"].median())
+    forks_median = float(repos["forks_count"].median())
+    issues_median = float(repos["open_issues_count"].median())
 
     css = """
-    :root { --ink:#17202a; --muted:#5c6b73; --line:#d9e2ec; --rest:#4C78A8; --gql:#2A9D8F; --bg:#f7f9fb; --panel:#ffffff; }
+    :root { --ink:#17202a; --muted:#63717a; --line:#dfe5e8; --rest:#33464d; --gql:#10b8aa; --accent:#ff5a5f; --bg:#eceff1; --panel:#ffffff; }
     * { box-sizing: border-box; }
+    html, body { min-height:100%; }
     body { margin:0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
-    header { background:#ffffff; border-bottom:1px solid var(--line); padding:28px 32px 22px; position:sticky; top:0; z-index:2; }
-    header h1 { margin:0 0 8px; font-size: clamp(1.6rem, 3vw, 2.5rem); font-weight:700; letter-spacing:0; }
-    header p { margin:0; color:var(--muted); max-width:980px; line-height:1.5; }
-    main { max-width:1180px; margin:0 auto; padding:24px 24px 48px; }
-    .metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:24px; }
-    .metric { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px; min-height:92px; }
-    .metric span { display:block; color:var(--muted); font-size:.9rem; margin-bottom:10px; }
-    .metric strong { font-size:1.8rem; }
-    section { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:22px; margin:18px 0; }
-    h2 { margin:0 0 12px; font-size:1.25rem; }
-    h3 { margin:16px 0 8px; font-size:1rem; }
-    p { color:#26343d; line-height:1.55; }
-    .grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
-    img { width:100%; display:block; border:1px solid var(--line); border-radius:6px; background:#fff; }
-    table { width:100%; border-collapse:collapse; margin-top:12px; font-size:.9rem; }
-    th,td { border-bottom:1px solid var(--line); padding:9px 8px; text-align:left; }
-    th { background:#f1f5f9; color:#25313b; }
-    .callout { border-left:4px solid var(--gql); background:#eefaf7; padding:12px 14px; border-radius:6px; }
-    .legend { display:flex; gap:14px; color:var(--muted); font-size:.92rem; }
-    .dot { width:11px; height:11px; border-radius:50%; display:inline-block; margin-right:6px; }
-    @media (max-width: 860px) { .metrics { grid-template-columns:repeat(2,1fr); } .grid { grid-template-columns:1fr; } header { position:static; } }
-    @media (max-width: 560px) { .metrics { grid-template-columns:1fr; } main { padding:16px; } section { padding:16px; } }
+    .board { height:100vh; overflow:hidden; padding:8px; display:grid; grid-template-columns:repeat(12, minmax(0,1fr)); grid-template-rows:repeat(6, minmax(0,1fr)); gap:8px; }
+    .tile { background:var(--panel); border:1px solid var(--line); box-shadow:0 1px 3px rgba(0,0,0,.05); padding:12px; overflow:hidden; min-width:0; min-height:0; }
+    .tile h2, .tile h3 { margin:0 0 8px; font-size:12px; text-transform:uppercase; color:#536169; letter-spacing:.02em; }
+    .hero { grid-column:1 / 5; grid-row:1 / 3; display:flex; flex-direction:column; justify-content:space-between; }
+    .hero h1 { margin:0; font-size:28px; line-height:1.05; letter-spacing:0; }
+    .hero p { margin:8px 0 0; color:var(--muted); font-size:13px; line-height:1.35; }
+    .kpi { display:flex; flex-direction:column; justify-content:space-between; }
+    .k1 { grid-column:5 / 7; grid-row:1 / 2; }
+    .k2 { grid-column:7 / 9; grid-row:1 / 2; }
+    .k3 { grid-column:9 / 11; grid-row:1 / 2; }
+    .k4 { grid-column:11 / 13; grid-row:1 / 2; }
+    .kpi strong { font-size:29px; line-height:1; font-weight:500; color:#24323a; }
+    .kpi span { font-size:12px; color:var(--muted); text-transform:uppercase; }
+    .kpi small { color:var(--muted); font-size:11px; }
+    .time-chart { grid-column:5 / 10; grid-row:2 / 5; }
+    .size-chart { grid-column:1 / 5; grid-row:3 / 5; }
+    .donut-time { grid-column:10 / 13; grid-row:2 / 4; }
+    .donut-size { grid-column:5 / 7; grid-row:5 / 7; }
+    .delta-time { grid-column:7 / 10; grid-row:5 / 7; }
+    .delta-size { grid-column:1 / 5; grid-row:5 / 7; }
+    .dataset-tile { grid-column:10 / 13; grid-row:4 / 6; }
+    .result { grid-column:10 / 13; grid-row:6 / 7; background:#17202a; color:#fff; }
+    .result h2 { color:#a7b2b8; }
+    .result strong { display:block; font-size:18px; line-height:1.1; margin-bottom:5px; }
+    .result p { margin:0; color:#d8e0e4; line-height:1.25; font-size:11px; }
+    .svg-chart { width:100%; height:100%; display:block; }
+    .donut { width:100%; height:100%; display:block; }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th,td { border-bottom:1px solid var(--line); padding:5px 5px; text-align:left; white-space:nowrap; }
+    th { color:#536169; font-weight:700; font-size:11px; text-transform:uppercase; }
+    .legend-line { display:flex; gap:12px; align-items:center; color:var(--muted); font-size:12px; }
+    .dot { width:10px; height:10px; display:inline-block; border-radius:50%; margin-right:5px; }
+    .progress { height:12px; background:#edf2f4; margin-top:10px; position:relative; }
+    .progress span { position:absolute; left:0; top:0; bottom:0; width:99.98%; background:var(--gql); }
+    @media (max-width: 1000px) {
+      .board { height:auto; overflow:visible; grid-template-columns:repeat(6, 1fr); grid-auto-rows:minmax(110px, auto); }
+      .hero,.time-chart,.size-chart,.delta-size,.dataset-tile,.result { grid-column:span 6; grid-row:auto; }
+      .kpi,.donut-time,.donut-size,.delta-time { grid-column:span 3; grid-row:auto; }
+    }
+    .dataset-stats { display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; margin:6px 0 8px; }
+    .dataset-stats div { background:#f3f6f8; padding:6px; min-width:0; }
+    .dataset-stats span { display:block; color:var(--muted); font-size:10px; text-transform:uppercase; }
+    .dataset-stats strong { font-size:15px; font-weight:600; }
+    @media (max-width: 620px) { .board { grid-template-columns:1fr; } .hero,.time-chart,.size-chart,.delta-size,.dataset-tile,.result,.kpi,.donut-time,.donut-size,.delta-time { grid-column:span 1; grid-row:auto; } }
     """
 
     return f"""<!doctype html>
@@ -373,42 +490,45 @@ def build_dashboard_html(data: Dict[str, pd.DataFrame]) -> str:
   <style>{css}</style>
 </head>
 <body>
-  <header>
-    <h1>GraphQL vs REST em repositorios Python populares</h1>
-    <p>Dashboard final do experimento controlado do Lab 05. A comparacao usa a API do GitHub, 100 repositorios Python, 4 cenarios e 30 repeticoes por cenario.</p>
-  </header>
-  <main>
-    <div class="metrics">{card_html}</div>
-
-    <section>
-      <h2>Leitura geral</h2>
-      <p class="callout">GraphQL reduziu fortemente o tamanho bruto das respostas em todos os cenarios. Para tempo de resposta, GraphQL foi melhor nos cenarios C2, C3 e C4, mas REST foi ligeiramente melhor no cenario simples C1.</p>
-      <div class="legend"><span><i class="dot" style="background:var(--rest)"></i>REST</span><span><i class="dot" style="background:var(--gql)"></i>GraphQL</span></div>
-    </section>
-
-    <section>
-      <h2>RQ1 - Tempo de resposta</h2>
-      <p>Comparacao das medianas de tempo entre REST e GraphQL por cenario. Valores negativos de delta indicam vantagem de GraphQL.</p>
-      <div class="grid">
-        <img src="../analysis/figures/rq1_tempo_mediano_por_cenario.png" alt="Tempo mediano por cenario">
-        <img src="../analysis/figures/rq1_delta_percentual_tempo.png" alt="Delta percentual de tempo">
+  <main class="board">
+    <section class="tile hero">
+      <div>
+        <h1>GraphQL vs REST</h1>
+        <p>Experimento controlado com API do GitHub, repositorios Python populares e quatro cenarios comparaveis.</p>
       </div>
-      {rq1_table}
-    </section>
-
-    <section>
-      <h2>RQ2 - Tamanho bruto da resposta</h2>
-      <p>Comparacao do corpo bruto retornado por REST e GraphQL. A escala logaritmica evidencia a diferenca de ordem de grandeza entre as respostas.</p>
-      <div class="grid">
-        <img src="../analysis/figures/rq2_tamanho_mediano_por_cenario.png" alt="Tamanho mediano por cenario">
-        <img src="../analysis/figures/rq2_delta_percentual_tamanho.png" alt="Delta percentual de tamanho">
+      <div>
+        <div class="legend-line"><span><i class="dot" style="background:var(--rest)"></i>REST</span><span><i class="dot" style="background:var(--gql)"></i>GraphQL</span><span><i class="dot" style="background:var(--accent)"></i>pior caso GQL</span></div>
+        <div class="progress"><span></span></div>
       </div>
-      {rq2_table}
     </section>
 
-    <section>
-      <h2>Conclusao</h2>
-      <p>O experimento confirma uma vantagem consistente de GraphQL em tamanho de resposta. Em tempo, a vantagem aparece principalmente quando a consulta envolve listas ou dados combinados. Para metadados simples, REST permaneceu competitivo e teve mediana ligeiramente menor.</p>
+    <section class="tile kpi k1"><span>Medicoes</span><strong>{fmt_int(st["measurements"])}</strong><small>coleta completa</small></section>
+    <section class="tile kpi k2"><span>Pares validos</span><strong>{fmt_int(st["valid_pairs"])}</strong><small>REST + GraphQL</small></section>
+    <section class="tile kpi k3"><span>Repositorios</span><strong>{fmt_int(st["repos"])}</strong><small>Python populares</small></section>
+    <section class="tile kpi k4"><span>Falhas</span><strong>{fmt_int(st["failures"])}</strong><small>descartadas</small></section>
+
+    <section class="tile time-chart">{time_chart}</section>
+    <section class="tile size-chart">{size_chart}</section>
+    <section class="tile donut-time">{donut_time}</section>
+    <section class="tile donut-size">{donut_size}</section>
+
+    <section class="tile delta-time">{time_delta_chart}</section>
+    <section class="tile delta-size">{size_delta_chart}</section>
+
+    <section class="tile dataset-tile">
+      <h2>Dataset</h2>
+      <div class="dataset-stats">
+        <div><span>Stars med.</span><strong>{fmt_int(stars_median)}</strong></div>
+        <div><span>Forks med.</span><strong>{fmt_int(forks_median)}</strong></div>
+        <div><span>Issues med.</span><strong>{fmt_int(issues_median)}</strong></div>
+      </div>
+      {dataset_table}
+    </section>
+
+    <section class="tile result">
+      <h2>Resultado para fala</h2>
+      <strong>GraphQL vence em tamanho; tempo depende do cenario.</strong>
+      <p>C1 fica competitivo para REST. C2, C3 e principalmente C4 favorecem GraphQL.</p>
     </section>
   </main>
 </body>
