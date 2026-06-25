@@ -1,0 +1,4 @@
+api_type,scenario_id,http_status,error,count
+GraphQL,C1,401,HTTP 401,1
+GraphQL,C3,0,URLError,1
+REST,C3,0,URLError,1

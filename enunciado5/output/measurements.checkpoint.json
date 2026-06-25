@@ -1,0 +1,16 @@
+{
+  "completed_count": 24000,
+  "config": {
+    "item_limit": 10,
+    "repos_csv": "enunciado5/data/top_python_repos.csv",
+    "runs": 30,
+    "scenarios": [
+      "C1",
+      "C2",
+      "C3",
+      "C4"
+    ]
+  },
+  "last_measurement_id": "jingyaogong/minimind:C4:run030:REST",
+  "updated_at": "2026-06-22T13:09:36.648962Z"
+}
